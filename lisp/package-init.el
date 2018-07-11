@@ -1,4 +1,3 @@
-
 ;; adding melpa
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
@@ -10,9 +9,15 @@
   (when (< emacs-major-version 24)
     ;; For important compatibility libraries like cl-lib
     (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
+(package-initialize)
+
+;; Check if use-package is installed and install if its not, note it's a melpa package so
+;; has to come after the melpa repository is added
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 
 ;; Initialise elpy
-(package-initialize)
 (elpy-enable)
 
 (require 'yasnippet)

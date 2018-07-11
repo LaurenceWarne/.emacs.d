@@ -11,5 +11,5 @@
 (load "global-minor-mode-init")
 (load "custom-functions")
 (load "package-init")
-(load "bindings")
+(load "keybindings")
 (load "custom")
