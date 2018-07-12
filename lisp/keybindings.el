@@ -14,4 +14,3 @@
 (global-set-key (kbd "M-n") 'lw-forward-brace)
 (global-set-key (kbd "M-p") 'lw-backward-brace)
 
-(setq aw-keys '(?a ?s ?d ?f ?e ?i ?j ?k ?l))
