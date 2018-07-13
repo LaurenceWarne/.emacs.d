@@ -15,7 +15,8 @@
 ;; Note it's a melpa package so this has to come after the melpa repository is added
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
-  (package-install 'use-package))
+  (package-install 'use-package)
+  (eval-when-compile (require 'use-package)))
 
 ;; Install all packages if not already installed (use-package must still be called)
 (setq use-package-always-ensure t)
@@ -25,9 +26,6 @@
 ;;https://jwiegley.github.io/use-package/keywords/
 
 (use-package elpy
-  :defer t
-  :init
-  (autoload 'elpy "elpy" nil t)
   :config
   ;; Enable Elpy in all future Python buffers.
   (elpy-enable))
@@ -46,9 +44,7 @@
   (yas-global-mode 1))
 
 (use-package smartparens
-  :defer t
-  :init
-  (autoload 'smartparens "smartparens" nil t)
+  :demand t
   :config
   (smartparens-global-mode 1))
 
@@ -60,9 +56,7 @@
   (projectile-global-mode 1))
 
 (use-package helm
-  :defer t
-  :init
-  (autoload 'helm "helm" nil t)
+  :demand t
   :config
   (helm-mode 1)
   (setq projectile-completion-system 'helm))
@@ -93,6 +87,26 @@
   :init
   (autoload 'treemacs-projectile "treemacs-projectile" nil t))
 
+(use-package flycheck)
 
-  
+(use-package hydra)
 
+;; (use-package meghanada
+;;   :when (= emacs-major-version 25)
+;;   :config
+;;   (progn
+;;     (add-hook 'java-mode-hook
+;; 	      (lambda ()
+;; 		;; meghanada-mode on
+;; 		(meghanada-mode t)
+;; 		(flycheck-mode +1)
+;; 		(setq c-basic-offset 2)
+;; 		;; use code format
+;; 		(add-hook 'before-save-hook 'meghanada-code-beautify-before-save)))
+;;     (cond
+;;      ((eq system-type 'windows-nt)
+;;       (setq meghanada-java-path (expand-file-name "bin/java.exe" (getenv "JAVA_HOME")))
+;;       (setq meghanada-maven-path "mvn.cmd"))
+;;      (t
+;;       (setq meghanada-java-path "java")
+;;       (setq meghanada-maven-path "mvn")))))

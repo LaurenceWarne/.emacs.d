@@ -6,6 +6,10 @@
 
 ;;; Code:
 
+
+;; emacs 25 makes me add this
+;(package-initialize)
+
 (add-to-list 'load-path "~/.emacs.d/lisp")
 
 (load "global-minor-mode-init")
