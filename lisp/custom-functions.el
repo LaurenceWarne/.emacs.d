@@ -16,3 +16,11 @@
     (forward-char)
     )
   )
+
+(defun lw-save-line ()
+  (interactive)
+  (progn
+    (move-beginning-of-line nil)
+    (set-mark-command nil)
+    (move-end-of-line nil)
+    (kill-ring-save)))

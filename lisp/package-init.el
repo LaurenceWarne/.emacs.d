@@ -26,15 +26,22 @@
 ;;https://jwiegley.github.io/use-package/keywords/
 
 (use-package elpy
-  :config
   ;; Enable Elpy in all future Python buffers.
-  (elpy-enable))
+  :init (add-hook 'python-mode-hook #'elpy-enable))
+
 
 (use-package avy
-  ;; Creates autoloads for those commands and defers loading of the module until they are used
+  ;; Creates autoloads for those commands which defers loading of the module until they are used
   :commands (avy-goto-char avy-goto-char-2)
   :config
   (setq aw-keys '(?a ?s ?d ?f ?e ?i ?j ?k ?l)))
+
+(use-package smex
+  :bind (
+	 ("M-x" . 'smex)
+	 ("M-X" . 'smex-major-mode-commands)
+	  ;; This is the old M-x.
+	 ("C-c C-c M-x" . 'execute-extended-command)))
 
 (use-package yasnippet
   :defer t
@@ -49,17 +56,20 @@
   (smartparens-global-mode 1))
 
 (use-package projectile
-  :defer t
-  :init
-  (autoload 'projectile "projectile" nil t)
   :config
   (projectile-global-mode 1))
 
 (use-package helm
   :demand t
   :config
-  (helm-mode 1)
-  (setq projectile-completion-system 'helm))
+  (helm-mode 1))
+
+(use-package helm-flx
+  :after helm
+  :config
+  (helm-flx-mode +1)
+  (setq helm-flx-for-helm-find-files t ;; t by default
+	helm-flx-for-helm-locate t)) ;; nil by default
 
 (use-package helm-projectile
   :after (helm projectile)
@@ -67,12 +77,10 @@
   :init
   (autoload 'helm-projectile "helm-projectile" nil t)
   :config
-  (helm-projectile-on))
+  (helm-projectile-on)
+  (setq projectile-completion-system 'helm))
 
 (use-package company
-  :defer t
-  :init
-  (autoload 'company "company" nil t)
   :config
   (add-hook 'after-init-hook 'global-company-mode))
 
@@ -90,6 +98,17 @@
 (use-package flycheck)
 
 (use-package hydra)
+
+(use-package groovy-mode
+  :commands groovy-mode
+  :init (add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode)))
+
+
+(use-package speed-type
+  :commands (speed-type-text speed-type-region speed-type-buffer))
+
+(use-package goto-last-change
+  :commands goto-last-change)
 
 ;; (use-package meghanada
 ;;   :when (= emacs-major-version 25)
