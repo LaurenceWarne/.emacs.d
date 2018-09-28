@@ -18,6 +18,9 @@
   (package-install 'use-package)
   (eval-when-compile (require 'use-package)))
 
+;; lsp recommends we do this for some reason
+(require 'cc-mode)
+
 ;; Install all packages if not already installed (use-package must still be called)
 (setq use-package-always-ensure t)
 
@@ -27,8 +30,8 @@
 
 (use-package elpy
   ;; Enable Elpy in all future Python buffers.
-  :init (add-hook 'python-mode-hook #'elpy-enable))
-
+  :init (add-hook 'python-mode-hook #'elpy-enable)
+  :config (setq elpy-rpc-python-command "python3"))
 
 (use-package avy
   ;; Creates autoloads for those commands which defers loading of the module until they are used
@@ -52,8 +55,8 @@
 
 (use-package smartparens
   :demand t
-  :config
-  (smartparens-global-mode 1))
+  :config)
+  ;(smartparens-global-mode 1))
 
 (use-package projectile
   :config
@@ -103,29 +106,66 @@
   :commands groovy-mode
   :init (add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode)))
 
-
 (use-package speed-type
   :commands (speed-type-text speed-type-region speed-type-buffer))
 
 (use-package goto-last-change
   :commands goto-last-change)
 
-;; (use-package meghanada
-;;   :when (= emacs-major-version 25)
+(use-package java-snippets
+  :after yasnippet)
+
+(use-package lsp-mode
+  :init (setq lsp-inhibit-message t
+              lsp-eldoc-render-all nil
+              lsp-highlight-symbol-at-point nil))
+
+;; (use-package company-lsp
+;;   :after  company
 ;;   :config
-;;   (progn
-;;     (add-hook 'java-mode-hook
-;; 	      (lambda ()
-;; 		;; meghanada-mode on
-;; 		(meghanada-mode t)
-;; 		(flycheck-mode +1)
-;; 		(setq c-basic-offset 2)
-;; 		;; use code format
-;; 		(add-hook 'before-save-hook 'meghanada-code-beautify-before-save)))
-;;     (cond
-;;      ((eq system-type 'windows-nt)
-;;       (setq meghanada-java-path (expand-file-name "bin/java.exe" (getenv "JAVA_HOME")))
-;;       (setq meghanada-maven-path "mvn.cmd"))
-;;      (t
-;;       (setq meghanada-java-path "java")
-;;       (setq meghanada-maven-path "mvn")))))
+;;   (add-hook 'java-mode-hook (lambda () (push 'company-lsp company-backends)))
+;;   (setq company-lsp-enable-snippet t
+;;         company-lsp-cache-candidates t)
+;;   (push 'java-mode company-global-modes))
+
+(use-package lsp-ui
+  :config
+  (setq lsp-ui-sideline-enable t
+        lsp-ui-sideline-show-symbol t
+        lsp-ui-sideline-show-hover t
+        lsp-ui-sideline-show-code-actions t
+        lsp-ui-sideline-update-mode 'point))
+
+(use-package lsp-java
+  :requires (lsp-ui-flycheck lsp-ui-sideline)
+  :config
+  (add-hook 'java-mode-hook  'lsp-java-enable)
+  (add-hook 'java-mode-hook  'flycheck-mode)
+  (add-hook 'java-mode-hook  'company-mode)
+  (add-hook 'java-mode-hook  (lambda () (lsp-ui-flycheck-enable t)))
+  (add-hook 'java-mode-hook  'lsp-ui-sideline-mode)
+  (setq lsp-java-organize-imports t)
+  ;; lombok support: https://github.com/emacs-lsp/lsp-java/issues/26
+  (setq lsp-java-vmargs '("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.2/524e0a697e9d62950b2f763d88d35cd8dc82a9a1/lombok-1.18.2.jar" "-Xbootclasspath/a:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.2/524e0a697e9d62950b2f763d88d35cd8dc82a9a1/lombok-1.18.2.jar"))
+  (setq lsp-java--workspace-folders (list "~/Documents/work/java/projects/cornucopic")))
+
+(use-package org-bullets
+  :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+
+;; mu4e setup and configuration
+;; mu4e needs to be installed for this to work
+;; See:
+;; http://cachestocaches.com/2017/3/complete-guide-email-emacs-using-mu-and-/
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
+(require 'mu4e)
+
+(setq mu4e-contexts
+ `( ,(make-mu4e-context
+     :name "Gmail"
+     :match-func (lambda (msg) (when msg
+       (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
+     :vars '(
+       (mu4e-trash-folder . "/Gmail/[Gmail].Trash")
+       (mu4e-refile-folder . "/Gmail/[Gmail].Archive")
+       ))
+    ))
