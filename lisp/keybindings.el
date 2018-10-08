@@ -19,4 +19,3 @@
 
 (global-set-key (kbd "M-n") 'lw-forward-brace)
 (global-set-key (kbd "M-p") 'lw-backward-brace)
-

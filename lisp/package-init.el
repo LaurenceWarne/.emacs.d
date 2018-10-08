@@ -11,7 +11,7 @@
     (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
 (package-initialize)
 
-;; Check if use-package is installed and install if its not
+;; Check if use-package is installed and install if it's not
 ;; Note it's a melpa package so this has to come after the melpa repository is added
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
@@ -84,8 +84,8 @@
   (setq projectile-completion-system 'helm))
 
 (use-package company
-  :config
-  (add-hook 'after-init-hook 'global-company-mode))
+  :config)
+  ;(add-hook 'after-init-hook 'global-company-mode))
 
 (use-package treemacs
   :defer t
@@ -120,13 +120,13 @@
               lsp-eldoc-render-all nil
               lsp-highlight-symbol-at-point nil))
 
-;; (use-package company-lsp
-;;   :after  company
-;;   :config
-;;   (add-hook 'java-mode-hook (lambda () (push 'company-lsp company-backends)))
-;;   (setq company-lsp-enable-snippet t
-;;         company-lsp-cache-candidates t)
-;;   (push 'java-mode company-global-modes))
+(use-package company-lsp
+  :after  company
+  :config
+  (add-hook 'java-mode-hook (lambda () (push 'company-lsp company-backends)))
+  (setq company-lsp-enable-snippet t
+        company-lsp-cache-candidates t)
+  (push 'java-mode company-global-modes))
 
 (use-package lsp-ui
   :config
@@ -159,6 +159,49 @@
 (add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
 (require 'mu4e)
 
+(use-package doom-themes
+  :init
+  ;; emacs25 has no color-themes variable
+  (setq color-themes '())  
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+	doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  :config
+  ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
+  ;; may have their own settings.
+  (load-theme 'doom-one t)
+  ;; Enable flashing mode-line on errors
+  (doom-themes-visual-bell-config)
+  ;; Enable custom neotree theme (all-the-icons must be installed!)
+  (doom-themes-neotree-config)
+  ;; or for treemacs users
+  (doom-themes-treemacs-config)
+  ;; Corrects (and improves) org-mode's native fontification.
+  (doom-themes-org-config))
+
+;; We need to call M-x all-the-icons-install-fonts
+;; See https://github.com/domtronn/all-the-icons.el
+(use-package all-the-icons)
+
+;; (use-package doom-modeline
+;;   :defer t
+;;   :config
+;;   :hook (after-init . doom-modeline-init))
+
+(use-package solaire-mode
+  :init
+  ;; brighten buffers (that represent real files)
+  (add-hook 'after-change-major-mode-hook #'turn-on-solaire-mode)
+  ;; ...if you use auto-revert-mode:
+  (add-hook 'after-revert-hook #'turn-on-solaire-mode)
+  ;; You can do similar with the minibuffer when it is activated:
+  (add-hook 'minibuffer-setup-hook #'solaire-mode-in-minibuffer)
+  ;; To enable solaire-mode unconditionally for certain modes:
+  (add-hook 'ediff-prepare-buffer-hook #'solaire-mode))
+
+(use-package rainbow-delimiters
+  :init
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+
 (setq mu4e-contexts
  `( ,(make-mu4e-context
      :name "Gmail"
@@ -169,3 +212,5 @@
        (mu4e-refile-folder . "/Gmail/[Gmail].Archive")
        ))
     ))
+
+;; Hooks

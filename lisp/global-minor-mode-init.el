@@ -9,4 +9,6 @@
 (tool-bar-mode -1)         ;; Get rid of the tool bar
 (menu-bar-mode -1)         ;; Get rid of the menu bar
 
-(setq show-paren-style 'expression)            ;; Highlight text between parens
+(setq visible-bell 1)                  ;; Get rid of annoying bell, use flash screen instead
+(setq show-paren-style 'parenthesis)   ;; Highlight text between parens
+(setq org-use-speed-commands t)        ;; Shortcut for org commands when on headlines
