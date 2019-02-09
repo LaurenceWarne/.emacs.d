@@ -11,6 +11,8 @@
 (global-set-key (kbd "C-'") 'goto-last-change)
 (global-set-key (kbd "C-j") 'helm-buffers-list)
 (global-set-key (kbd "C-x b") 'helm-buffers-list)
+(global-set-key (kbd "C-*") 'quoted-insert)
+(global-set-key (kbd "C-+") 'electric-newline-and-maybe-indent)
 (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
 (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
 (global-set-key (kbd "S-C-<down>") 'shrink-window)

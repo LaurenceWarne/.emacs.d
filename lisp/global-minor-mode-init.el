@@ -12,3 +12,10 @@
 (setq visible-bell 1)                  ;; Get rid of annoying bell, use flash screen instead
 (setq show-paren-style 'parenthesis)   ;; Highlight text between parens
 (setq org-use-speed-commands t)        ;; Shortcut for org commands when on headlines
+(setq python-shell-interpreter "/usr/bin/python3")
+
+
+(defun eclipse-indent-setup ()
+  (c-set-offset 'arglist-intro '+)
+  (c-set-offset 'arglist-close 0))
+(add-hook 'java-mode-hook 'eclipse-indent-setup)

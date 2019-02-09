@@ -37,7 +37,8 @@
   ;; Creates autoloads for those commands which defers loading of the module until they are used
   :commands (avy-goto-char avy-goto-char-2)
   :config
-  (setq aw-keys '(?a ?s ?d ?f ?e ?i ?j ?k ?l)))
+  (setq avy-keys-alist
+      `((avy-goto-char-2 . (?a ?s ?d ?f ?j ?k ?l))))
 
 (use-package smex
   :bind (
@@ -51,7 +52,9 @@
   :init
   (autoload 'yasnippet "yasnippet" nil t)
   :config
-  (yas-global-mode 1))
+  (yas-global-mode 1)
+  (setq yas-indent-line 'auto)
+  (setq yas-also-auto-indent-first-line t))
 
 (use-package smartparens
   :demand t
@@ -115,18 +118,9 @@
 (use-package java-snippets
   :after yasnippet)
 
-(use-package lsp-mode
-  :init (setq lsp-inhibit-message t
-              lsp-eldoc-render-all nil
-              lsp-highlight-symbol-at-point nil))
+(use-package lsp-mode)
 
-(use-package company-lsp
-  :after  company
-  :config
-  (add-hook 'java-mode-hook (lambda () (push 'company-lsp company-backends)))
-  (setq company-lsp-enable-snippet t
-        company-lsp-cache-candidates t)
-  (push 'java-mode company-global-modes))
+(use-package company-lsp)
 
 (use-package lsp-ui
   :config
@@ -137,17 +131,11 @@
         lsp-ui-sideline-update-mode 'point))
 
 (use-package lsp-java
-  :requires (lsp-ui-flycheck lsp-ui-sideline)
+  :after lsp
   :config
-  (add-hook 'java-mode-hook  'lsp-java-enable)
-  (add-hook 'java-mode-hook  'flycheck-mode)
-  (add-hook 'java-mode-hook  'company-mode)
-  (add-hook 'java-mode-hook  (lambda () (lsp-ui-flycheck-enable t)))
-  (add-hook 'java-mode-hook  'lsp-ui-sideline-mode)
-  (setq lsp-java-organize-imports t)
-  ;; lombok support: https://github.com/emacs-lsp/lsp-java/issues/26
-  (setq lsp-java-vmargs '("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.2/524e0a697e9d62950b2f763d88d35cd8dc82a9a1/lombok-1.18.2.jar" "-Xbootclasspath/a:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.2/524e0a697e9d62950b2f763d88d35cd8dc82a9a1/lombok-1.18.2.jar"))
-  (setq lsp-java--workspace-folders (list "~/Documents/work/java/projects/cornucopic")))
+  (add-hook 'java-mode-hook 'lsp)
+  (setq lsp-java-vmargs
+  	'("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.16.20/ac76d9b956045631d1561a09289cbf472e077c01/lombok-1.16.20.jar" "-Xbootclasspath/a:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.16.20/ac76d9b956045631d1561a09289cbf472e077c01/lombok-1.16.20.jar")))
 
 (use-package org-bullets
   :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
