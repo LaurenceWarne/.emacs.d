@@ -38,7 +38,7 @@
   :commands (avy-goto-char avy-goto-char-2)
   :config
   (setq avy-keys-alist
-      `((avy-goto-char-2 . (?a ?s ?d ?f ?j ?k ?l))))
+      `((avy-goto-char-2 . (?a ?s ?d ?f ?j ?k ?l)))))
 
 (use-package smex
   :bind (

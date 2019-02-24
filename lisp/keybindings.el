@@ -13,6 +13,9 @@
 (global-set-key (kbd "C-x b") 'helm-buffers-list)
 (global-set-key (kbd "C-*") 'quoted-insert)
 (global-set-key (kbd "C-+") 'electric-newline-and-maybe-indent)
+(global-set-key (kbd "C-m") 'lw-copy-text-to-next-line)
+(global-set-key (kbd "<return>") 'newline)
+(global-set-key (kbd "M-u") 'universal-argument)
 (global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
 (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
 (global-set-key (kbd "S-C-<down>") 'shrink-window)
@@ -21,3 +24,11 @@
 
 (global-set-key (kbd "M-n") 'lw-forward-brace)
 (global-set-key (kbd "M-p") 'lw-backward-brace)
+
+; Counter those annoying additional org hooks
+(add-hook 'org-mode-hook
+          (lambda ()
+	    (local-set-key (kbd "C-,") nil)
+	    (local-set-key (kbd "C-j") nil)
+            (local-set-key (kbd "C-,") 'beginning-of-buffer)
+	    (local-set-key (kbd "C-j") 'helm-buffers-list)))

@@ -3,35 +3,28 @@
   (progn
     ;; check if previous letter is a '{'
     (when (equal ?{ (char-before))
-      (backward-char)
-      )
-    (skip-chars-backward "^{")
-    )
-  )
+      (backward-char))
+    (skip-chars-backward "^{")))
 
 (defun lw-forward-brace ()
   (interactive)
   (progn
     (skip-chars-forward "^{")
-    (forward-char)
-    )
-  )
-
-(defun lw-save-line ()
-  (interactive)
-  (progn
-    (move-beginning-of-line nil)
-    (set-mark-command nil)
-    (move-end-of-line nil)
-    (kill-ring-save)))
+    (forward-char)))
 
 (defun lw-copy-text-to-next-line ()
-  (interative)
+  (interactive)
   (progn
-    (setq line-text
-	  (buffer-substring-no-properties
-	   (line-beginning-position) (line-end-position)))
+    (setq contents-of-line (thing-at-point 'line t))
+    ; Remove newline if it exists
+    (if (equal "\n" (substring contents-of-line -1))
+	(setq contents-of-line (substring contents-of-line 0 -1)))
     (end-of-line)
-    (open-line)
+    (open-line 1)
     (next-line)
-    ))
+    (insert contents-of-line)
+    (previous-line 1)
+    (end-of-line)))
+
+(defun lw-unix-line-discard()
+  (interactive))
