@@ -68,7 +68,9 @@
 (use-package helm
   :demand t
   :config
-  (helm-mode 1))
+  (helm-mode 1)
+  (define-key helm-map (kbd "C-,") 'helm-beginning-of-buffer)
+  (define-key helm-map (kbd "C-.") 'helm-end-of-buffer))
 
 (use-package helm-flx
   :after helm
@@ -170,11 +172,6 @@
 ;; See https://github.com/domtronn/all-the-icons.el
 (use-package all-the-icons)
 
-;; (use-package doom-modeline
-;;   :defer t
-;;   :config
-;;   :hook (after-init . doom-modeline-init))
-
 (use-package solaire-mode
   :init
   ;; brighten buffers (that represent real files)
@@ -189,6 +186,13 @@
 (use-package rainbow-delimiters
   :init
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+
+(use-package eyebrowse
+  :config
+  (define-key eyebrowse-mode-map (kbd "M-1") 'eyebrowse-switch-to-window-config-1)
+  (define-key eyebrowse-mode-map (kbd "M-2") 'eyebrowse-switch-to-window-config-2)
+  (define-key eyebrowse-mode-map (kbd "M-3") 'eyebrowse-switch-to-window-config-3)
+  (define-key eyebrowse-mode-map (kbd "M-4") 'eyebrowse-switch-to-window-config-4))
 
 (setq mu4e-contexts
  `( ,(make-mu4e-context
