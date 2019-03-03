@@ -40,7 +40,7 @@
 (add-to-list 'desktop-buffer-mode-handlers '(inferior-python-mode . lw-create-python-buffer))
 
 ;; Save ielm buffers
-(add-hook 'ielm
+(add-hook 'inferior-lisp-hook
 	  (lambda () (setq-local desktop-save-buffer #'lw-save-python-buffer)))
 
 (add-to-list 'desktop-buffer-mode-handlers '(inferior-lisp . lw-create-ielm-buffer))
