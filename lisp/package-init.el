@@ -28,6 +28,13 @@
 ;;https://github.com/jwiegley/use-package
 ;;https://jwiegley.github.io/use-package/keywords/
 
+;; This package does what you think it does
+(use-package auto-package-update
+  :config
+  (setq auto-package-update-delete-old-versions t)
+  (setq auto-package-update-hide-results t)
+  (auto-package-update-maybe))
+
 (use-package elpy
   ;; Enable Elpy in all future Python buffers.
   :init (add-hook 'python-mode-hook #'elpy-enable)
@@ -77,7 +84,7 @@
   :config
   (helm-flx-mode +1)
   (setq helm-flx-for-helm-find-files t ;; t by default
-	helm-flx-for-helm-locate t)) ;; nil by default
+  	helm-flx-for-helm-locate t)) ;; nil by default
 
 (use-package helm-projectile
   :after (helm projectile)
@@ -192,7 +199,12 @@
   (define-key eyebrowse-mode-map (kbd "M-1") 'eyebrowse-switch-to-window-config-1)
   (define-key eyebrowse-mode-map (kbd "M-2") 'eyebrowse-switch-to-window-config-2)
   (define-key eyebrowse-mode-map (kbd "M-3") 'eyebrowse-switch-to-window-config-3)
-  (define-key eyebrowse-mode-map (kbd "M-4") 'eyebrowse-switch-to-window-config-4))
+  (define-key eyebrowse-mode-map (kbd "M-4") 'eyebrowse-switch-to-window-config-4)
+  (define-key eyebrowse-mode-map (kbd "M-5") 'eyebrowse-switch-to-window-config-5)
+  (define-key eyebrowse-mode-map (kbd "M-8") 'eyebrowse-switch-to-window-config-8)
+  (define-key eyebrowse-mode-map (kbd "M-9") 'eyebrowse-switch-to-window-config-9)
+  (eyebrowse-mode t)
+  (setq eyebrowse-new-workspace t))
 
 (setq mu4e-contexts
  `( ,(make-mu4e-context
