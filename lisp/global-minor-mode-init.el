@@ -13,11 +13,14 @@
 (setq show-paren-style 'parenthesis)   ;; Highlight text between parens
 (setq org-use-speed-commands t)        ;; Shortcut for org commands when on headlines
 (setq python-shell-interpreter "/usr/bin/python3")
+(fset 'yes-or-no-p 'y-or-n-p)          ;; Use y/n instead of yes/no
+
 
 (defun eclipse-indent-setup ()
   (c-set-offset 'arglist-intro '+)
   (c-set-offset 'arglist-close 0))
 (add-hook 'java-mode-hook 'eclipse-indent-setup)
+;; add hook to switch to helm-projectile-switch-to-buffer
 
 ;; For saving special buffers.
 ;; See https://bmag.github.io/2015/12/26/desktop.html#supporting-more-buffer-types

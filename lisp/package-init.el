@@ -47,13 +47,6 @@
   (setq avy-keys-alist
       `((avy-goto-char-2 . (?a ?s ?d ?f ?j ?k ?l)))))
 
-(use-package smex
-  :bind (
-	 ("M-x" . 'smex)
-	 ("M-X" . 'smex-major-mode-commands)
-	  ;; This is the old M-x.
-	 ("C-c C-c M-x" . 'execute-extended-command)))
-
 (use-package yasnippet
   :defer t
   :init
@@ -74,6 +67,12 @@
 
 (use-package helm
   :demand t
+  :bind
+  ("M-y" . 'helm-show-kill-ring)
+  ("C-x C-f" . 'helm-find-files)
+  ("C-j" . 'helm-buffers-list)
+  ("C-x b" . 'helm-buffers-list)
+  ("M-x" . 'helm-M-x)
   :config
   (helm-mode 1)
   (define-key helm-map (kbd "C-,") 'helm-beginning-of-buffer)
@@ -94,6 +93,11 @@
   :config
   (helm-projectile-on)
   (setq projectile-completion-system 'helm))
+
+(use-package helm-descbinds
+  :defer t
+  :bind (("C-h b" . helm-descbinds)
+         ("C-h w" . helm-descbinds)))
 
 (use-package company
   :config)
@@ -201,6 +205,8 @@
   (define-key eyebrowse-mode-map (kbd "M-3") 'eyebrowse-switch-to-window-config-3)
   (define-key eyebrowse-mode-map (kbd "M-4") 'eyebrowse-switch-to-window-config-4)
   (define-key eyebrowse-mode-map (kbd "M-5") 'eyebrowse-switch-to-window-config-5)
+  (define-key eyebrowse-mode-map (kbd "M-6") 'eyebrowse-switch-to-window-config-6)
+  (define-key eyebrowse-mode-map (kbd "M-7") 'eyebrowse-switch-to-window-config-7)
   (define-key eyebrowse-mode-map (kbd "M-8") 'eyebrowse-switch-to-window-config-8)
   (define-key eyebrowse-mode-map (kbd "M-9") 'eyebrowse-switch-to-window-config-9)
   (eyebrowse-mode t)
