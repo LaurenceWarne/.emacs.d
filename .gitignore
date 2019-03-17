@@ -53,3 +53,11 @@ projectile-bookmarks.eld
 ido.last
 smex-items
 speed-type
+session*
+recentf
+workspace/*
+eclipse.jdt.ls/*
+.emacs-buffers
+.lsp-session*
+.last-package-update-day
+network-security.data
