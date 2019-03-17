@@ -28,3 +28,7 @@
 
 (defun lw-unix-line-discard()
   (interactive))
+
+(defun lw-switch-to-last-buffer()
+  (interactive)
+  (switch-to-buffer nil))

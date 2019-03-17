@@ -2,6 +2,7 @@
 (global-set-key (kbd "C-;") 'avy-goto-char-2)
 (global-set-key (kbd "M-o") 'ace-window)
 (global-set-key (kbd "C-,") 'beginning-of-buffer)
+(global-set-key (kbd "M-j") 'lw-switch-to-last-buffer)
 (global-set-key (kbd "C-.") 'end-of-buffer)
 (global-set-key (kbd "M-[") 'backward-paragraph)
 (global-set-key (kbd "M-]") 'forward-paragraph)
@@ -15,8 +16,6 @@
 (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
 (global-set-key (kbd "S-C-<down>") 'shrink-window)
 (global-set-key (kbd "S-C-<up>") 'enlarge-window)
-
-
 (global-set-key (kbd "M-n") 'lw-forward-brace)
 (global-set-key (kbd "M-p") 'lw-backward-brace)
 

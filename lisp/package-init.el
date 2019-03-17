@@ -65,16 +65,19 @@
   :config
   (projectile-global-mode 1))
 
+;; See http://tuhdo.github.io/helm-projectile.html
 (use-package helm
   :demand t
   :bind
   ("M-y" . 'helm-show-kill-ring)
   ("C-x C-f" . 'helm-find-files)
-  ("C-j" . 'helm-buffers-list)
+  ("C-j" . 'helm-mini)
   ("C-x b" . 'helm-buffers-list)
   ("M-x" . 'helm-M-x)
   :config
   (helm-mode 1)
+  ;; Makes helm-boring-file-regexp-list act as a .gitignore 
+  (setq helm-ff-skip-boring-files t)  
   (define-key helm-map (kbd "C-,") 'helm-beginning-of-buffer)
   (define-key helm-map (kbd "C-.") 'helm-end-of-buffer))
 
@@ -149,6 +152,9 @@
   (add-hook 'java-mode-hook 'lsp)
   (setq lsp-java-vmargs
   	'("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.16.20/ac76d9b956045631d1561a09289cbf472e077c01/lombok-1.16.20.jar" "-Xbootclasspath/a:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.16.20/ac76d9b956045631d1561a09289cbf472e077c01/lombok-1.16.20.jar")))
+
+(use-package helm-lsp
+  :after lsp helm)
 
 (use-package org-bullets
   :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
