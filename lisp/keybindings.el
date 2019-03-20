@@ -30,3 +30,9 @@
 	    (local-set-key (kbd "M-p") 'outline-previous-heading)
 	    (local-set-key (kbd "M-[") 'org-backward-heading-same-level)
 	    (local-set-key (kbd "M-]") 'org-forward-heading-same-level)))
+
+(add-hook 'java-mode-hook
+          (lambda ()
+	    (local-set-key (kbd "M-j") nil)  ;; Will now default to global map
+	    (local-set-key (kbd "C-j") nil)
+	    (local-set-key (kbd "C-j") 'helm-projectile)))

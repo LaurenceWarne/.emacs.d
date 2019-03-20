@@ -47,3 +47,20 @@
 	  (lambda () (setq-local desktop-save-buffer #'lw-save-python-buffer)))
 
 (add-to-list 'desktop-buffer-mode-handlers '(inferior-emacs-lisp-mode . lw-create-ielm-buffer))
+
+;; Enable collapsing of xml
+;; see https://emacs.stackexchange.com/questions/2884/the-old-how-to-fold-xml-question
+(require 'nxml-mode)
+(add-to-list 'hs-special-modes-alist
+             '(nxml-mode
+               "<!--\\|<[^/>]*[^/]>"
+               "-->\\|</[^/>]*[^/]>"
+
+               "<!--"
+               sgml-skip-tag-forward
+               nil))
+
+(add-hook 'nxml-mode-hook 'hs-minor-mode)
+(define-key nxml-mode-map (kbd "C-c e") 'hs-toggle-hiding)
+(define-key nxml-mode-map (kbd "C-c C-e") 'hs-toggle-hiding)
+

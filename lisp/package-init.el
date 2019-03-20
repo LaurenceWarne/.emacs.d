@@ -149,6 +149,7 @@
 (use-package lsp-java
   :after lsp
   :config
+  ;; Do we need to start the server (if not already running) here as well?
   (add-hook 'java-mode-hook 'lsp)
   (setq lsp-java-vmargs
   	'("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.16.20/ac76d9b956045631d1561a09289cbf472e077c01/lombok-1.16.20.jar" "-Xbootclasspath/a:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.16.20/ac76d9b956045631d1561a09289cbf472e077c01/lombok-1.16.20.jar")))
