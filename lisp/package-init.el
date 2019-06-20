@@ -169,10 +169,6 @@
   ;; may have their own settings.
   (load-theme 'doom-one t))
 
-;; We need to call M-x all-the-icons-install-fonts
-;; See https://github.com/domtronn/all-the-icons.el
-(use-package all-the-icons)
-
 (use-package solaire-mode
   :hook
   ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
