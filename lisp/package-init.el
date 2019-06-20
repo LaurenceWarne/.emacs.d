@@ -35,6 +35,10 @@
   (setq auto-package-update-hide-results t)
   (auto-package-update-maybe))
 
+(use-package ace-window
+  :config
+  (bind-key "M-o" 'ace-window))
+
 (use-package elpy
   ;; Enable Elpy in all future Python buffers.
   :init (add-hook 'python-mode-hook #'elpy-enable)

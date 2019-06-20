@@ -1,6 +1,5 @@
 (global-set-key (kbd "C-:") 'avy-goto-char)
 (global-set-key (kbd "C-;") 'avy-goto-char-2)
-(global-set-key (kbd "M-o") 'ace-window)
 (global-set-key (kbd "C-,") 'beginning-of-buffer)
 (global-set-key (kbd "M-j") 'lw-switch-to-last-buffer)
 (global-set-key (kbd "C-.") 'end-of-buffer)
