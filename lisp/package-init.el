@@ -106,17 +106,6 @@
   :config)
   ;(add-hook 'after-init-hook 'global-company-mode))
 
-(use-package treemacs
-  :defer t
-  :init
-  (autoload 'treemacs "treemacs" nil t))
-
-(use-package treemacs-projectile
-  :after (projectile treemacs)
-  :defer t
-  :init
-  (autoload 'treemacs-projectile "treemacs-projectile" nil t))
-
 (use-package flycheck)
 
 (use-package hydra)
@@ -160,50 +149,35 @@
 (use-package org-bullets
   :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
 
-;; mu4e setup and configuration
-;; mu4e needs to be installed for this to work
-;; See:
-;; http://cachestocaches.com/2017/3/complete-guide-email-emacs-using-mu-and-/
-(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
-(require 'mu4e)
-
 (use-package doom-themes
-  :init
-  ;; emacs25 has no color-themes variable
-  (setq color-themes '())  
-  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-	doom-themes-enable-italic t) ; if nil, italics is universally disabled
+  :hook
+  ((find-file-hook after-revert-hook) . doom-buffer-mode-maybe)
+  (ediff-prepare-buffer-hook . doom-buffer-mode)
+  (minibuffer-setup-hook . doom-brighten-minibuffer)
   :config
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+	doom-themes-enable-italic t  ; if nil, italics is universally disabled
+
+	;; doom-one specific settings
+	doom-one-brighter-modeline nil
+	doom-one-brighter-comments nil)
   ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
   ;; may have their own settings.
-  (load-theme 'doom-one t)
-  ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
-  ;; Enable custom neotree theme (all-the-icons must be installed!)
-  (doom-themes-neotree-config)
-  ;; or for treemacs users
-  (doom-themes-treemacs-config)
-  ;; Corrects (and improves) org-mode's native fontification.
-  (doom-themes-org-config))
+  (load-theme 'doom-one t))
 
 ;; We need to call M-x all-the-icons-install-fonts
 ;; See https://github.com/domtronn/all-the-icons.el
 (use-package all-the-icons)
 
 (use-package solaire-mode
-  :init
-  ;; brighten buffers (that represent real files)
-  (add-hook 'after-change-major-mode-hook #'turn-on-solaire-mode)
-  ;; ...if you use auto-revert-mode:
-  (add-hook 'after-revert-hook #'turn-on-solaire-mode)
-  ;; You can do similar with the minibuffer when it is activated:
-  (add-hook 'minibuffer-setup-hook #'solaire-mode-in-minibuffer)
-  ;; To enable solaire-mode unconditionally for certain modes:
-  (add-hook 'ediff-prepare-buffer-hook #'solaire-mode))
-
+  :hook
+  ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
+  (minibuffer-setup . solaire-mode-in-minibuffer)
+  :config
+  (solaire-mode-swap-bg))
+            
 (use-package rainbow-delimiters
-  :init
-  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+  :hook (prog-mode-hook . rainbow-delimiters-mode))
 
 (use-package eyebrowse
   :config
@@ -218,16 +192,3 @@
   (define-key eyebrowse-mode-map (kbd "M-9") 'eyebrowse-switch-to-window-config-9)
   (eyebrowse-mode t)
   (setq eyebrowse-new-workspace t))
-
-(setq mu4e-contexts
- `( ,(make-mu4e-context
-     :name "Gmail"
-     :match-func (lambda (msg) (when msg
-       (string-prefix-p "/Gmail" (mu4e-message-field msg :maildir))))
-     :vars '(
-       (mu4e-trash-folder . "/Gmail/[Gmail].Trash")
-       (mu4e-refile-folder . "/Gmail/[Gmail].Archive")
-       ))
-    ))
-
-;; Hooks
