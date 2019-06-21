@@ -158,7 +158,7 @@
   ((find-file-hook after-revert-hook) . doom-buffer-mode-maybe)
   (ediff-prepare-buffer-hook . doom-buffer-mode)
   (minibuffer-setup-hook . doom-brighten-minibuffer)
-  :config
+  :init
   (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
 	doom-themes-enable-italic t  ; if nil, italics is universally disabled
 
