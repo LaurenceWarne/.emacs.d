@@ -11,11 +11,16 @@
 ;; emacs 25 makes me add this
 ;(package-initialize)
 
-(add-to-list 'load-path "~/.emacs.d/lisp")
-;Set custom file, prevent init.el file pollution. 
-(setq custom-file "lisp/custom.el")
+; I split up emacs customization & initialization into smaller thematic files
+(defvar custom-init-files-directory
+  (concat user-emacs-directory "lisp/")
+  "Directory which contains files loaded on initiliazation by init.el.")
 
-;; Split into separate files for maintenence
+(add-to-list 'load-path custom-init-files-directory)
+; Set custom file, prevent init.el file pollution.
+(setq custom-file (concat custom-init-files-directory "custom.el"))
+
+;; Load the seperate files
 (condition-case e
     (load "global-minor-mode-init")
   (error (message "error on loading global-minor-mode-init: %s"
