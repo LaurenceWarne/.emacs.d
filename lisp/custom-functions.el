@@ -22,11 +22,9 @@
 
 (defun lw-copy-text-to-next-line ()
   (interactive)
-  (progn
-    (setq contents-of-line (thing-at-point 'line t))
-    ; Remove newline if it exists
-    (if (equal "\n" (substring contents-of-line -1))
-	(setq contents-of-line (substring contents-of-line 0 -1)))
+  (let ((contents-of-line (buffer-substring-no-properties
+       (line-beginning-position)
+       (line-end-position))))
     (end-of-line)
     (open-line 1)
     (next-line)

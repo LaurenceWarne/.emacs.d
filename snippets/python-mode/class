@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: class
+# key: cla
+# --
+class $1:
+    """
+    $2
+    """
+    def __init__(self, $3):
+        $0
