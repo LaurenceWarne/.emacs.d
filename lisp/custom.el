@@ -1,3 +1,9 @@
+;;;; custom.el -- emacs custom file
+;;; Commentary:
+
+;; 
+
+;;;; Code:
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.

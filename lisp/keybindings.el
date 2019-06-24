@@ -1,3 +1,17 @@
+;;;; keybindings.el -- installs/initializes packages
+;;; Commentary:
+
+;; Here we set global keybindings, and local keybindings for vanilla
+;; emacs packages. For local keybindings for external packages see
+;; package-init.el. Check keybindings active in the current buffer with
+;; <C-h b>
+;; See:
+;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Keymaps.html
+
+;;;; Code:
+
+;;; Global keybindings
+
 (global-set-key (kbd "C-:") 'avy-goto-char)
 (global-set-key (kbd "C-;") 'avy-goto-char-2)
 (global-set-key (kbd "C-,") 'beginning-of-buffer)
@@ -18,7 +32,9 @@
 (global-set-key (kbd "M-n") 'lw-forward-brace)
 (global-set-key (kbd "M-p") 'lw-backward-brace)
 
-; Counter those annoying additional org hooks
+;;; Local keybindings
+
+;; Counter those annoying additional org hooks
 (add-hook 'org-mode-hook
           (lambda ()
 	    (local-set-key (kbd "C-,") nil)
@@ -32,6 +48,6 @@
 
 (add-hook 'java-mode-hook
           (lambda ()
-	    (local-set-key (kbd "M-j") nil)  ;; Will now default to global map
+	    (local-set-key (kbd "M-j") nil)  ; Will now default to global map
 	    (local-set-key (kbd "C-j") nil)
 	    (local-set-key (kbd "C-j") 'helm-projectile)))

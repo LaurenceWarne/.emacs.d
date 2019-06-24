@@ -1,3 +1,15 @@
+;;;; package-init.el -- installs/initializes packages
+;;; Commentary:
+
+;; Use use-package to install and configure packages in a readable way.
+;; See:
+;; https://github.com/jwiegley/use-package
+;; https://jwiegley.github.io/use-package/keywords/
+
+;;;; Code:
+
+;;; Add repositories
+
 ;; Add melpa repository
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
@@ -21,12 +33,11 @@
 ;; lsp recommends we do this for some reason
 (require 'cc-mode)
 
+
+;;; Use package declarations
+
 ;; Install all packages if not already installed (use-package must still be called)
 (setq use-package-always-ensure t)
-
-;; see
-;;https://github.com/jwiegley/use-package
-;;https://jwiegley.github.io/use-package/keywords/
 
 ;; This package does what you think it does
 (use-package auto-package-update

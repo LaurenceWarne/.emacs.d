@@ -1,3 +1,11 @@
+;;;; custom-functions.el -- useful interactive functions
+;;; Commentary:
+
+;; Functions made by me! All are prefixed by lw- for namespacing
+
+;;;; Code:
+
+
 (defun lw-backward-brace ()
   (interactive)
   (progn

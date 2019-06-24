@@ -1,17 +1,16 @@
-;;; init.el -- my init file
+;;;; init.el -- my init file
 ;;; Commentary:
 
 ;; See:
 ;; https://github.com/baron42bba/.emacs.d/blob/master/bba.org
 ;; https://github.com/sachac/.emacs.d/blob/gh-pages/Sacha.org
 
-;;; Code:
-
+;;;; Code:
 
 ;; emacs 25 makes me add this
 ;(package-initialize)
 
-; I split up emacs customization & initialization into smaller thematic files
+; Split up emacs customization & initialization into smaller thematic files
 (defvar custom-init-files-directory
   (concat user-emacs-directory "lisp/")
   "Directory which contains files loaded on initiliazation by init.el.")
