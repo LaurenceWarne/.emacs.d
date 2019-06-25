@@ -29,8 +29,7 @@
 (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
 (global-set-key (kbd "S-C-<down>") 'shrink-window)
 (global-set-key (kbd "S-C-<up>") 'enlarge-window)
-(global-set-key (kbd "M-n") 'lw-forward-brace)
-(global-set-key (kbd "M-p") 'lw-backward-brace)
+(global-set-key (kbd "M-n") 'newline-and-indent-ignoring-current-line)
 
 ;;; Local keybindings
 
