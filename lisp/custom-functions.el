@@ -23,7 +23,7 @@
     (forward-char)))
 
 (defun lw-copy-text-to-next-line ()
-  "Create a new line below the current line with the same contents as the current line. Does not affect the kill-ring."
+  "Create a new line below the current line with the same contents as the current line. Does not affect the kill ring."
   (interactive)
   (let ((contents-of-line (buffer-substring-no-properties
        (line-beginning-position)

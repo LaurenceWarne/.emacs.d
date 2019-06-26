@@ -203,3 +203,7 @@
   (define-key eyebrowse-mode-map (kbd "M-9") 'eyebrowse-switch-to-window-config-9)
   (eyebrowse-mode t)
   (setq eyebrowse-new-workspace t))
+
+;; See:
+;; https://github.com/Malabarba/camcorder.el
+(use-package camcorder)
