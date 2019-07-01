@@ -127,6 +127,9 @@
 
 (use-package groovy-mode
   :commands groovy-mode
+  :bind
+  ;; Project integration as we mostly use groovy for gradle config
+  ("C-j" . helm-projectile)
   :init (add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode)))
 
 (use-package speed-type
