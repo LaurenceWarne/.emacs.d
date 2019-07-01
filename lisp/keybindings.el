@@ -49,4 +49,5 @@
           (lambda ()
 	    (local-set-key (kbd "M-j") nil)  ; Will now default to global map
 	    (local-set-key (kbd "C-j") nil)
+	    (local-set-key (kbd ";") nil)
 	    (local-set-key (kbd "C-j") 'helm-projectile)))

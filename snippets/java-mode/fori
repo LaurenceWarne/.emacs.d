@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: fori
+# key: f
+# --
+for (int ${1:`(if (equal (line-number-at-pos) 1) "i" (let* ((all-lines (split-string (buffer-string) "\n"))(prev-line (nth (- (line-number-at-pos) 2) all-lines)))(cond((string-match-p "for (int i =" prev-line) "j") ((string-match-p "for (int j =" prev-line) "k")(t "i")))))`} = $2; $1 < $3; $1++){
+    $0
+}

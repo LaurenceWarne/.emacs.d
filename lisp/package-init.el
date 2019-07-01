@@ -155,8 +155,11 @@
   :config
   ;; Do we need to start the server (if not already running) here as well?
   (add-hook 'java-mode-hook 'lsp)
+  (add-hook 'java-mode-hook (lambda ()
+			      (add-hook 'before-save-hook 'lsp-java-organize-imports nil 'local)))
   (setq lsp-java-vmargs
-  	'("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.16.20/ac76d9b956045631d1561a09289cbf472e077c01/lombok-1.16.20.jar" "-Xbootclasspath/a:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.16.20/ac76d9b956045631d1561a09289cbf472e077c01/lombok-1.16.20.jar")))
+	;; Needs lombok in the gradle cache
+  	'("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.2/524e0a697e9d62950b2f763d88d35cd8dc82a9a1/lombok-1.18.2.jar" "-Xbootclasspath/a:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.2/524e0a697e9d62950b2f763d88d35cd8dc82a9a1/lombok-1.18.2.jar")))
 
 (use-package helm-lsp
   :after lsp helm)
