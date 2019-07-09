@@ -44,6 +44,7 @@
   :config
   (setq auto-package-update-delete-old-versions t)
   (setq auto-package-update-hide-results t)
+  (setq auto-package-update-prompt-before-update t)
   (auto-package-update-maybe))
 
 (use-package ace-window
@@ -162,7 +163,8 @@
 			      (add-hook 'before-save-hook 'lsp-java-organize-imports nil 'local)))
   (setq lsp-java-vmargs
 	;; Needs lombok in the gradle cache
-  	'("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.2/524e0a697e9d62950b2f763d88d35cd8dc82a9a1/lombok-1.18.2.jar" "-Xbootclasspath/a:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.2/524e0a697e9d62950b2f763d88d35cd8dc82a9a1/lombok-1.18.2.jar")))
+  	'("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.8/448003bc1b234aac04b58e27d7755c12c3ec4236/lombok-1.18.8.jar" "-Xbootclasspath/a:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.8/448003bc1b234aac04b58e27d7755c12c3ec4236/lombok-1.18.8.jar"))
+  (setq tab-width 4))
 
 (use-package helm-lsp
   :after lsp helm)

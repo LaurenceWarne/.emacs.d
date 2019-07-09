@@ -48,3 +48,30 @@
   (interactive)
   (end-of-line)
   (newline-and-indent))
+
+(defun lw-java-goto-test(&optional other-buffer)
+  "Attempt to jump to the test file corresponding to the java file in the current buffer."
+  (interactive)
+  (let* ((test-dir (replace-regexp-in-string "/main/" "/test/" (buffer-file-name)))
+	 (test-file (replace-regexp-in-string "\.java$" "Test.java" test-dir)))
+    (if other-buffer
+	(progn
+	  (other-buffer) (find-file-at-point test-file) (other-buffer))
+      (find-file-at-point test-file))))
+
+(defun lw-java-goto-implementation(&optional other-buffer)
+  "Attempt to jump to the implementation file corresponding to the java file in the current buffer."
+  (interactive)
+  (let* ((main-dir (replace-regexp-in-string "/test/" "/main/" (buffer-file-name)))
+	 (main-file (replace-regexp-in-string "Test\.java$" ".java" main-dir)))
+    (if other-buffer
+	(progn
+	  (other-buffer) (find-file-at-point main-file) (other-buffer))
+      (find-file-at-point main-file))))
+
+(defun lw-java-toggle-test-implementation(&optional other-buffer)
+  "Goto test file if in implementation file, and implementation file if in a test file."
+  (interactive)
+  (if (string-match ".*/main/.*" (buffer-file-name))
+      (lw-java-goto-test other-buffer)
+    (lw-java-goto-implementation other-buffer)))
