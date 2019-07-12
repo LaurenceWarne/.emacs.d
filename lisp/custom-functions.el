@@ -36,11 +36,14 @@
     (end-of-line)))
 
 (defun lw-unix-line-discard()
-  (interactive))
+  (interactive)
+  (back-to-indentation)
+  (kill-line))
 
 (defun lw-switch-to-last-buffer()
   "Switch to buffer returned by (other-buffer)."
   (interactive)
+  ;; Check here if line is empty
   (switch-to-buffer nil))
 
 (defun newline-and-indent-ignoring-current-line()
@@ -75,3 +78,32 @@
   (if (string-match ".*/main/.*" (buffer-file-name))
       (lw-java-goto-test other-buffer)
     (lw-java-goto-implementation other-buffer)))
+
+(defun lw-copy-to-next-line-region ()
+  (interactive)
+  (let* ((mark-start (region-beginning))
+	 (mark-end (region-end))
+	 (region-string (buffer-substring-no-properties mark-start mark-end)))
+    (end-of-line)
+    ;; If we are not already on a new line, create a new line
+    (let ((contents-of-line (buffer-substring-no-properties
+			     (line-beginning-position)
+			     (line-end-position))))
+      (when (not (string-match "^$" contents-of-line))
+	  (newline)))
+    (insert region-string)
+    (goto-char mark-end)
+    ;; There's an issue here with the marked region going invisible even with
+    ;; Transient-Mark mode active
+    (set-mark-command mark-start)))
+
+(defun lw-copy-to-next-line-region-or-text ()
+  (interactive)
+  (if (use-region-p)
+      (lw-copy-to-next-line-region)
+    (lw-copy-text-to-next-line)))
+
+(defun lw-test ()
+  (if (looking-at "$")
+      (message "match!")
+    (message "no match!"))
