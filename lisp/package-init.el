@@ -51,9 +51,14 @@
   :config
   (bind-key "M-o" 'ace-window))
 
+;; NOTE:
+;; for this package to work you need to run:
+;; $ pip3 install jedi flake8 autopep8 black yapf --user
+;; See:
+;; https://github.com/jorgenschaefer/elpy
 (use-package elpy
   ;; Enable Elpy in all future Python buffers.
-  :init (add-hook 'python-mode-hook #'elpy-enable)
+  :init (elpy-enable)
   :config (setq elpy-rpc-python-command "python3"))
 
 (use-package avy
@@ -119,18 +124,21 @@
          ("C-h w" . helm-descbinds)))
 
 (use-package company
-  :config)
-  ;(add-hook 'after-init-hook 'global-company-mode))
+  :config
+  ;; We usually want make sure we have appropriate backends before enabling
+  (add-hook 'emacs-lisp-mode-hook 'company-mode))
 
-(use-package flycheck)
+(use-package flycheck
+  ;; Don't use :hook here as that defers loading until flycheck is called
+  :config (add-hook 'emacs-lisp-mode-hook 'flycheck-mode))
 
 (use-package hydra)
 
 (use-package groovy-mode
   :commands groovy-mode
-  :bind
   ;; Project integration as we mostly use groovy for gradle config
-  ("C-j" . helm-projectile)
+  :bind (:map groovy-mode-map
+			  ("C-j" . helm-projectile))
   :init (add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode)))
 
 (use-package speed-type
@@ -156,7 +164,11 @@
 
 (use-package lsp-java
   :after lsp
+  :hook ('java-mode-hook . (lambda ()
+							 (add-hook 'before-save-hook 'lsp-java-organize-imports nil 'local)))
   :config
+  (setq lsp-java-format-comments-enabled nil)
+  (setq lsp-java-format-on-type-enabled nil)
   ;; Do we need to start the server (if not already running) here as well?
   (add-hook 'java-mode-hook 'lsp)
   (add-hook 'java-mode-hook (lambda ()
@@ -212,6 +224,8 @@
   (eyebrowse-mode t)
   (setq eyebrowse-new-workspace t))
 
-;; See:
 ;; https://github.com/Malabarba/camcorder.el
 (use-package camcorder)
+
+;; https://github.com/purcell/package-lint
+(use-package package-lint)
