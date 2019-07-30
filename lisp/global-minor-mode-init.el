@@ -75,3 +75,4 @@
 (define-key nxml-mode-map (kbd "C-c e") 'hs-toggle-hiding)
 (define-key nxml-mode-map (kbd "C-c C-e") 'hs-toggle-hiding)
 
+(add-hook 'emacs-lisp-mode-hook (lambda () electric-pair-mode -1))

@@ -79,12 +79,17 @@
 
 (use-package smartparens
   :demand t
-  :config)
+  :bind (:map smartparens-mode-map
+	      ;; Unfortunately can't bind C-[ here as it's bound to ESC
+	      ("M-[" . 'sp-backward-sexp)
+	      ("M-]" . 'sp-forward-sexp))
+  :config
+  (add-hook 'emacs-lisp-mode-hook 'smartparens-mode))
   ;(smartparens-global-mode 1))
 
 (use-package projectile
   :config
-  (projectile-global-mode 1))
+  (projectile-mode 1))
 
 ;; See http://tuhdo.github.io/helm-projectile.html
 (use-package helm
@@ -97,8 +102,8 @@
   ("M-x" . 'helm-M-x)
   :config
   (helm-mode 1)
-  ;; Makes helm-boring-file-regexp-list act as a .gitignore 
-  (setq helm-ff-skip-boring-files t)  
+  ;; Makes helm-boring-file-regexp-list act as a .gitignore
+  (setq helm-ff-skip-boring-files t)
   (define-key helm-map (kbd "C-,") 'helm-beginning-of-buffer)
   (define-key helm-map (kbd "C-.") 'helm-end-of-buffer))
 
@@ -106,8 +111,8 @@
   :after helm
   :config
   (helm-flx-mode +1)
-  (setq helm-flx-for-helm-find-files t ;; t by default
-  	helm-flx-for-helm-locate t)) ;; nil by default
+  (setq helm-flx-for-helm-find-files t ; t by default
+  	helm-flx-for-helm-locate t))   ; nil by default
 
 (use-package helm-projectile
   :after (helm projectile)
@@ -164,8 +169,6 @@
 
 (use-package lsp-java
   :after lsp
-  :hook ('java-mode-hook . (lambda ()
-							 (add-hook 'before-save-hook 'lsp-java-organize-imports nil 'local)))
   :config
   (setq lsp-java-format-comments-enabled nil)
   (setq lsp-java-format-on-type-enabled nil)
@@ -208,7 +211,8 @@
   (solaire-mode-swap-bg))
             
 (use-package rainbow-delimiters
-  :hook (prog-mode-hook . rainbow-delimiters-mode))
+  :config
+  (add-hook 'emacs-elisp-mode-hook 'rainbow-delimiters-mode))
 
 (use-package eyebrowse
   :config
@@ -225,7 +229,8 @@
   (setq eyebrowse-new-workspace t))
 
 ;; https://github.com/Malabarba/camcorder.el
-(use-package camcorder)
+(use-package camcorder
+  :commands camcorder-mode)
 
 ;; https://github.com/purcell/package-lint
 (use-package package-lint)

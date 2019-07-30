@@ -102,8 +102,3 @@
   (if (use-region-p)
       (lw-copy-to-next-line-region)
     (lw-copy-text-to-next-line)))
-
-(defun lw-test ()
-  (if (looking-at "$")
-      (message "match!")
-    (message "no match!"))
