@@ -62,8 +62,10 @@
   :config (setq elpy-rpc-python-command "python3"))
 
 (use-package avy
-  ;; Creates autoloads for those commands which defers loading of the module until they are used
-  :commands (avy-goto-char avy-goto-char-2)
+  ;; This does two things: first, it creates an autoload for the avy-goto-char commands and defers loading of avy until you actually use it. Second, it binds the key C-: to that command.
+  :bind
+  ("C-:" . 'avy-goto-char)
+  ("C-;" . 'avy-goto-char-2)
   :config
   (setq avy-keys-alist
       `((avy-goto-char-2 . (?a ?s ?d ?f ?j ?k ?l)))))

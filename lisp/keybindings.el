@@ -12,8 +12,6 @@
 
 ;;; Global keybindings
 
-(global-set-key (kbd "C-:") 'avy-goto-char)
-(global-set-key (kbd "C-;") 'avy-goto-char-2)
 (global-set-key (kbd "C-,") 'beginning-of-buffer)
 (global-set-key (kbd "M-j") 'lw-switch-to-last-buffer)
 (global-set-key (kbd "C-.") 'end-of-buffer)
@@ -30,6 +28,7 @@
 (global-set-key (kbd "S-C-<down>") 'shrink-window)
 (global-set-key (kbd "S-C-<up>") 'enlarge-window)
 (global-set-key (kbd "M-n") 'newline-and-indent-ignoring-current-line)
+(global-set-key (kbd "M-;") 'eval-expression)
 
 ;;; Local keybindings
 
