@@ -102,12 +102,15 @@
   ("C-j" . 'helm-mini)
   ("C-x b" . 'helm-buffers-list)
   ("M-x" . 'helm-M-x)
+  ("C-s" . 'helm-occur)
   :config
   (helm-mode 1)
   ;; Makes helm-boring-file-regexp-list act as a .gitignore
   (setq helm-ff-skip-boring-files t)
   (define-key helm-map (kbd "C-,") 'helm-beginning-of-buffer)
-  (define-key helm-map (kbd "C-.") 'helm-end-of-buffer))
+  (define-key helm-map (kbd "C-.") 'helm-end-of-buffer)
+  (define-key helm-occur-map (kbd "C-s") 'helm-next-line)
+  (define-key helm-occur-map (kbd "C-r") 'helm-previous-line))
 
 (use-package helm-flx
   :after helm
@@ -126,9 +129,10 @@
   (setq projectile-completion-system 'helm))
 
 (use-package helm-descbinds
+  :after helm
   :defer t
   :bind (("C-h b" . helm-descbinds)
-         ("C-h w" . helm-descbinds)))
+	 ("C-h w" . helm-descbinds)))
 
 (use-package company
   :config
