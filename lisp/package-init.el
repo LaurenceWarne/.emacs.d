@@ -93,7 +93,6 @@
   :config
   (projectile-mode 1))
 
-;; See http://tuhdo.github.io/helm-projectile.html
 (use-package helm
   :demand t
   :bind
@@ -110,7 +109,9 @@
   (define-key helm-map (kbd "C-,") 'helm-beginning-of-buffer)
   (define-key helm-map (kbd "C-.") 'helm-end-of-buffer)
   (define-key helm-occur-map (kbd "C-s") 'helm-next-line)
-  (define-key helm-occur-map (kbd "C-r") 'helm-previous-line))
+  (define-key helm-occur-map (kbd "C-r") 'helm-previous-line)
+  (require 'org)
+  (define-key org-mode-map (kbd "C-j") 'helm-mini))
 
 (use-package helm-flx
   :after helm
@@ -120,13 +121,13 @@
   	helm-flx-for-helm-locate t))   ; nil by default
 
 (use-package helm-projectile
-  :after (helm projectile)
-  :defer t
-  :init
-  (autoload 'helm-projectile "helm-projectile" nil t)
+  :after (helm projectile groovy-mode)
   :config
   (helm-projectile-on)
-  (setq projectile-completion-system 'helm))
+  (setq projectile-completion-system 'helm)
+  (define-key java-mode-map (kbd "C-j") 'helm-projectile)
+  ;; Project integration as we mostly use groovy for gradle config
+  (define-key groovy-mode-map (kbd "C-j") 'helm-projectile))
 
 (use-package helm-descbinds
   :after helm
@@ -146,17 +147,14 @@
 (use-package hydra)
 
 (use-package groovy-mode
-  :commands groovy-mode
-  ;; Project integration as we mostly use groovy for gradle config
-  :bind (:map groovy-mode-map
-			  ("C-j" . helm-projectile))
   :init (add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode)))
 
 (use-package speed-type
   :commands (speed-type-text speed-type-region speed-type-buffer))
 
 (use-package goto-last-change
-  :commands goto-last-change)
+  :bind
+  ("C-'" . 'goto-last-change))
 
 (use-package java-snippets
   :after yasnippet)
