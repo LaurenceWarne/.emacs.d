@@ -39,6 +39,12 @@
 ;; Install all packages if not already installed (use-package must still be called)
 (setq use-package-always-ensure t)
 
+;; https://github.com/dholm/benchmark-init-el
+(use-package benchmark-init
+  :config
+  ;; To disable collection of benchmark data after init is done.
+  (add-hook 'after-init-hook 'benchmark-init/deactivate))
+
 ;; This package does what you think it does
 (use-package auto-package-update
   :config
