@@ -1,25 +1,23 @@
 ;;;; init.el -- my init file
 ;;; Commentary:
 
-;; See:
+;; For inspiration see:
 ;; https://github.com/baron42bba/.emacs.d/blob/master/bba.org
 ;; https://github.com/sachac/.emacs.d/blob/gh-pages/Sacha.org
 
 ;;;; Code:
 
-;; emacs 25 makes me add this
-;(package-initialize)
-
-; Split up emacs customization & initialization into smaller thematic files
-(defvar custom-init-files-directory
+;; Split up emacs customization & initialization into smaller thematic files
+(defvar lw-custom-init-files-directory
   (concat user-emacs-directory "lisp/")
-  "Directory which contains files loaded on initiliazation by init.el.")
+  "Directory which contains custom user elisp files loaded by init.el.")
 
-(add-to-list 'load-path custom-init-files-directory)
-; Set custom file, prevent init.el file pollution.
-(setq custom-file (concat custom-init-files-directory "custom.el"))
+(add-to-list 'load-path lw-custom-init-files-directory)
+;; Set custom file, prevent init.el file pollution.
+(setq custom-file (concat lw-custom-init-files-directory "custom.el"))
 
-;; Load the seperate files
+;;; File loading
+
 (condition-case e
     (load "global-minor-mode-init")
   (error (message "error on loading global-minor-mode-init: %s"
