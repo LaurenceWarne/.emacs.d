@@ -184,6 +184,10 @@
   (setq lsp-java-format-on-type-enabled nil)
   ;; Do we need to start the server (if not already running) here as well?
   (add-hook 'java-mode-hook 'lsp)
+  (add-hook
+   'java-mode-hook
+   (lambda ()
+     (add-hook 'before-save-hook 'lsp-java-organize-imports nil 'local)))
   (setq lsp-java-vmargs
 	;; Needs lombok in the gradle cache
   	'("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.8/448003bc1b234aac04b58e27d7755c12c3ec4236/lombok-1.18.8.jar" "-Xbootclasspath/a:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.8/448003bc1b234aac04b58e27d7755c12c3ec4236/lombok-1.18.8.jar"))
