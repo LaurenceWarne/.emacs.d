@@ -126,14 +126,18 @@
   (setq helm-flx-for-helm-find-files t ; t by default
   	helm-flx-for-helm-locate t))   ; nil by default
 
+(use-package helm-ag)
+
 (use-package helm-projectile
-  :after (helm projectile groovy-mode)
+  :after (helm projectile helm-ag groovy-mode)
   :config
   (helm-projectile-on)
   (setq projectile-completion-system 'helm)
   (define-key java-mode-map (kbd "C-j") 'helm-projectile)
+  (define-key java-mode-map (kbd "M-q") 'helm-projectile-ag)
   ;; Project integration as we mostly use groovy for gradle config
-  (define-key groovy-mode-map (kbd "C-j") 'helm-projectile))
+  (define-key groovy-mode-map (kbd "C-j") 'helm-projectile)
+  (define-key groovy-mode-map (kbd "M-q") 'helm-projectile-ag))
 
 (use-package helm-descbinds
   :after helm
