@@ -258,3 +258,17 @@
 (use-package jdoc-jumper
   :commands jdoc-jumper-jump-from-point
   :load-path "~/projects/jdoc-jumper")
+
+;; https://github.com/politza/pdf-tools/blob/master/README.org
+(use-package pdf-tools
+  :config
+  (pdf-loader-install)
+  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
+  (set-face-attribute 'pdf-isearch-lazy nil
+		      :inherit 'lazy-highlight
+		      :foreground "black"
+		      :background "grey")
+  (set-face-attribute 'pdf-isearch-match nil
+		      :inherit 'isearch
+		      :foreground "white"
+		      :background "black"))
