@@ -126,7 +126,10 @@
   (setq helm-flx-for-helm-find-files t ; t by default
   	helm-flx-for-helm-locate t))   ; nil by default
 
-(use-package helm-ag)
+(use-package helm-ag
+  :after helm
+  :config
+  (define-key java-mode-map (kbd "M-s") 'helm-ag-edit))
 
 (use-package helm-projectile
   :after (helm projectile helm-ag groovy-mode)
@@ -250,3 +253,8 @@
 
 ;; https://github.com/purcell/package-lint
 (use-package package-lint)
+
+;; https://github.com/LaurenceWarne/jdoc-jumper
+(use-package jdoc-jumper
+  :commands jdoc-jumper-jump-from-point
+  :load-path "~/projects/jdoc-jumper")
