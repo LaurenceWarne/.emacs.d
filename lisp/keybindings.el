@@ -28,10 +28,12 @@
 (global-set-key (kbd "S-C-<up>") 'enlarge-window)
 (global-set-key (kbd "M-n") 'newline-and-indent-ignoring-current-line)
 (global-set-key (kbd "M-;") 'eval-expression)
+(global-set-key (kbd "M-'") 'mark-word)
+(global-set-key (kbd "M-@") 'abbrev-prefix-mark)
 
 ;;; Local keybindings
 
-;; Counter those annoying additional org hooks
+;; Counter those annoying org keybindings
 (add-hook 'org-mode-hook
           (lambda ()
             (local-set-key (kbd "C-,") 'beginning-of-buffer)

@@ -72,6 +72,8 @@
   :bind
   ("C-:" . 'avy-goto-char)
   ("C-;" . 'avy-goto-char-2)
+  ("C-#" . 'avy-copy-region)
+  ("M-#" . 'avy-copy-line)
   :config
   (setq avy-keys-alist
       `((avy-goto-char-2 . (?a ?s ?d ?f ?j ?k ?l)))))
@@ -112,6 +114,7 @@
   (helm-mode 1)
   ;; Makes helm-boring-file-regexp-list act as a .gitignore
   (setq helm-ff-skip-boring-files t)
+  (setq helm-M-x-fuzzy-match t)
   (define-key helm-map (kbd "C-,") 'helm-beginning-of-buffer)
   (define-key helm-map (kbd "C-.") 'helm-end-of-buffer)
   (define-key helm-occur-map (kbd "C-s") 'helm-next-line)
