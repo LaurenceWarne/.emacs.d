@@ -117,6 +117,8 @@
   (setq helm-M-x-fuzzy-match t)
   (define-key helm-map (kbd "C-,") 'helm-beginning-of-buffer)
   (define-key helm-map (kbd "C-.") 'helm-end-of-buffer)
+  (define-key helm-map (kbd "C-k") 'helm-buffer-run-kill-buffers)
+  (define-key helm-map (kbd "M-D") 'helm-delete-minibuffer-contents)
   (define-key helm-occur-map (kbd "C-s") 'helm-next-line)
   (define-key helm-occur-map (kbd "C-r") 'helm-previous-line)
   (require 'org)
@@ -275,3 +277,16 @@
 		      :inherit 'isearch
 		      :foreground "white"
 		      :background "black"))
+
+;; https://github.com/anwyn/slime-company
+(use-package slime-company
+  ;; We have to call this before slime is loaded:
+  ;; https://github.com/anwyn/slime-company/issues/11
+  :init
+  (slime-setup '(slime-fancy slime-company)))
+
+(use-package slime
+  :config
+  ;; Set your lisp system and, optionally, some contribs
+  (setq inferior-lisp-program "/usr/local/bin/sbcl")
+  (setq slime-contribs '(slime-fancy)))
