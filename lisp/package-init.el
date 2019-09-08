@@ -290,3 +290,23 @@
   ;; Set your lisp system and, optionally, some contribs
   (setq inferior-lisp-program "/usr/local/bin/sbcl")
   (setq slime-contribs '(slime-fancy)))
+
+(use-package steam
+  :load-path "~/projects/steam.el"
+  :config
+  (setq steam-username "39422361280608732623190235")
+  (setq org-startup-with-inline-images t))
+
+(use-package beacon
+  :config
+  (beacon-mode 1))
+
+;; ;; http://danmidwood.com/content/2014/11/21/animated-paredit.html
+;; (use-package paredit
+;;   :hook
+;;   ('lisp-mode-hook 'paredit-mode)
+;;   :bind (:map paredit-mode-map
+;; 	      ("C-0" . 'paredit-forward-slurp-sexp)
+;; 	      ("C-9" . 'paredit-backward-slurp-sexp))
+;;   :config
+;;   (add-hook 'lisp-mode-hook #'enable-paredit-mode))
