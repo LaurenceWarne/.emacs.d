@@ -39,12 +39,6 @@
 ;; Install all packages if not already installed (use-package must still be called)
 (setq use-package-always-ensure t)
 
-;; https://github.com/dholm/benchmark-init-el
-(use-package benchmark-init
-  :config
-  ;; To disable collection of benchmark data after init is done.
-  (add-hook 'after-init-hook 'benchmark-init/deactivate))
-
 ;; This package does what you think it does
 (use-package auto-package-update
   :config
@@ -300,6 +294,24 @@
 (use-package beacon
   :config
   (beacon-mode 1))
+
+;; Requires shellcheck:
+;; https://github.com/koalaman/shellcheck
+;; https://github.com/federicotdn/flymake-shellcheck
+(use-package flymake-shellcheck
+  :commands flymake-shellcheck-load
+  :init
+  (add-hook 'sh-mode-hook 'flymake-shellcheck-load)
+  (add-hook 'sh-mode-hook 'flymake-mode))
+
+(use-package esup
+  :commands esup)
+
+(use-package lorem-ipsum
+  :commands
+  (lorem-ipsum-insert-sentences
+   lorem-ipsum-insert-paragraphs
+   lorem-ipsum-insert-list))
 
 ;; ;; http://danmidwood.com/content/2014/11/21/animated-paredit.html
 ;; (use-package paredit
