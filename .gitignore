@@ -61,3 +61,4 @@ eclipse.jdt.ls/*
 .lsp-session*
 .last-package-update-day
 network-security.data
+request/

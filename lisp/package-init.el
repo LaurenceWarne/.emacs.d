@@ -304,6 +304,8 @@
   (add-hook 'sh-mode-hook 'flymake-shellcheck-load)
   (add-hook 'sh-mode-hook 'flymake-mode))
 
+;; The emacs startup profiler
+;; https://github.com/jschaf/esup
 (use-package esup
   :commands esup)
 
@@ -313,12 +315,14 @@
    lorem-ipsum-insert-paragraphs
    lorem-ipsum-insert-list))
 
-;; ;; http://danmidwood.com/content/2014/11/21/animated-paredit.html
-;; (use-package paredit
-;;   :hook
-;;   ('lisp-mode-hook 'paredit-mode)
-;;   :bind (:map paredit-mode-map
-;; 	      ("C-0" . 'paredit-forward-slurp-sexp)
-;; 	      ("C-9" . 'paredit-backward-slurp-sexp))
-;;   :config
-;;   (add-hook 'lisp-mode-hook #'enable-paredit-mode))
+;; https://github.com/millejoh/emacs-ipython-notebook
+(use-package ein)
+
+;; http://danmidwood.com/content/2014/11/21/animated-paredit.html
+(use-package paredit
+  :bind (:map paredit-mode-map
+	      ("C-0" . 'paredit-forward-slurp-sexp)
+	      ("C-9" . 'paredit-backward-slurp-sexp))
+  :config
+  (add-hook 'lisp-mode-hook #'enable-paredit-mode))
+
