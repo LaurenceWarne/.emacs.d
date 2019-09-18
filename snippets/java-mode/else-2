@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: else-2
+# key: el
+# --
+else {
+     $0
+}
