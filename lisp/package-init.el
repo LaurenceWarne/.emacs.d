@@ -263,6 +263,8 @@
   :config
   (pdf-loader-install)
   (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
+  (define-key pdf-view-mode-map (kbd "C-,") 'pdf-view-first-page)
+  (define-key pdf-view-mode-map (kbd "C-.") 'pdf-view-last-page)
   (set-face-attribute 'pdf-isearch-lazy nil
 		      :inherit 'lazy-highlight
 		      :foreground "black"
@@ -283,7 +285,9 @@
   :config
   ;; Set your lisp system and, optionally, some contribs
   (setq inferior-lisp-program "/usr/local/bin/sbcl")
-  (setq slime-contribs '(slime-fancy)))
+  (setq slime-contribs '(slime-fancy))
+  (define-key slime-repl-mode-map (kbd "M-,") 'slime-describe-symbol)
+  (define-key slime-repl-mode-map (kbd "C-c C-d C-d") 'slime-pop-find-definition-stack))
 
 (use-package steam
   :load-path "~/projects/steam.el"
@@ -324,7 +328,8 @@
 	      ("C-0" . 'paredit-forward-slurp-sexp)
 	      ("C-9" . 'paredit-backward-slurp-sexp))
   :config
-  (add-hook 'lisp-mode-hook #'enable-paredit-mode))
+  (add-hook 'lisp-mode-hook #'enable-paredit-mode)
+  (add-hook 'slime-repl-mode-hook #'enable-paredit-mode))
 
 ;; https://github.com/vermiculus/sx.el
 (use-package sx
@@ -344,3 +349,10 @@
   :config
   (require 'org)
   (define-key org-mode-map (kbd "M-r") #'helm-org-rifle-org-directory))
+
+;; https://github.com/Wilfred/helpful
+(use-package helpful
+  :bind
+  ("C-h f" . #'helpful-callable)
+  ("C-h v" . #'helpful-variable)
+  ("C-h k" . #'helpful-key))
