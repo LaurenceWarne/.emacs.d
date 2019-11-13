@@ -62,3 +62,4 @@ eclipse.jdt.ls/*
 .last-package-update-day
 network-security.data
 request/
+.sx/*
