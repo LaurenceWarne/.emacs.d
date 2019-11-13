@@ -265,6 +265,8 @@
   (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
   (define-key pdf-view-mode-map (kbd "C-,") 'pdf-view-first-page)
   (define-key pdf-view-mode-map (kbd "C-.") 'pdf-view-last-page)
+  (define-key pdf-view-mode-map (kbd "C--") 'pdf-view-shrink)
+  (define-key pdf-view-mode-map (kbd "C-=") 'pdf-view-enlarge)
   (set-face-attribute 'pdf-isearch-lazy nil
 		      :inherit 'lazy-highlight
 		      :foreground "black"
@@ -356,3 +358,6 @@
   ("C-h f" . #'helpful-callable)
   ("C-h v" . #'helpful-variable)
   ("C-h k" . #'helpful-key))
+
+;; https://magit.vc/
+(use-package magit)
