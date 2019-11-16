@@ -361,3 +361,8 @@
 
 ;; https://magit.vc/
 (use-package magit)
+
+;; https://github.com/syohex/emacs-zoom-window
+(use-package zoom-window
+  :config
+  (global-set-key (kbd "M-i") 'zoom-window-zoom))
