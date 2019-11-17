@@ -137,6 +137,10 @@
   (setq projectile-completion-system 'helm)
   (define-key java-mode-map (kbd "C-j") 'helm-projectile)
   (define-key java-mode-map (kbd "M-q") 'helm-projectile-ag)
+  (define-key python-mode-map (kbd "C-j") 'helm-projectile)
+  (define-key python-mode-map (kbd "M-q") 'helm-projectile-ag)
+  (define-key emacs-lisp-mode-map (kbd "C-j") 'helm-projectile)
+  (define-key emacs-lisp-mode-map (kbd "M-q") 'helm-projectile-ag)
   ;; Project integration as we mostly use groovy for gradle config
   (define-key groovy-mode-map (kbd "C-j") 'helm-projectile)
   (define-key groovy-mode-map (kbd "M-q") 'helm-projectile-ag))
