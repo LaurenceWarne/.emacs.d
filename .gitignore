@@ -63,3 +63,5 @@ eclipse.jdt.ls/*
 network-security.data
 request/
 .sx/*
+quelpa/**
+transient/**

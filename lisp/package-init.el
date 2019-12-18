@@ -47,6 +47,16 @@
   (setq auto-package-update-prompt-before-update t)
   (auto-package-update-maybe))
 
+;; https://github.com/quelpa/quelpa
+(use-package quelpa
+  :config
+  ;; https://github.com/quelpa/quelpa-use-package
+  (quelpa
+   '(quelpa-use-package
+     :fetcher git
+     :url "https://github.com/quelpa/quelpa-use-package.git"))
+  (require 'quelpa-use-package))
+
 (use-package ace-window
   :config
   (bind-key "M-o" 'ace-window))
@@ -165,8 +175,10 @@
 (use-package groovy-mode
   :init (add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode)))
 
+;; https://github.com/parkouss/speed-type
 (use-package speed-type
-  :commands (speed-type-text speed-type-region speed-type-buffer))
+  :commands (speed-type-code speed-type-text speed-type-region speed-type-buffer)
+  :load-path "~/projects/speed-type")
 
 (use-package goto-last-change
   :bind
