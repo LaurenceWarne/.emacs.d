@@ -164,7 +164,8 @@
 (use-package company
   :config
   ;; We usually want make sure we have appropriate backends before enabling
-  (add-hook 'emacs-lisp-mode-hook 'company-mode))
+  (add-hook 'emacs-lisp-mode-hook 'company-mode)
+  (add-hook 'ielm-mode-hook 'company-mode))
 
 (use-package flycheck
   ;; Don't use :hook here as that defers loading until flycheck is called
@@ -347,7 +348,8 @@
 	      ("C-9" . 'paredit-backward-slurp-sexp))
   :config
   (add-hook 'lisp-mode-hook #'enable-paredit-mode)
-  (add-hook 'slime-repl-mode-hook #'enable-paredit-mode))
+  (add-hook 'slime-repl-mode-hook #'enable-paredit-mode)
+  (add-hook 'ielm-mode-hook #'enable-paredit-mode))
 
 ;; https://github.com/vermiculus/sx.el
 (use-package sx
