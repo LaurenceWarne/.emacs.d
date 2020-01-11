@@ -384,3 +384,9 @@
 (use-package zoom-window
   :config
   (global-set-key (kbd "M-i") 'zoom-window-zoom))
+
+
+;; https://github.com/magnars/expand-region.el
+(use-package expand-region
+  :config
+  (global-set-key (kbd "M-'") 'er/expand-region))
