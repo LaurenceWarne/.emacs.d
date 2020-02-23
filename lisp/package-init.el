@@ -94,11 +94,12 @@
 (use-package smartparens
   :demand t
   :bind (:map smartparens-mode-map
-	      ;; Unfortunately can't bind C-[ here as it's bound to ESC
-	      ("M-[" . 'sp-backward-sexp)
-	      ("M-]" . 'sp-forward-sexp))
+	      ;; We use smartparens as a replacement for paredit in python buffers
+	      ("C-0" . 'sp-forward-slurp-sexp)
+	      ("C-9" . 'sp-forward-barf-sexp))
   :config
-  (add-hook 'emacs-lisp-mode-hook 'smartparens-mode))
+  (add-hook 'inferior-python-mode-hook #'smartparens-mode)
+  (add-hook 'python-mode-hook #'smartparens-mode))
   ;(smartparens-global-mode 1))
 
 (use-package projectile
@@ -213,7 +214,7 @@
      (add-hook 'before-save-hook 'lsp-java-organize-imports nil 'local)))
   (setq lsp-java-vmargs
 	;; Needs lombok in the gradle cache
-  	'("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.8/448003bc1b234aac04b58e27d7755c12c3ec4236/lombok-1.18.8.jar" "-Xbootclasspath/a:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.8/448003bc1b234aac04b58e27d7755c12c3ec4236/lombok-1.18.8.jar"))
+  	'("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.10/625fc0055674dff70dbc76efa36d0f2c89b04a24/lombok-1.18.10.jar" "-Xbootclasspath/a:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.10/625fc0055674dff70dbc76efa36d0f2c89b04a24/lombok-1.18.10.jar"))
   (setq tab-width 4))
 
 (use-package helm-lsp
@@ -247,7 +248,7 @@
             
 (use-package rainbow-delimiters
   :config
-  (add-hook 'emacs-elisp-mode-hook 'rainbow-delimiters-mode))
+  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
 
 (use-package eyebrowse
   :config
@@ -385,6 +386,11 @@
   :config
   (global-set-key (kbd "M-i") 'zoom-window-zoom))
 
+;; https://github.com/sebastiencs/company-box
+(use-package company-box
+  :hook (company-mode . company-box-mode)
+  :config
+  (setq company-box-icons-alist 'company-box-icons-all-the-icons))
 
 ;; https://github.com/magnars/expand-region.el
 (use-package expand-region

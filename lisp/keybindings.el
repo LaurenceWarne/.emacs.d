@@ -26,9 +26,11 @@
 (global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
 (global-set-key (kbd "S-C-<down>") 'shrink-window)
 (global-set-key (kbd "S-C-<up>") 'enlarge-window)
-(global-set-key (kbd "M-n") 'newline-and-indent-ignoring-current-line)
+(global-set-key (kbd "M-n") 'lw-newline-and-indent-ignoring-current-line)
+(global-set-key (kbd "C-u") 'lw-unix-line-discard)
 (global-set-key (kbd "M-;") 'eval-expression)
 (global-set-key (kbd "M-@") 'abbrev-prefix-mark)
+(global-set-key (kbd "C-x C-o") 'find-file-other-window)
 
 ;;; Local keybindings
 

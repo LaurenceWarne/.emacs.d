@@ -46,7 +46,7 @@
   ;; Check here if line is empty
   (switch-to-buffer nil))
 
-(defun newline-and-indent-ignoring-current-line()
+(defun lw-newline-and-indent-ignoring-current-line()
   "Create a new line below the current line and go to it."
   (interactive)
   (end-of-line)
