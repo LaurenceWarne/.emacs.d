@@ -39,14 +39,6 @@
 ;; Install all packages if not already installed (use-package must still be called)
 (setq use-package-always-ensure t)
 
-;; This package does what you think it does
-(use-package auto-package-update
-  :config
-  (setq auto-package-update-delete-old-versions t)
-  (setq auto-package-update-hide-results t)
-  (setq auto-package-update-prompt-before-update t)
-  (auto-package-update-maybe))
-
 ;; https://github.com/quelpa/quelpa
 (use-package quelpa
   :config
@@ -106,6 +98,7 @@
   :config
   (projectile-mode 1))
 
+;; http://tuhdo.github.io/helm-intro.html
 (use-package helm
   :demand t
   :bind
@@ -120,6 +113,7 @@
   ;; Makes helm-boring-file-regexp-list act as a .gitignore
   (setq helm-ff-skip-boring-files t)
   (setq helm-M-x-fuzzy-match t)
+  (setq helm-split-window-in-side-p t)
   (define-key helm-map (kbd "C-,") 'helm-beginning-of-buffer)
   (define-key helm-map (kbd "C-.") 'helm-end-of-buffer)
   (define-key helm-map (kbd "C-k") 'helm-buffer-run-kill-buffers)
@@ -396,3 +390,11 @@
 (use-package expand-region
   :config
   (global-set-key (kbd "M-'") 'er/expand-region))
+
+(use-package magit-todos)
+
+(use-package mc-biome-viewer
+  :load-path "~/projects/mc-biome-viewer"
+  :config
+  (setq mc-biome-viewer-column-chunks-in-camera 64)
+  (puthash "ice plains" '(:foreground "silver") mc-biome-viewer-biome-to-face-map))
