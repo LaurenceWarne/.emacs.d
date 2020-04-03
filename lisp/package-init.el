@@ -394,7 +394,16 @@
 (use-package magit-todos)
 
 (use-package mc-biome-viewer
-  :load-path "~/projects/mc-biome-viewer"
+    :ensure nil
+    ;:load-path "~/projects/mc-biome-viewer"
+    :quelpa (mc-biome-viewer :fetcher github :repo "LaurenceWarne/mc-biome-viewer")
+    ;; Example configuration
+    :config
+    (setq mc-biome-viewer-column-chunks-in-camera 48)  ; But fewer chunks will be faster
+    (puthash "ice plains" '(:foreground "silver") mc-biome-viewer-biome-to-face-map))
+
+;; https://github.com/dgutov/diff-hl
+(use-package diff-hl
   :config
-  (setq mc-biome-viewer-column-chunks-in-camera 64)
-  (puthash "ice plains" '(:foreground "silver") mc-biome-viewer-biome-to-face-map))
+  (global-diff-hl-mode)
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
