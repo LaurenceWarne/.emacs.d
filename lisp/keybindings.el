@@ -83,7 +83,7 @@ Toggle display of latex fragments if the cursor is preceded by a valid latex exp
 		       'delete-backward-char 'org-delete-backward-char-custom
 		       'org-return 'org-return-custom)
 	    ;; Render all latex in the buffer
-	    (org-toggle-latex-fragment '(16))
+	    ;(org-toggle-latex-fragment '(16))
             (add-hook 'post-self-insert-hook
 		      (lambda () (org-auto-latex t)) 'append 'local)
             (add-hook 'org-delete-backward-char-custom-hook #'org-auto-latex)

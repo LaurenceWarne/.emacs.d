@@ -168,8 +168,8 @@
 
 (use-package hydra)
 
-(use-package groovy-mode
-  :init (add-to-list 'auto-mode-alist '("\\.groovy\\'" . groovy-mode)))
+;; Note groovy mode automatically adds itself to auto-mode-alist
+(use-package groovy-mode)
 
 ;; https://github.com/parkouss/speed-type
 (use-package speed-type
@@ -407,3 +407,10 @@
   :config
   (global-diff-hl-mode)
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
+
+;; https://github.com/ardumont/org2jekyll
+(use-package org2jekyll
+  :config
+  (setq org2jekyll-blog-author "Laurence Warne"
+	org2jekyll-source-directory (expand-file-name "~/org/")
+	org2jekyll-jekyll-directory (expand-file-name "~/projects/")))
