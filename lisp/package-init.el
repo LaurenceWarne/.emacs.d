@@ -61,7 +61,9 @@
 (use-package elpy
   ;; Enable Elpy in all future Python buffers.
   :init (elpy-enable)
-  :config (setq elpy-rpc-python-command "python3"))
+  :config (setq elpy-rpc-python-command "python3")
+  ;; Fix python does not support readline warning
+  (setq python-shell-completion-native-enable nil))
 
 (use-package avy
   ;; This does two things: first, it creates an autoload for the avy-goto-char commands and defers loading of avy until you actually use it. Second, it binds the key C-: to that command.
@@ -404,13 +406,44 @@
 
 ;; https://github.com/dgutov/diff-hl
 (use-package diff-hl
-  :config
-  (global-diff-hl-mode)
-  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
+    :config
+    (global-diff-hl-mode)
+    (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
 ;; https://github.com/ardumont/org2jekyll
 (use-package org2jekyll
-  :config
-  (setq org2jekyll-blog-author "Laurence Warne"
-	org2jekyll-source-directory (expand-file-name "~/org/")
-	org2jekyll-jekyll-directory (expand-file-name "~/projects/")))
+    :load-path "~/projects/org2jekyll"
+    :config
+    (setq org2jekyll-blog-author "Laurence Warne"
+	  org2jekyll-source-directory (expand-file-name "~/org/")
+	  org2jekyll-jekyll-directory (expand-file-name "~/Documents/")
+	  org2jekyll-jekyll-drafts-dir ""
+	  org2jekyll-jekyll-posts-dir "_posts/"
+	  org-publish-project-alist
+	  `(("default"
+	     :base-directory ,(org2jekyll-input-directory)
+	     :base-extension "org"
+	     :publishing-directory ,(org2jekyll-output-directory)
+	     :with-toc nil
+	     :html-head "<link rel=\"stylesheet\" href=\"./css/style.css\" type=\"text/css\"/>"
+	     :html-preamble t
+	     :recursive t
+	     :publishing-function org-html-publish-to-html
+	     :headline-levels 4             ; Just the default for this project.
+	     :body-only t)
+	    ("post"
+	     :base-directory ,(org2jekyll-input-directory)
+	     :base-extension "org"
+	     :publishing-directory ,(org2jekyll-output-directory org2jekyll-jekyll-posts-dir)
+	     :publishing-function org-html-publish-to-html
+	     :headline-levels 4
+	     :section-numbers nil
+	     :with-toc nil
+	     :html-head "<link rel=\"stylesheet\" href=\"./css/style.css\" type=\"text/css\"/>"
+	     :html-preamble t
+	     :recursive t
+	     :make-index t
+	     :html-extension "html"
+	     :body-only t))))
+
+(use-package htmlize)
