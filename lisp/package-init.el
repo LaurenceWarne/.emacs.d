@@ -59,7 +59,9 @@
 ;; See:
 ;; https://github.com/jorgenschaefer/elpy
 (use-package elpy
-  ;; Enable Elpy in all future Python buffers.
+   :bind (:map python-mode-map
+	      ("C-x C-e" . #'elpy-shell-send-statement))
+   ;; Enable Elpy in all future Python buffers.
   :init (elpy-enable)
   :config (setq elpy-rpc-python-command "python3")
   ;; Fix python does not support readline warning
@@ -134,8 +136,7 @@
 
 (use-package helm-ag
   :after helm
-  :config
-  (define-key java-mode-map (kbd "M-s") 'helm-ag-edit))
+  :bind (("C-q" . helm-do-ag)))
 
 (use-package helm-projectile
   :after (helm projectile helm-ag groovy-mode)
