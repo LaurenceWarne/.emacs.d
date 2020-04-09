@@ -18,24 +18,23 @@
 (defun lw-forward-brace ()
   "Move cursor to the first brace below in the current buffer, if it exists."
   (interactive)
-  (progn
-    (skip-chars-forward "^{")
-    (forward-char)))
+  (skip-chars-forward "^{")
+  (forward-char))
 
 (defun lw-copy-text-to-next-line ()
-  "Create a new line below the current line with the same contents as the current line. Does not affect the kill ring."
+  "Create a new line below the current line with the same contents as the current line.  Does not affect the kill ring."
   (interactive)
-  (let ((contents-of-line (buffer-substring-no-properties
-       (line-beginning-position)
-       (line-end-position))))
-    (end-of-line)
-    (open-line 1)
-    (next-line)
-    (insert contents-of-line)
-    (previous-line 1)
-    (end-of-line)))
+  (save-excursion
+    (let ((contents-of-line (buffer-substring-no-properties
+			     (line-beginning-position)
+			     (line-end-position))))
+      (end-of-line)
+      (open-line 1)
+      (forward-line)
+      (insert contents-of-line))))
 
 (defun lw-unix-line-discard()
+  "Operates like ctrl-u on a unix terminal."
   (interactive)
   (back-to-indentation)
   (kill-line))

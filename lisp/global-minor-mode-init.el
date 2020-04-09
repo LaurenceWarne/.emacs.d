@@ -81,3 +81,20 @@
 (define-key nxml-mode-map (kbd "C-c C-e") 'hs-toggle-hiding)
 
 (add-hook 'emacs-lisp-mode-hook (lambda () electric-pair-mode -1))
+
+(defvar lw-read-the-org-setup-file "~/repos/org-html-themes/setup/theme-readtheorg.setup")
+
+(org-export-define-derived-backend 'lw-wiki-html 'html
+  :options-alist `((:setupfile "SETUPFILE" nil ,lw-read-the-org-setup-file t))
+  :menu-entry
+  '(?h "Export to HTML"
+       ((?w "As a wiki file" lw-org-export-to-html))))
+
+(defun lw-org-export-to-html
+    (&optional async subtreep visible-only body-only ext-plist)
+  "Org export menu entry for read-the-org."
+  (let* ((extension ".html")
+	 (file (org-export-output-file-name extension subtreep))
+	 (org-export-coding-system 'utf-8))
+    (org-export-to-file 'lw-wiki-html file
+      async subtreep visible-only body-only ext-plist)))
