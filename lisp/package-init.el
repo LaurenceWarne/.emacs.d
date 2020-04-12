@@ -447,4 +447,15 @@
 	     :html-extension "html"
 	     :body-only t))))
 
+
+;; https://github.com/hniksic/emacs-htmlize
 (use-package htmlize)
+
+;; https://github.com/domtronn/all-the-icons.el
+;; Note after installing this you need to run M-x all-the-icons-install-fonts
+(use-package all-the-icons)
+
+;; https://github.com/jtbm37/all-the-icons-dired
+(use-package all-the-icons-dired
+  :after all-the-icons
+  :hook (dired-mode . all-the-icons-dired-mode))

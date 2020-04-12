@@ -21,15 +21,20 @@
 ;;; Set variables
 (setq visible-bell 1)                  ; Get rid of annoying bell, use flash screen instead
 (setq show-paren-style 'parenthesis)   ; Highlight text between parens
+(fset 'yes-or-no-p 'y-or-n-p)          ; Use y/n instead of yes/no
+;; https://www.emacswiki.org/emacs/DisabledCommands
+(setq disabled-command-function nil)   ; Enable all disabled commands
+
+(require 'dired)
+(add-hook 'dired-mode (lambda () (dired-hide-details-mode)))
+
 (require 'org)
 (setq org-use-speed-commands t)        ; Shortcut for org commands when on headlines
 (setq org-startup-with-inline-images t)
 (setq org-startup-folded nil)
+
 (require 'python)
 (setq python-shell-interpreter "/usr/bin/python3")
-(fset 'yes-or-no-p 'y-or-n-p)          ; Use y/n instead of yes/no
-;; https://www.emacswiki.org/emacs/DisabledCommands
-(setq disabled-command-function nil)   ; Enable all disabled commands
 
 
 (defun eclipse-indent-setup ()
