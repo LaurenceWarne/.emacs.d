@@ -93,3 +93,9 @@ Toggle display of latex fragments if the cursor is preceded by a valid latex exp
           (lambda ()
 	    (local-set-key (kbd "M-j") nil)  ; Will now default to global map
 	    (local-set-key (kbd "M-k") 'lw-java-toggle-test-implementation)))
+
+
+(add-hook 'dired-mode-hook
+	  (lambda ()
+	    (local-set-key (kbd "b") 'dired-up-directory)
+	    (local-set-key (kbd "k") 'kill-this-buffer)))

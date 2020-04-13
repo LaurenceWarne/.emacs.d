@@ -26,7 +26,7 @@
 (setq disabled-command-function nil)   ; Enable all disabled commands
 
 (require 'dired)
-(add-hook 'dired-mode (lambda () (dired-hide-details-mode)))
+(add-hook 'dired-mode-hook (lambda () (dired-hide-details-mode 1)))
 
 (require 'org)
 (setq org-use-speed-commands t)        ; Shortcut for org commands when on headlines
