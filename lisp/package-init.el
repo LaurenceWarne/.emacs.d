@@ -493,7 +493,7 @@
 	   ("Media"
 	    (extension "mp3" "mp4" "avi" "mpg" "flv" "ogg"))
 	   ("Configuration"
-	    (regexp . "^.+"))
+	    (regexp . "^\\.[^(git)]+"))
 	   ("Backup"
 	    (regexp . ".*~"))))))
 
