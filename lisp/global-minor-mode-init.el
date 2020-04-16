@@ -26,7 +26,10 @@
 (setq disabled-command-function nil)   ; Enable all disabled commands
 
 (require 'dired)
-(add-hook 'dired-mode-hook (lambda () (dired-hide-details-mode 1)))
+(require 'dired-x)
+(add-hook 'dired-mode-hook (lambda ()
+			     (dired-hide-details-mode 1)
+			     (dired-omit-mode 1)))
 
 (require 'org)
 (setq org-use-speed-commands t)        ; Shortcut for org commands when on headlines
@@ -89,6 +92,7 @@
 
 (defvar lw-read-the-org-setup-file "~/repos/org-html-themes/setup/theme-readtheorg.setup")
 
+(require 'ox)
 (org-export-define-derived-backend 'lw-wiki-html 'html
   :options-alist `((:setupfile "SETUPFILE" nil ,lw-read-the-org-setup-file t))
   :menu-entry

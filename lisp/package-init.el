@@ -139,19 +139,23 @@
   :bind (("C-q" . helm-do-ag)))
 
 (use-package helm-projectile
-  :after (helm projectile helm-ag groovy-mode)
+  ;; Don't add helm-ag to after because its loading is deferred
+  :after (helm projectile groovy-mode)
+  :bind (:map python-mode-map
+	      ("C-j" . #'helm-projectile)
+	      ("M-q" . #'helm-projectile-ag)
+	      :map java-mode-map
+	      ("C-j" . #'helm-projectile)
+	      ("M-q" . #'helm-projectile-ag)
+	      :map emacs-lisp-mode-map
+	      ("C-j" . #'helm-projectile)
+	      ("M-q" . #'helm-projectile-ag)
+	      :map groovy-mode-map
+	      ("C-j" . #'helm-projectile)
+	      ("M-q" . #'helm-projectile-ag))
   :config
   (helm-projectile-on)
-  (setq projectile-completion-system 'helm)
-  (define-key java-mode-map (kbd "C-j") 'helm-projectile)
-  (define-key java-mode-map (kbd "M-q") 'helm-projectile-ag)
-  (define-key python-mode-map (kbd "C-j") 'helm-projectile)
-  (define-key python-mode-map (kbd "M-q") 'helm-projectile-ag)
-  (define-key emacs-lisp-mode-map (kbd "C-j") 'helm-projectile)
-  (define-key emacs-lisp-mode-map (kbd "M-q") 'helm-projectile-ag)
-  ;; Project integration as we mostly use groovy for gradle config
-  (define-key groovy-mode-map (kbd "C-j") 'helm-projectile)
-  (define-key groovy-mode-map (kbd "M-q") 'helm-projectile-ag))
+  (setq projectile-completion-system 'helm))
 
 (use-package helm-descbinds
   :after helm
@@ -459,3 +463,62 @@
 (use-package all-the-icons-dired
   :after all-the-icons
   :hook (dired-mode . all-the-icons-dired-mode))
+
+;; https://github.com/Fuco1/dired-hacks
+(use-package dired-filter
+  :hook (dired-mode . dired-filter-group-mode)
+  :config
+  (setq dired-filter-group-saved-groups
+	'(("default"
+	   ("Git"
+	    (regexp . "^\\.git"))
+	   ("Python"
+	    (extension . "py"))
+	   ("Java"
+	    (extension . "java"))
+	   ("Lisp"
+	    (extension "el" "cl" "elc"))
+	   ("Org"
+	    (extension . "org"))
+	   ("PDF"
+	    (extension . "pdf"))
+	   ("LaTeX"
+	    (extension "tex" "bib"))
+	   ("HTML"
+	    (extension "html"))
+	   ("Archives"
+	    (extension "zip" "rar" "gz" "bz2" "tar"))
+	   ("Images"
+	    (extension "jpg" "png" "jpeg" "gif" "bmp" "svg"))
+	   ("Media"
+	    (extension "mp3" "mp4" "avi" "mpg" "flv" "ogg"))
+	   ("Configuration"
+	    (regexp . "^.+"))
+	   ("Backup"
+	    (regexp . ".*~"))))))
+
+;; https://github.com/Fuco1/dired-hacks#dired-rainbow
+(use-package dired-rainbow
+  :config
+  (dired-rainbow-define-chmod directory "#6cb2eb" "d.*")
+  (dired-rainbow-define html "#eb5286" ("css" "less" "sass" "scss" "htm" "html" "jhtm" "mht" "eml" "mustache" "xhtml"))
+  (dired-rainbow-define xml "#f2d024" ("xml" "xsd" "xsl" "xslt" "wsdl" "bib" "json" "msg" "pgn" "rss" "yaml" "yml" "rdata"))
+  (dired-rainbow-define document "#9561e2" ("docm" "doc" "docx" "odb" "odt" "pdb" "pdf" "ps" "rtf" "djvu" "epub" "odp" "ppt" "pptx"))
+  (dired-rainbow-define markdown "#ffed4a" ("org" "etx" "info" "markdown" "md" "mkd" "nfo" "pod" "rst" "tex" "textfile" "txt"))
+  (dired-rainbow-define database "#6574cd" ("xlsx" "xls" "csv" "accdb" "db" "mdb" "sqlite" "nc"))
+  (dired-rainbow-define media "#de751f" ("mp3" "mp4" "MP3" "MP4" "avi" "mpeg" "mpg" "flv" "ogg" "mov" "mid" "midi" "wav" "aiff" "flac"))
+  (dired-rainbow-define image "#f66d9b" ("tiff" "tif" "cdr" "gif" "ico" "jpeg" "jpg" "png" "psd" "eps" "svg"))
+  (dired-rainbow-define log "#c17d11" ("log"))
+  (dired-rainbow-define shell "#f6993f" ("awk" "bash" "bat" "sed" "sh" "zsh" "vim"))
+  (dired-rainbow-define interpreted "#38c172" ("py" "ipynb" "rb" "pl" "t" "msql" "mysql" "pgsql" "sql" "r" "clj" "cljs" "scala" "js"))
+  (dired-rainbow-define compiled "#4dc0b5" ("asm" "cl" "lisp" "el" "c" "h" "c++" "h++" "hpp" "hxx" "m" "cc" "cs" "cp" "cpp" "go" "f" "for" "ftn" "f90" "f95" "f03" "f08" "s" "rs" "hi" "hs" "pyc" ".java"))
+  (dired-rainbow-define executable "#8cc4ff" ("exe" "msi"))
+  (dired-rainbow-define compressed "#51d88a" ("7z" "zip" "bz2" "tgz" "txz" "gz" "xz" "z" "Z" "jar" "war" "ear" "rar" "sar" "xpi" "apk" "xz" "tar"))
+  (dired-rainbow-define packaged "#faad63" ("deb" "rpm" "apk" "jad" "jar" "cab" "pak" "pk3" "vdf" "vpk" "bsp"))
+  (dired-rainbow-define encrypted "#ffed4a" ("gpg" "pgp" "asc" "bfe" "enc" "signature" "sig" "p12" "pem"))
+  (dired-rainbow-define fonts "#6cb2eb" ("afm" "fon" "fnt" "pfb" "pfm" "ttf" "otf"))
+  (dired-rainbow-define partition "#e3342f" ("dmg" "iso" "bin" "nrg" "qcow" "toast" "vcd" "vmdk" "bak"))
+  (dired-rainbow-define vc "#0074d9" ("git" "gitignore" "gitattributes" "gitmodules"))
+  (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*"))
+
+(use-package pcre2el)
