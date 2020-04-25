@@ -90,11 +90,11 @@
 
 (add-hook 'emacs-lisp-mode-hook (lambda () electric-pair-mode -1))
 
-(defvar lw-read-the-org-setup-file "~/repos/org-html-themes/setup/theme-readtheorg.setup")
+(defvar lw-read-the-org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/htmlize.css\"/><link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/readtheorg.css\"/><script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js\"></script><script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/js/readtheorg.js\"></script>")
 
 (require 'ox)
 (org-export-define-derived-backend 'lw-wiki-html 'html
-  :options-alist `((:setupfile "SETUPFILE" nil ,lw-read-the-org-setup-file t))
+  :options-alist `((:html-head "HTML_HEAD" nil ,lw-read-the-org-html-head newline))
   :menu-entry
   '(?h "Export to HTML"
        ((?w "As a wiki file" lw-org-export-to-html))))

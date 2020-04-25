@@ -425,17 +425,14 @@
 	  org2jekyll-jekyll-drafts-dir ""
 	  org2jekyll-jekyll-posts-dir "_posts/"
 	  org-publish-project-alist
-	  `(("default"
-	     :base-directory ,(org2jekyll-input-directory)
+	  `(("wiki"
+	     :base-directory "~/org"
 	     :base-extension "org"
-	     :publishing-directory ,(org2jekyll-output-directory)
-	     :with-toc nil
-	     :html-head "<link rel=\"stylesheet\" href=\"./css/style.css\" type=\"text/css\"/>"
+	     :publishing-directory "~/wiki"
+	     :html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/htmlize.css\"/><link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/readtheorg.css\"/><script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js\"></script><script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/js/readtheorg.js\"></script>"
 	     :html-preamble t
 	     :recursive t
-	     :publishing-function org-html-publish-to-html
-	     :headline-levels 4             ; Just the default for this project.
-	     :body-only t)
+	     :publishing-function org-html-publish-to-html)
 	    ("post"
 	     :base-directory ,(org2jekyll-input-directory)
 	     :base-extension "org"
