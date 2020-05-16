@@ -97,7 +97,7 @@
   :options-alist `((:html-head "HTML_HEAD" nil ,lw-read-the-org-html-head newline))
   :menu-entry
   '(?h "Export to HTML"
-       ((?w "As a wiki file" lw-org-export-to-html))))
+       ((?t "As a wiki file" lw-org-export-to-html))))
 
 (defun lw-org-export-to-html
     (&optional async subtreep visible-only body-only ext-plist)

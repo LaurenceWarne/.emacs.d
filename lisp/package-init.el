@@ -100,7 +100,10 @@
 
 (use-package projectile
   :config
-  (projectile-mode 1))
+  (projectile-mode 1)
+  (setq projectile-other-file-alist
+	(append projectile-other-file-alist
+		'(("el" "el") ("py" "py") ("java" "java")))))
 
 ;; http://tuhdo.github.io/helm-intro.html
 (use-package helm
@@ -140,19 +143,32 @@
 
 (use-package helm-projectile
   ;; Don't add helm-ag to after because its loading is deferred
-  :after (helm projectile groovy-mode)
+  :after (helm projectile groovy-mode paredit)
+  :init
+  (defun lw-helm-projectile-find-other-file-pf ()
+    (interactive)
+    (let ((current-prefix-arg 4))
+      (call-interactively #'helm-projectile-find-other-file)))
   :bind (:map python-mode-map
 	      ("C-j" . #'helm-projectile)
 	      ("M-q" . #'helm-projectile-ag)
+	      ("M-k" . #'lw-helm-projectile-find-other-file-pf)
 	      :map java-mode-map
 	      ("C-j" . #'helm-projectile)
 	      ("M-q" . #'helm-projectile-ag)
+	      ("M-k" . #'lw-helm-projectile-find-other-file-pf)
 	      :map emacs-lisp-mode-map
 	      ("C-j" . #'helm-projectile)
 	      ("M-q" . #'helm-projectile-ag)
+	      ("M-k" . #'lw-helm-projectile-find-other-file-pf)
+	      :map paredit-mode-map
+	      ("C-j" . #'helm-projectile)
+	      ("M-q" . #'helm-projectile-ag)
+	      ("M-k" . #'lw-helm-projectile-find-other-file-pf)
 	      :map groovy-mode-map
 	      ("C-j" . #'helm-projectile)
-	      ("M-q" . #'helm-projectile-ag))
+	      ("M-q" . #'helm-projectile-ag)
+	      ("M-k" . #'lw-helm-projectile-find-other-file-pf))
   :config
   (helm-projectile-on)
   (setq projectile-completion-system 'helm))
@@ -347,7 +363,8 @@
 (use-package paredit
   :bind (:map paredit-mode-map
 	      ("C-0" . 'paredit-forward-slurp-sexp)
-	      ("C-9" . 'paredit-backward-slurp-sexp))
+	      ("C-9" . 'paredit-backward-slurp-sexp)
+	      ("M-s" . 'forward-sexp))
   :config
   (add-hook 'lisp-mode-hook #'enable-paredit-mode)
   (add-hook 'slime-repl-mode-hook #'enable-paredit-mode)
@@ -424,29 +441,21 @@
 	  org2jekyll-jekyll-directory (expand-file-name "~/Documents/")
 	  org2jekyll-jekyll-drafts-dir ""
 	  org2jekyll-jekyll-posts-dir "_posts/"
-	  org-publish-project-alist
-	  `(("wiki"
-	     :base-directory "~/org"
-	     :base-extension "org"
-	     :publishing-directory "~/wiki"
-	     :html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/htmlize.css\"/><link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/readtheorg.css\"/><script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js\"></script><script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/js/readtheorg.js\"></script>"
-	     :html-preamble t
-	     :recursive t
-	     :publishing-function org-html-publish-to-html)
-	    ("post"
-	     :base-directory ,(org2jekyll-input-directory)
-	     :base-extension "org"
-	     :publishing-directory ,(org2jekyll-output-directory org2jekyll-jekyll-posts-dir)
-	     :publishing-function org-html-publish-to-html
-	     :headline-levels 4
-	     :section-numbers nil
-	     :with-toc nil
-	     :html-head "<link rel=\"stylesheet\" href=\"./css/style.css\" type=\"text/css\"/>"
-	     :html-preamble t
-	     :recursive t
-	     :make-index t
-	     :html-extension "html"
-	     :body-only t))))
+	  post-project
+	  `("post"
+	    :base-directory ,(org2jekyll-input-directory)
+	    :base-extension "org"
+	    :publishing-directory ,(org2jekyll-output-directory org2jekyll-jekyll-posts-dir)
+	    :publishing-function org-html-publish-to-html
+	    :headline-levels 4
+	    :section-numbers nil
+	    :with-toc nil
+	    :html-head "<link rel=\"stylesheet\" href=\"./css/style.css\" type=\"text/css\"/>"
+	    :html-preamble t
+	    :recursive t
+	    :make-index t
+	    :html-extension "html"
+	    :body-only t)))
 
 
 ;; https://github.com/hniksic/emacs-htmlize
@@ -519,3 +528,25 @@
   (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*"))
 
 (use-package pcre2el)
+
+;; Requires cquery: https://github.com/cquery-project/cquery/wiki/Emacs
+;; https://github.com/cquery-project/emacs-cquery
+(use-package cquery
+  :config
+  (setq cquery-executable "/usr/local/src/cquery/build/cquery"))
+
+(use-package ox-yaow
+    :ensure nil
+    :load-path "~/projects/ox-yaow.el"
+    :config
+    (setq org-publish-project-alist
+	  '(("wiki"
+	     :base-directory "~/org/"
+	     :base-extension "org"
+	     :publishing-directory "~/wiki/"
+	     :html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/htmlize.css\"/><link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/readtheorg.css\"/><script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js\"></script><script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/js/readtheorg.js\"></script>"
+	     :html-preamble t
+	     :recursive t
+	     :publishing-function ox-yaow-publish-to-html
+					;:completion-function nil
+	     ))))
