@@ -548,5 +548,9 @@
 	     :html-preamble t
 	     :recursive t
 	     :publishing-function ox-yaow-publish-to-html
-					;:completion-function nil
+	     :preparation-function ox-yaow-preparation-fn
+	     :completion-function ox-yaow-completion-fn
 	     ))))
+
+;; https://github.com/yoshiki/yaml-mode
+(use-package yaml-mode)
