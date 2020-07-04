@@ -84,8 +84,8 @@
   (autoload 'yasnippet "yasnippet" nil t)
   :config
   (yas-global-mode 1)
-  (setq yas-indent-line 'auto)
-  (setq yas-also-auto-indent-first-line t))
+  (setq yas-indent-line 'auto
+	yas-also-auto-indent-first-line t))
 
 (use-package smartparens
   :demand t
@@ -121,9 +121,9 @@
   :config
   (helm-mode 1)
   ;; Makes helm-boring-file-regexp-list act as a .gitignore
-  (setq helm-ff-skip-boring-files t)
-  (setq helm-M-x-fuzzy-match t)
-  (setq helm-split-window-in-side-p t)
+  (setq helm-ff-skip-boring-files t
+	helm-M-x-fuzzy-match t
+	helm-split-window-in-side-p t)
   (define-key helm-map (kbd "C-,") 'helm-beginning-of-buffer)
   (define-key helm-map (kbd "C-.") 'helm-end-of-buffer)
   (define-key helm-map (kbd "C-k") 'helm-buffer-run-kill-buffers)
@@ -229,7 +229,8 @@
   :after lsp-mode
   :config
   (setq lsp-java-format-comments-enabled nil
-	lsp-java-format-on-type-enabled nil)
+	lsp-java-format-on-type-enabled nil
+	lsp-java-save-actions-organize-imports t)
   ;; Do we need to start the server (if not already running) here as well?
   (add-hook 'java-mode-hook 'lsp)
   ;; (add-hook
@@ -330,16 +331,16 @@
 (use-package slime
   :config
   ;; Set your lisp system and, optionally, some contribs
-  (setq inferior-lisp-program "/usr/local/bin/sbcl")
-  (setq slime-contribs '(slime-fancy))
+  (setq inferior-lisp-program "/usr/local/bin/sbcl"
+	slime-contribs '(slime-fancy))
   (define-key slime-repl-mode-map (kbd "M-,") 'slime-describe-symbol)
   (define-key slime-repl-mode-map (kbd "C-c C-d C-d") 'slime-pop-find-definition-stack))
 
 (use-package steam
   :load-path "~/projects/steam.el"
   :config
-  (setq steam-username "39422361280608732623190235")
-  (setq org-startup-with-inline-images t))
+  (setq steam-username "39422361280608732623190235"
+	org-startup-with-inline-images t))
 
 (use-package beacon
   :config
@@ -428,8 +429,8 @@
 
 (use-package mc-biome-viewer
     :ensure nil
-    ;:load-path "~/projects/mc-biome-viewer"
-    :quelpa (mc-biome-viewer :fetcher github :repo "LaurenceWarne/mc-biome-viewer")
+    :load-path "~/projects/mc-biome-viewer"
+    ;:quelpa (mc-biome-viewer :fetcher github :repo "LaurenceWarne/mc-biome-viewer")
     ;; Example configuration
     :config
     (setq mc-biome-viewer-column-chunks-in-camera 48)  ; But fewer chunks will be faster
