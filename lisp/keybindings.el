@@ -41,7 +41,9 @@
 	    (local-set-key (kbd "M-n") 'outline-next-heading)
 	    (local-set-key (kbd "M-p") 'outline-previous-heading)
 	    (local-set-key (kbd "M-[") 'org-backward-heading-same-level)
-	    (local-set-key (kbd "M-]") 'org-forward-heading-same-level)))
+	    (local-set-key (kbd "M-]") 'org-forward-heading-same-level)
+	    (local-set-key (kbd "M-h") (lambda () (interactive)
+					 (org-toggle-latex-fragment 16)))))
 
 (defvar org-delete-backward-char-custom-hook nil)
 

@@ -71,7 +71,7 @@
   ;; This does two things: first, it creates an autoload for the avy-goto-char commands and defers loading of avy until you actually use it. Second, it binds the key C-: to that command.
   :bind
   ("C-:" . 'avy-goto-char)
-  ("C-;" . 'avy-goto-char-2)
+  ("C-;" . 'avy-goto-char-timer)
   ("C-#" . 'avy-copy-region)
   ("M-#" . 'avy-copy-line)
   :config
@@ -206,11 +206,15 @@
 (use-package java-snippets
   :after yasnippet)
 
-(use-package lsp-mode)
+(use-package lsp-mode
+  :config
+  (setq lsp-enable-file-watchers nil
+	lsp-enable-links nil))
 
 (use-package company-lsp)
 
 (use-package lsp-ui
+  :after lsp-mode
   :config
   (setq lsp-ui-sideline-enable t
         lsp-ui-sideline-show-symbol t
@@ -221,21 +225,21 @@
 (use-package lsp-java
   :after lsp-mode
   :config
-  (setq lsp-java-format-comments-enabled nil)
-  (setq lsp-java-format-on-type-enabled nil)
+  (setq lsp-java-format-comments-enabled nil
+	lsp-java-format-on-type-enabled nil)
   ;; Do we need to start the server (if not already running) here as well?
   (add-hook 'java-mode-hook 'lsp)
-  (add-hook
-   'java-mode-hook
-   (lambda ()
-     (add-hook 'before-save-hook 'lsp-java-organize-imports nil 'local)))
+  ;; (add-hook
+  ;;  'java-mode-hook
+  ;;  (lambda ()
+  ;;    (add-hook 'before-save-hook 'lsp-java-organize-imports nil 'local)))
   (setq lsp-java-vmargs
 	;; Needs lombok in the gradle cache
   	'("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.10/625fc0055674dff70dbc76efa36d0f2c89b04a24/lombok-1.18.10.jar" "-Xbootclasspath/a:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.10/625fc0055674dff70dbc76efa36d0f2c89b04a24/lombok-1.18.10.jar"))
   (setq tab-width 4))
 
 (use-package helm-lsp
-  :after lsp helm)
+  :after lsp-mode helm)
 
 (use-package org-bullets
   :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
@@ -437,7 +441,7 @@
     :load-path "~/projects/org2jekyll"
     :config
     (setq org2jekyll-blog-author "Laurence Warne"
-	  org2jekyll-source-directory (expand-file-name "~/org/")
+	  org2jekyll-source-directory (expand-file-name "~/posts/")
 	  org2jekyll-jekyll-directory (expand-file-name "~/Documents/")
 	  org2jekyll-jekyll-drafts-dir ""
 	  org2jekyll-jekyll-posts-dir "_posts/"
@@ -455,7 +459,8 @@
 	    :recursive t
 	    :make-index t
 	    :html-extension "html"
-	    :body-only t)))
+	    :body-only t))
+    (setq org-publish-project-alist (cons post-project org-publish-project-alist)))
 
 
 ;; https://github.com/hniksic/emacs-htmlize
@@ -540,17 +545,18 @@
     :load-path "~/projects/ox-yaow.el"
     :config
     (setq org-publish-project-alist
-	  '(("wiki"
-	     :base-directory "~/org/"
-	     :base-extension "org"
-	     :publishing-directory "~/wiki/"
-	     :html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/htmlize.css\"/><link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/readtheorg.css\"/><script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js\"></script><script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/js/readtheorg.js\"></script>"
-	     :html-preamble t
-	     :recursive t
-	     :publishing-function ox-yaow-publish-to-html
-	     :preparation-function ox-yaow-preparation-fn
-	     :completion-function ox-yaow-completion-fn
-	     ))))
+	  (cons	'("wiki"
+		 :base-directory "~/org/"
+		 :base-extension "org"
+		 :publishing-directory "~/wiki/"
+		 :html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/htmlize.css\"/><link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/readtheorg.css\"/><script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js\"></script><script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/js/readtheorg.js\"></script>"
+		 :html-preamble t
+		 :recursive t
+		 :publishing-function ox-yaow-publish-to-html
+		 :preparation-function ox-yaow-preparation-fn
+		 :completion-function ox-yaow-completion-fn
+		 :ox-yaow-depth 1)
+		org-publish-project-alist)))
 
 ;; https://github.com/yoshiki/yaml-mode
 (use-package yaml-mode)
