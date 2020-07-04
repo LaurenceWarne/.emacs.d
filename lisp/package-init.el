@@ -95,6 +95,7 @@
 	      ("C-9" . 'sp-forward-barf-sexp))
   :config
   (add-hook 'inferior-python-mode-hook #'smartparens-mode)
+  (add-hook 'java-mode-hook #'smartparens-mode)
   (add-hook 'python-mode-hook #'smartparens-mode))
   ;(smartparens-global-mode 1))
 
@@ -103,7 +104,9 @@
   (projectile-mode 1)
   (setq projectile-other-file-alist
 	(append projectile-other-file-alist
-		'(("el" "el") ("py" "py") ("java" "java")))))
+		'(("el"   . ("el" "md"))
+		  ("py"   . ("py" "md"))
+		  ("java" . ("java" "md" "gradle"))))))
 
 ;; http://tuhdo.github.io/helm-intro.html
 (use-package helm
@@ -239,7 +242,9 @@
   (setq tab-width 4))
 
 (use-package helm-lsp
-  :after lsp-mode helm)
+  :after lsp-mode helm
+  :config
+  (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
 
 (use-package org-bullets
   :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
