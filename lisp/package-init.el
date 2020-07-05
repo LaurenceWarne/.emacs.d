@@ -210,8 +210,11 @@
   :after yasnippet)
 
 (use-package lsp-mode
+  :hook
+  (java-mode . lsp-deferred)
   :config
-  (setq lsp-enable-file-watchers nil
+  (setq lsp-keep-workspace-alive nil
+	lsp-enable-file-watchers nil
 	lsp-enable-links nil))
 
 (use-package company-lsp)
@@ -232,11 +235,6 @@
 	lsp-java-format-on-type-enabled nil
 	lsp-java-save-actions-organize-imports t)
   ;; Do we need to start the server (if not already running) here as well?
-  (add-hook 'java-mode-hook 'lsp)
-  ;; (add-hook
-  ;;  'java-mode-hook
-  ;;  (lambda ()
-  ;;    (add-hook 'before-save-hook 'lsp-java-organize-imports nil 'local)))
   (setq lsp-java-vmargs
 	;; Needs lombok in the gradle cache
   	'("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.10/625fc0055674dff70dbc76efa36d0f2c89b04a24/lombok-1.18.10.jar" "-Xbootclasspath/a:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.10/625fc0055674dff70dbc76efa36d0f2c89b04a24/lombok-1.18.10.jar"))
@@ -248,7 +246,7 @@
   (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
 
 (use-package org-bullets
-  :config (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1))))
+  :hook (org-mode . org-bullets-mode))
 
 (use-package doom-themes
   :hook
