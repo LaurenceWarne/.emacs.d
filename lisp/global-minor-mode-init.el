@@ -88,7 +88,11 @@
 (define-key nxml-mode-map (kbd "C-c e") 'hs-toggle-hiding)
 (define-key nxml-mode-map (kbd "C-c C-e") 'hs-toggle-hiding)
 
-(add-hook 'emacs-lisp-mode-hook (lambda () electric-pair-mode -1))
+(add-hook 'emacs-lisp-mode-hook
+	  (lambda ()
+	    (electric-pair-local-mode -1)
+            ;; https://github.com/bbatsov/emacs-lisp-style-guide
+	    (setq indent-tabs-mode nil)))
 
 (defvar lw-read-the-org-html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/htmlize.css\"/><link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/readtheorg.css\"/><script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js\"></script><script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/js/readtheorg.js\"></script>")
 
