@@ -94,10 +94,26 @@
     (goto-char mark-end)
     ;; There's an issue here with the marked region going invisible even with
     ;; Transient-Mark mode active
-    (set-mark-command mark-start)))
+
 
 (defun lw-copy-to-next-line-region-or-text ()
   (interactive)
   (if (use-region-p)
       (lw-copy-to-next-line-region)
     (lw-copy-text-to-next-line)))
+
+
+(defun lw-avy-swap-lines ()
+  (interactive)
+  (when (use-region-p)
+    (let ((avy-all-windows nil)
+          (fst-line-point (avy--line nil (region-beginning) (region-end))))
+      (when fst-line-point
+        ;; Highlight it
+        (let ((snd-line-point (avy--line nil (region-beginning) (region-end))))
+          (when snd-line-point
+            (save-mark-and-excursion
+              (push-mark fst-line-point)
+              (goto-char snd-line-point)
+              (transpose-lines 0))
+            (lw-avy-swap-lines)))))))

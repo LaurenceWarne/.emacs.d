@@ -32,9 +32,12 @@
 			     (dired-omit-mode 1)))
 
 (require 'org)
-(setq org-use-speed-commands t)        ; Shortcut for org commands when on headlines
+(setq org-use-speed-commands t)         ; Shortcut for org commands when on headlines
 (setq org-startup-with-inline-images t)
 (setq org-startup-folded nil)
+(setq org-startup-truncated nil)        ; Default to normal Emacs line wrapping behaviour
+;;
+
 
 (require 'python)
 (setq python-shell-interpreter "/usr/bin/python3")

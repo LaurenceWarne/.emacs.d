@@ -79,8 +79,6 @@ Toggle display of latex fragments if the cursor is preceded by a valid latex exp
 
 (add-hook 'org-mode-hook
           (lambda ()
-	    ;; Default to normal emacs line wrapping behaviour
-	    (setq org-startup-truncated nil)
 	    (org-remap org-mode-map
 		       'delete-backward-char 'org-delete-backward-char-custom
 		       'org-return 'org-return-custom)
