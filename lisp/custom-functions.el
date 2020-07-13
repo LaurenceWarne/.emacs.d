@@ -94,7 +94,7 @@
     (goto-char mark-end)
     ;; There's an issue here with the marked region going invisible even with
     ;; Transient-Mark mode active
-
+    (set-mark-command mark-start)))
 
 (defun lw-copy-to-next-line-region-or-text ()
   (interactive)
