@@ -102,12 +102,11 @@
       (lw-copy-to-next-line-region)
     (lw-copy-text-to-next-line)))
 
-
 (defun lw-avy-swap-lines ()
   (interactive)
   (when (use-region-p)
-    (let ((avy-all-windows nil)
-          (fst-line-point (avy--line nil (region-beginning) (region-end))))
+    (let* ((avy-all-windows nil)
+           (fst-line-point (avy--line nil (region-beginning) (region-end))))
       (when fst-line-point
         ;; Highlight it
         (let ((snd-line-point (avy--line nil (region-beginning) (region-end))))

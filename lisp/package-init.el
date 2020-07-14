@@ -291,7 +291,9 @@
 
 ;; https://github.com/Malabarba/camcorder.el
 (use-package camcorder
-  :commands camcorder-mode)
+  :commands camcorder-mode
+  :config
+  (define-key camcorder-mode-map (kbd "S-<f12>") 'camcorder-stop))
 
 ;; https://github.com/purcell/package-lint
 (use-package package-lint)
@@ -565,3 +567,9 @@
 
 ;; https://github.com/yoshiki/yaml-mode
 (use-package yaml-mode)
+
+;; https://github.com/lewang/command-log-mode
+(use-package command-log-mode)
+
+;; https://github.com/sagemath/sage-shell-mode
+(use-package sage-shell-mode)
