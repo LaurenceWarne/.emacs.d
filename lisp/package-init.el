@@ -573,3 +573,13 @@
 
 ;; https://github.com/sagemath/sage-shell-mode
 (use-package sage-shell-mode)
+
+(use-package fontify-face
+  :hook (emacs-lisp-mode . fontify-face-mode))
+
+;; https://github.com/cireu/elispfl
+(use-package elispfl
+  :ensure nil
+  :quelpa (elispfl :fetcher github :repo "cireu/elispfl")
+  :hook ((emacs-lisp-mode . elispfl-mode)
+         (ielm-mode . elispfl-ielm-mode)))
