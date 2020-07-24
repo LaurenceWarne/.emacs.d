@@ -583,3 +583,6 @@
   :quelpa (elispfl :fetcher github :repo "cireu/elispfl")
   :hook ((emacs-lisp-mode . elispfl-mode)
          (ielm-mode . elispfl-ielm-mode)))
+
+(use-package fontmenu
+  :load-path "~/projects/fontmenu")

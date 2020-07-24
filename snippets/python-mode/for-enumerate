@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: for-enumerate
+# key: fe
+# --
+
+for ${1:`
+(if (= (line-number-at-pos) 1) "idx"
+    (let* ((all-lines (split-string (buffer-string) "\n"))
+           (prev-line (nth (- (line-number-at-pos) 2) all-lines)))
+      (cond ((string-match-p "for idx," prev-line) "idx2")
+            ((string-match-p "for idx2," prev-line) "idx3")
+	    (t "idx"))))
+`}, ${2:item} in enumerate(${3:iterable}):
+    $0

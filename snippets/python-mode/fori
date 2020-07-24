@@ -2,5 +2,5 @@
 # name: fori
 # key: f
 # --
-for ${1:`(if (equal (line-number-at-pos) 1) "i" (let* ((all-lines (split-string (buffer-string) "\n"))(prev-line (nth (- (line-number-at-pos) 2) all-lines)))(cond((string-match-p "for i in " prev-line) "j") ((string-match-p "for j in " prev-line) "k")(t "i")))))`} in range($2):
+for ${1:`(if (= (line-number-at-pos) 1) "i" (let* ((all-lines (split-string (buffer-string) "\n"))(prev-line (nth (- (line-number-at-pos) 2) all-lines)))(cond((string-match-p "for i in " prev-line) "j") ((string-match-p "for j in " prev-line) "k")(t "i")))))`} in range($2):
     $0
