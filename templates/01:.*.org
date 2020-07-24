@@ -1,0 +1,3 @@
+#+TITLE: `(capitalize (replace-regexp-in-string "-" " " (file-name-base (buffer-file-name))))`
+
+* $0

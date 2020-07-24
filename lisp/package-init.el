@@ -584,5 +584,14 @@
   :hook ((emacs-lisp-mode . elispfl-mode)
          (ielm-mode . elispfl-ielm-mode)))
 
+;; https://github.com/kjambunathan/fontmenu
 (use-package fontmenu
   :load-path "~/projects/fontmenu")
+
+;; https://github.com/mineo/yatemplate
+(use-package yatemplate
+  :config
+  (auto-insert-mode)
+  (setq auto-insert-alist nil  ; is already populated by default
+        auto-insert-query nil)
+  (yatemplate-fill-alist))
