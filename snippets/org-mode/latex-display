@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: latex-display
+# key: $$
+# --
+
+\\[
+$1
+\\]
+
+$0
