@@ -17,10 +17,13 @@
        (proto (if no-ssl "http" "https")))
   ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
   (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
+  
   ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
   (when (< emacs-major-version 24)
     ;; For important compatibility libraries like cl-lib
     (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
+(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)  ; Get most recent versions of org mode
+
 (package-initialize)
 
 ;; Check if use-package is installed and install if it's not
@@ -48,6 +51,23 @@
      :fetcher git
      :url "https://github.com/quelpa/quelpa-use-package.git"))
   (require 'quelpa-use-package))
+
+;; https://orgmode.org/
+(use-package org
+  :ensure org-plus-contrib
+  :bind (:map org-mode-map
+              ("C-," . 'beginning-of-buffer)
+              ("M-n" . 'outline-next-heading)
+              ("M-p" . 'outline-previous-heading)
+              ("M-[" . 'org-backward-heading-same-level)
+              ("M-]" . 'org-forward-heading-same-level)
+              ("M-h" . (lambda () (interactive) (org-toggle-latex-fragment 16))))
+  :config
+  (setq org-use-speed-commands t     ; Shortcut for org commands when on headlines
+        org-startup-with-inline-images t
+        org-startup-folded nil
+        org-startup-truncated nil)   ; Default to normal Emacs line wrapping behaviour
+  :pin org)
 
 (use-package ace-window
   :config
@@ -595,3 +615,7 @@
   (setq auto-insert-alist nil  ; is already populated by default
         auto-insert-query nil)
   (yatemplate-fill-alist))
+
+;; https://github.com/io12/org-fragtog
+(use-package org-fragtog
+ :hook ((org-mode . org-fragtog-mode)))

@@ -34,61 +34,6 @@
 
 ;;; Local keybindings
 
-;; Counter those annoying org keybindings
-(add-hook 'org-mode-hook
-          (lambda ()
-            (local-set-key (kbd "C-,") 'beginning-of-buffer)
-	    (local-set-key (kbd "M-n") 'outline-next-heading)
-	    (local-set-key (kbd "M-p") 'outline-previous-heading)
-	    (local-set-key (kbd "M-[") 'org-backward-heading-same-level)
-	    (local-set-key (kbd "M-]") 'org-forward-heading-same-level)
-	    (local-set-key (kbd "M-h") (lambda () (interactive)
-					 (org-toggle-latex-fragment 16)))))
-
-(defvar org-delete-backward-char-custom-hook nil)
-
-(defvar org-return-custom-hook nil)
-
-(defun org-delete-backward-char-custom (N)
-  "Call (org-delete-backward-char N) and then run hooks in org-delete-backward-char-custom-hook."
-  (interactive "p")
-  (progn
-    (org-delete-backward-char N)
-    (run-hooks 'org-delete-backward-char-custom-hook)))
-
-(defun org-return-custom (&optional indent)
-  "Call (org-return INDENT) and then run hooks in org-return-custom-hook."
-  (interactive)
-  (progn
-    (org-return indent)
-    (run-hooks 'org-return-custom-hook)))
-
-;; https://www.reddit.com/r/emacs/comments/9h44lk/i_can_finally_preview_latex_in_orgmode_took_me/e69nfnw/
-(defun org-auto-latex (&optional require-space)
-  "Toggle display of latex fragments intelligently.
-Toggle display of latex fragments if the cursor is preceded by a valid latex expression.  REQUIRE-SPACE further requires that the latex expression must be followed by whitespace or a period/comma."
-  (save-excursion
-    (when (and
-	   (or (string-match-p "[,.[:blank:]\n]" (char-to-string (char-before)))
-	       (not require-space))
-	   (not (org-inside-LaTeX-fragment-p))
-	   (progn (backward-char
-		   (if require-space 2 1))
-		  (org-inside-LaTeX-fragment-p)))
-      (org-toggle-latex-fragment))))
-
-(add-hook 'org-mode-hook
-          (lambda ()
-	    (org-remap org-mode-map
-		       'delete-backward-char 'org-delete-backward-char-custom
-		       'org-return 'org-return-custom)
-	    ;; Render all latex in the buffer
-	    ;(org-toggle-latex-fragment '(16))
-            (add-hook 'post-self-insert-hook
-		      (lambda () (org-auto-latex t)) 'append 'local)
-            (add-hook 'org-delete-backward-char-custom-hook #'org-auto-latex)
-            (add-hook 'org-return-custom-hook (lambda () (org-auto-latex t)))))
-
 (add-hook 'java-mode-hook
           (lambda ()
 	    (local-set-key (kbd "M-j") nil)  ; Will now default to global map
