@@ -52,16 +52,18 @@
      :url "https://github.com/quelpa/quelpa-use-package.git"))
   (require 'quelpa-use-package))
 
+;; To ensure we have the most up to date version of org mode (at least on first
+;; install) we place this use-package call before requiring org anywhere.
 ;; https://orgmode.org/
 (use-package org
   :ensure org-plus-contrib
   :bind (:map org-mode-map
-              ("C-," . 'beginning-of-buffer)
-              ("M-n" . 'outline-next-heading)
-              ("M-p" . 'outline-previous-heading)
-              ("M-[" . 'org-backward-heading-same-level)
-              ("M-]" . 'org-forward-heading-same-level)
-              ("M-h" . (lambda () (interactive) (org-toggle-latex-fragment 16))))
+              ("C-," . beginning-of-buffer)
+              ("M-n" . outline-next-heading)
+              ("M-p" . outline-previous-heading)
+              ("M-[" . org-backward-heading-same-level)
+              ("M-]" . org-forward-heading-same-level)
+              ("M-h" . (lambda () (interactive) (org-latex-preview '(16)))))
   :config
   (setq org-use-speed-commands t     ; Shortcut for org commands when on headlines
         org-startup-with-inline-images t
@@ -90,10 +92,10 @@
 (use-package avy
   ;; This does two things: first, it creates an autoload for the avy-goto-char commands and defers loading of avy until you actually use it. Second, it binds the key C-: to that command.
   :bind
-  ("C-:" . 'avy-goto-char)
-  ("C-;" . 'avy-goto-char-timer)
-  ("C-#" . 'avy-copy-region)
-  ("M-#" . 'avy-copy-line)
+  ("C-:" . avy-goto-char)
+  ("C-;" . avy-goto-char-timer)
+  ("C-#" . avy-copy-region)
+  ("M-#" . avy-copy-line)
   :config
   (setq avy-keys-alist
       `((avy-goto-char-2 . (?a ?s ?d ?f ?j ?k ?l)))))
@@ -111,8 +113,8 @@
   :demand t
   :bind (:map smartparens-mode-map
 	      ;; We use smartparens as a replacement for paredit in python buffers
-	      ("C-0" . 'sp-forward-slurp-sexp)
-	      ("C-9" . 'sp-forward-barf-sexp))
+	      ("C-0" . sp-forward-slurp-sexp)
+	      ("C-9" . sp-forward-barf-sexp))
   :config
   (add-hook 'inferior-python-mode-hook #'smartparens-mode)
   (add-hook 'java-mode-hook #'smartparens-mode)
@@ -132,12 +134,12 @@
 (use-package helm
   :demand t
   :bind
-  ("M-y" . 'helm-show-kill-ring)
-  ("C-x C-f" . 'helm-find-files)
-  ("C-j" . 'helm-mini)
-  ("C-x b" . 'helm-buffers-list)
-  ("M-x" . 'helm-M-x)
-  ("C-s" . 'helm-occur)
+  ("M-y" . helm-show-kill-ring)
+  ("C-x C-f" . helm-find-files)
+  ("C-j" . helm-mini)
+  ("C-x b" . helm-buffers-list)
+  ("M-x" . helm-M-x)
+  ("C-s" . helm-occur)
   :config
   (helm-mode 1)
   ;; Makes helm-boring-file-regexp-list act as a .gitignore
@@ -224,7 +226,7 @@
 
 (use-package goto-last-change
   :bind
-  ("C-'" . 'goto-last-change))
+  ("C-'" . goto-last-change))
 
 (use-package java-snippets
   :after yasnippet)
@@ -392,9 +394,9 @@
 ;; http://danmidwood.com/content/2014/11/21/animated-paredit.html
 (use-package paredit
   :bind (:map paredit-mode-map
-	      ("C-0" . 'paredit-forward-slurp-sexp)
-	      ("C-9" . 'paredit-backward-slurp-sexp)
-	      ("M-s" . 'forward-sexp))
+	      ("C-0" . paredit-forward-slurp-sexp)
+	      ("C-9" . paredit-backward-slurp-sexp)
+	      ("M-s" . forward-sexp))
   :config
   (add-hook 'lisp-mode-hook #'enable-paredit-mode)
   (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
