@@ -53,13 +53,9 @@
   (require 'quelpa-use-package))
 
 (use-package doom-themes
-  :hook
-  ((find-file-hook after-revert-hook) . doom-buffer-mode-maybe)
-  (ediff-prepare-buffer-hook . doom-buffer-mode)
-  (minibuffer-setup-hook . doom-brighten-minibuffer)
-  :init
-  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-	doom-themes-enable-italic t  ; if nil, italics is universally disabled
+  :config
+  (setq doom-themes-enable-bold t ; if nil, bold is universally disabled
+	doom-themes-enable-italic t ; if nil, italics is universally disabled
 
 	;; doom-one specific settings
 	doom-one-brighter-modeline nil
@@ -621,4 +617,4 @@
 
 ;; https://github.com/io12/org-fragtog
 (use-package org-fragtog
- :hook ((org-mode . org-fragtog-mode)))
+ :hook (org-mode . org-fragtog-mode))
