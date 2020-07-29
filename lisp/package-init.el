@@ -52,6 +52,23 @@
      :url "https://github.com/quelpa/quelpa-use-package.git"))
   (require 'quelpa-use-package))
 
+(use-package doom-themes
+  :hook
+  ((find-file-hook after-revert-hook) . doom-buffer-mode-maybe)
+  (ediff-prepare-buffer-hook . doom-buffer-mode)
+  (minibuffer-setup-hook . doom-brighten-minibuffer)
+  :init
+  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
+	doom-themes-enable-italic t  ; if nil, italics is universally disabled
+
+	;; doom-one specific settings
+	doom-one-brighter-modeline nil
+	doom-one-brighter-comments nil)
+  ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
+  ;; may have their own settings.
+  (load-theme 'doom-acario-dark t)
+  (doom-themes-org-config))
+
 ;; To ensure we have the most up to date version of org mode (at least on first
 ;; install) we place this use-package call before requiring org anywhere.
 ;; https://orgmode.org/
@@ -269,22 +286,6 @@
 
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode))
-
-(use-package doom-themes
-  :hook
-  ((find-file-hook after-revert-hook) . doom-buffer-mode-maybe)
-  (ediff-prepare-buffer-hook . doom-buffer-mode)
-  (minibuffer-setup-hook . doom-brighten-minibuffer)
-  :init
-  (setq doom-themes-enable-bold t    ; if nil, bold is universally disabled
-	doom-themes-enable-italic t  ; if nil, italics is universally disabled
-
-	;; doom-one specific settings
-	doom-one-brighter-modeline nil
-	doom-one-brighter-comments nil)
-  ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
-  ;; may have their own settings.
-  (load-theme 'doom-one t))
 
 (use-package solaire-mode
   :hook

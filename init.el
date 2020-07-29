@@ -16,6 +16,18 @@
 ;; Set custom file, prevent init.el file pollution.
 (setq custom-file (concat lw-custom-init-files-directory "custom.el"))
 
+(with-current-buffer (get-buffer-create "Greeting")
+  (redisplay)
+  (insert "
+ _          _ _
+| |__   ___| | | ___
+| '_ \ / _ \ | |/ _ \ 
+| | | |  __/ | | (_) |
+|_| |_|\___|_|_|\___/ ")
+  (redisplay))
+
+(switch-to-buffer "Greeting")
+
 ;;; File loading
 
 (condition-case e
