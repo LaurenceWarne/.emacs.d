@@ -116,3 +116,17 @@
               (goto-char snd-line-point)
               (transpose-lines 0))
             (lw-avy-swap-lines)))))))
+
+(defvar lw-loading-screen-continue-thread t)
+
+(defun lw-init-loading-screen ()
+  (require 'snow)
+  (let-it-snow)
+  (switch-to-buffer "*snow*")
+  (while lw-loading-screen-continue-thread
+    (print (buffer-name (current-buffer)))
+    (if (not (string= "*snow*" (buffer-name (current-buffer))))
+        (progn
+          (message "Switching to snow")
+          (switch-to-buffer "*snow*"))
+      (message "Buffer is correct"))))

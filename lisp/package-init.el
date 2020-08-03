@@ -131,7 +131,8 @@
   :config
   (add-hook 'inferior-python-mode-hook #'smartparens-mode)
   (add-hook 'java-mode-hook #'smartparens-mode)
-  (add-hook 'python-mode-hook #'smartparens-mode))
+  (add-hook 'python-mode-hook #'smartparens-mode)
+  (require 'smartparens-config))
   ;(smartparens-global-mode 1))
 
 (use-package projectile
@@ -234,8 +235,10 @@
 
 ;; https://github.com/parkouss/speed-type
 (use-package speed-type
-  :commands (speed-type-code speed-type-text speed-type-region speed-type-buffer)
-  :load-path "~/projects/speed-type")
+  :commands (speed-type-code-region speed-type-text speed-type-region speed-type-buffer)
+  :load-path "~/projects/speed-type"
+  :config
+  (setq speed-type-default-lang "English"))
 
 (use-package goto-last-change
   :bind
@@ -283,11 +286,13 @@
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode))
 
+;; https://github.com/hlissner/emacs-solaire-mode
 (use-package solaire-mode
   :hook
   ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
   (minibuffer-setup . solaire-mode-in-minibuffer)
   :config
+  (solaire-global-mode +1)
   (solaire-mode-swap-bg))
             
 (use-package rainbow-delimiters
@@ -488,7 +493,6 @@
 	    :body-only t))
     (setq org-publish-project-alist (cons post-project org-publish-project-alist)))
 
-
 ;; https://github.com/hniksic/emacs-htmlize
 (use-package htmlize)
 
@@ -593,6 +597,7 @@
 ;; https://github.com/sagemath/sage-shell-mode
 (use-package sage-shell-mode)
 
+;; https://github.com/Fuco1/fontify-face
 (use-package fontify-face
   :hook (emacs-lisp-mode . fontify-face-mode))
 
@@ -618,3 +623,9 @@
 ;; https://github.com/io12/org-fragtog
 (use-package org-fragtog
  :hook (org-mode . org-fragtog-mode))
+
+;; https://github.com/alphapapa/snow.el
+(use-package snow
+  :ensure nil
+  :quelpa (snow :fetcher github :repo "alphapapa/snow.el")
+  :commands let-it-snow)
