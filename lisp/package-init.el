@@ -125,9 +125,11 @@
 (use-package smartparens
   :demand t
   :bind (:map smartparens-mode-map
-	      ;; We use smartparens as a replacement for paredit in python buffers
 	      ("C-0" . sp-forward-slurp-sexp)
-	      ("C-9" . sp-forward-barf-sexp))
+	      ("C-9" . sp-forward-barf-sexp)
+              ("M-f" . sp-forward-sexp)
+              ("M-b" . sp-backward-sexp)
+              ("M-s" . sp-down-sexp))
   :config
   (add-hook 'inferior-python-mode-hook #'smartparens-mode)
   (add-hook 'java-mode-hook #'smartparens-mode)
@@ -317,7 +319,7 @@
 (use-package camcorder
   :commands camcorder-mode
   :config
-  (define-key camcorder-mode-map (kbd "S-<f12>") 'camcorder-stop))
+  (define-key camcorder-mode-map (kbd "C-<f12>") 'camcorder-stop))
 
 ;; https://github.com/purcell/package-lint
 (use-package package-lint)
@@ -397,8 +399,10 @@
 (use-package paredit
   :bind (:map paredit-mode-map
 	      ("C-0" . paredit-forward-slurp-sexp)
-	      ("C-9" . paredit-backward-slurp-sexp)
-	      ("M-s" . forward-sexp))
+	      ("C-9" . paredit-forward-barf-sexp)
+              ("M-f" . paredit-forward)
+              ("M-b" . paredit-backward)
+	      ("M-s" . paredit-forward-down))
   :config
   (add-hook 'lisp-mode-hook #'enable-paredit-mode)
   (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
