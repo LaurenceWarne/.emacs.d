@@ -144,7 +144,8 @@
 	(append projectile-other-file-alist
 		'(("el"   . ("el" "md"))
 		  ("py"   . ("py" "md"))
-		  ("java" . ("java" "md" "gradle"))))))
+		  ("java" . ("java" "md" "gradle"))
+                  ("org"  . ("org"))))))
 
 ;; http://tuhdo.github.io/helm-intro.html
 (use-package helm
@@ -209,7 +210,9 @@
 	      :map groovy-mode-map
 	      ("C-j" . #'helm-projectile)
 	      ("M-q" . #'helm-projectile-ag)
-	      ("M-k" . #'lw-helm-projectile-find-other-file-pf))
+	      ("M-k" . #'lw-helm-projectile-find-other-file-pf)
+              :map org-mode-map
+              ("C-j" . #'helm-projectile))
   :config
   (helm-projectile-on)
   (setq projectile-completion-system 'helm))
@@ -633,3 +636,20 @@
   :ensure nil
   :quelpa (snow :fetcher github :repo "alphapapa/snow.el")
   :commands let-it-snow)
+
+;; https://github.com/skuro/plantuml-mode
+;; Also see:
+;; https://plantuml.com/class-diagram
+(use-package plantuml-mode
+  :after org
+  :config
+  (require 'org)
+  (require 'ob-plantuml)
+  (setq plantuml-jar-path (concat user-emacs-directory "plantuml.jar")
+        org-plantuml-jar-path plantuml-jar-path)
+  (unless (file-exists-p plantuml-jar-path)
+    (plantuml-download-jar))
+  (plantuml-set-exec-mode "jar")
+  (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+  (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+  (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t))))

@@ -13,10 +13,10 @@
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
-   ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
+   ["#040408" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
  '(package-selected-packages
    (quote
-    (solaire-mode snow org-plus-contrib org-fragtog yatemplate elispfl fontify-face sage-shell-mode command-log-mode keypression yaml-mode cquery dired-rainbow dired-filter dired-hacks all-the-icons-dired htmlize org2jekyll diff-hl diff-hl-mode bnf-mode gnu-elpa-keyring-update magit-todos mc-biome-viewer realgud company-box expand-region quelpa-use-package quelpa zoom-window magit synosaurus helpful helm-org-rifle sx ein lorem-ipsum esup flymake-shellcheck beacon steam parinfer paredit aggressive-indent slime-company slime pdf-tools helm-ag benchmark-init package-lint camcorder org-bullets helm-lsp lsp-java lsp-ui company-lsp lsp-mode java-snippets goto-last-change speed-type groovy-mode hydra flycheck helm-descbinds helm-projectile helm-flx helm projectile smartparens avy elpy auto-package-update use-package)))
+    (plantuml-mode eyuml solaire-mode snow org-plus-contrib org-fragtog yatemplate elispfl fontify-face sage-shell-mode command-log-mode keypression yaml-mode cquery dired-rainbow dired-filter dired-hacks all-the-icons-dired htmlize org2jekyll diff-hl diff-hl-mode bnf-mode gnu-elpa-keyring-update magit-todos mc-biome-viewer realgud company-box expand-region quelpa-use-package quelpa zoom-window magit synosaurus helpful helm-org-rifle sx ein lorem-ipsum esup flymake-shellcheck beacon steam parinfer paredit aggressive-indent slime-company slime pdf-tools helm-ag benchmark-init package-lint camcorder org-bullets helm-lsp lsp-java lsp-ui company-lsp lsp-mode java-snippets goto-last-change speed-type groovy-mode hydra flycheck helm-descbinds helm-projectile helm-flx helm projectile smartparens avy elpy auto-package-update use-package)))
  '(safe-local-variable-values (quote ((indent-tabs-mode nil)))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
