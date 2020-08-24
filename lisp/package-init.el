@@ -654,8 +654,24 @@
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
   (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t))))
 
+;; https://github.com/wbolster/emacs-python-black
 (use-package python-black)
 
+;; https://github.com/justbur/emacs-which-key
 (use-package which-key
   :config
   (which-key-mode))
+
+;; Also requires:
+;; pip3 install isort --user
+;; https://github.com/paetzke/py-isort.el
+(use-package py-isort
+  :hook (before-save . py-isort-before-save))
+
+;; Also requires:
+;; pip3 install importmagic epc --user
+;; https://github.com/anachronic/importmagic.el
+(use-package importmagic
+    :ensure t
+    :config
+    (add-hook 'python-mode-hook 'importmagic-mode))

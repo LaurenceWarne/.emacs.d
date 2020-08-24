@@ -37,6 +37,7 @@
 (add-hook 'java-mode-hook
           (lambda ()
 	    (local-set-key (kbd "M-j") nil)  ; Will now default to global map
+            (local-set-key (kbd "C-c C-c") 'recompile)
 	    ;(local-set-key (kbd "M-k") 'lw-java-toggle-test-implementation)
 	    ))
 

@@ -39,6 +39,7 @@
   (c-set-offset 'arglist-intro '+)
   (c-set-offset 'arglist-close 0))
 (add-hook 'java-mode-hook 'eclipse-indent-setup)
+(add-hook 'java-mode-hook (lambda () (setq compile-command "javac *.java")))
 
 ;;; Save special buffers
 ;; See:
