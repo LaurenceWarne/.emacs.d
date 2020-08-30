@@ -138,6 +138,8 @@
   ;(smartparens-global-mode 1))
 
 (use-package projectile
+  :bind
+  ("M-p" . projectile-switch-project)
   :config
   (projectile-mode 1)
   (setq projectile-other-file-alist
@@ -255,12 +257,14 @@
 (use-package lsp-mode
   :hook
   (java-mode . lsp-deferred)
+  (lsp-mode . lsp-lens-mode)
   :config
   (setq lsp-keep-workspace-alive nil
 	lsp-enable-file-watchers nil
 	lsp-enable-links nil))
 
-(use-package company-lsp)
+(use-package company-lsp
+  :after lsp-mode company)
 
 (use-package lsp-ui
   :after lsp-mode
@@ -411,19 +415,6 @@
   (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
   (add-hook 'slime-repl-mode-hook #'enable-paredit-mode)
   (add-hook 'ielm-mode-hook #'enable-paredit-mode))
-
-;; https://github.com/vermiculus/sx.el
-(use-package sx
-  :config
-  (bind-keys :prefix "C-c s"
-             :prefix-map my-sx-map
-             :prefix-docstring "Global keymap for SX."
-             ("q" . sx-tab-all-questions)
-             ("i" . sx-inbox)
-             ("o" . sx-open-link)
-             ("u" . sx-tab-unanswered-my-tags)
-             ("a" . sx-ask)
-             ("s" . sx-search)))
 
 ;; https://github.com/alphapapa/org-rifle
 (use-package helm-org-rifle
@@ -621,6 +612,7 @@
 
 ;; https://github.com/mineo/yatemplate
 (use-package yatemplate
+  :after yasnippet
   :config
   (auto-insert-mode)
   (setq auto-insert-alist nil  ; is already populated by default
@@ -671,7 +663,17 @@
 ;; Also requires:
 ;; pip3 install importmagic epc --user
 ;; https://github.com/anachronic/importmagic.el
-(use-package importmagic
-    :ensure t
-    :config
-    (add-hook 'python-mode-hook 'importmagic-mode))
+;(use-package importmagic
+;    :ensure t
+;    :config
+;    (add-hook 'python-mode-hook 'importmagic-mode))
+
+(use-package scala-mode
+  :mode "\\.s\\(cala\\|bt\\)$")
+
+;; https://scalameta.org/metals/docs/editors/emacs.html
+;; Note this package requires installation of a binary (see above link)
+(use-package lsp-metals
+  :after lsp lsp-ui scala-mode
+  :hook (scala-mode . lsp)
+  (lsp-mode . lsp-lens-mode))

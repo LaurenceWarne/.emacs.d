@@ -1,7 +1,10 @@
 # -*- mode: snippet -*-
 # name: doc
-# key: doc
+# key: def
+# group : definitions
 # --
-"""
-$0
-"""
+def $1($2):
+    \"\"\"$3
+    ${2:$(python-args-to-docstring)}
+    \"\"\"
+    $0
