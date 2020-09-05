@@ -130,3 +130,13 @@
           (message "Switching to snow")
           (switch-to-buffer "*snow*"))
       (message "Buffer is correct"))))
+
+(defun lw-elpy-tox-virtualenv ()
+  (interactive)
+  (let ((tox-dir (concat (projectile-project-root) ".tox/")))
+    (message "Found tox directory: %s" tox-dir)
+    (if (file-directory-p tox-dir)
+        (let ((dir (read-directory-name "directory:" tox-dir)))
+          (pyvenv-activate dir)
+          (elpy-rpc-restart))
+      (message "No .tox directory found at the project root."))))
