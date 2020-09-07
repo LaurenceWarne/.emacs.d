@@ -144,9 +144,12 @@
   (projectile-mode 1)
   (setq projectile-other-file-alist
 	(append projectile-other-file-alist
-		'(("el"   . ("el" "md"))
-		  ("py"   . ("py" "md"))
-		  ("java" . ("java" "md" "gradle"))
+		'(("md"   . ("el" "java" "py" "yml" "ini" "gradle"))
+                  ("ini"  . ("el" "java" "py" "yml" "md" "gradle"))
+                  ("yml"  . ("el" "java" "py" "ini" "md" "gradle"))
+                  ("el"   . ("el" "md"))
+		  ("py"   . ("py" "md" "ini" "yml"))
+		  ("java" . ("java" "md" "gradle" "yml"))
                   ("org"  . ("org"))))))
 
 ;; http://tuhdo.github.io/helm-intro.html
@@ -189,30 +192,26 @@
   ;; Don't add helm-ag to after because its loading is deferred
   :after (helm projectile groovy-mode paredit)
   :init
-  (defun lw-helm-projectile-find-other-file-pf ()
-    (interactive)
-    (let ((current-prefix-arg 4))
-      (call-interactively #'helm-projectile-find-other-file)))
   :bind (:map python-mode-map
 	      ("C-j" . #'helm-projectile)
 	      ("M-q" . #'helm-projectile-ag)
-	      ("M-k" . #'lw-helm-projectile-find-other-file-pf)
+	      ("M-k" . #'projectile-toggle-between-implementation-and-test)
 	      :map java-mode-map
 	      ("C-j" . #'helm-projectile)
 	      ("M-q" . #'helm-projectile-ag)
-	      ("M-k" . #'lw-helm-projectile-find-other-file-pf)
+	      ("M-k" . #'projectile-toggle-between-implementation-and-test)
 	      :map emacs-lisp-mode-map
 	      ("C-j" . #'helm-projectile)
 	      ("M-q" . #'helm-projectile-ag)
-	      ("M-k" . #'lw-helm-projectile-find-other-file-pf)
+	      ("M-k" . #'projectile-toggle-between-implementation-and-test)
 	      :map paredit-mode-map
 	      ("C-j" . #'helm-projectile)
 	      ("M-q" . #'helm-projectile-ag)
-	      ("M-k" . #'lw-helm-projectile-find-other-file-pf)
+	      ("M-k" . #'projectile-toggle-between-implementation-and-test)
 	      :map groovy-mode-map
 	      ("C-j" . #'helm-projectile)
 	      ("M-q" . #'helm-projectile-ag)
-	      ("M-k" . #'lw-helm-projectile-find-other-file-pf)
+	      ("M-k" . #'projectile-toggle-between-implementation-and-test)
               :map org-mode-map
               ("C-j" . #'helm-projectile))
   :config
