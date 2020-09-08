@@ -138,6 +138,7 @@
   ;(smartparens-global-mode 1))
 
 (use-package projectile
+  :demand t
   :bind
   ("M-p" . projectile-switch-project)
   :config
@@ -190,8 +191,7 @@
 
 (use-package helm-projectile
   ;; Don't add helm-ag to after because its loading is deferred
-  :after (helm projectile groovy-mode paredit)
-  :init
+  :after (helm projectile)
   :bind (:map python-mode-map
 	      ("C-j" . #'helm-projectile)
 	      ("M-q" . #'helm-projectile-ag)
@@ -201,14 +201,6 @@
 	      ("M-q" . #'helm-projectile-ag)
 	      ("M-k" . #'projectile-toggle-between-implementation-and-test)
 	      :map emacs-lisp-mode-map
-	      ("C-j" . #'helm-projectile)
-	      ("M-q" . #'helm-projectile-ag)
-	      ("M-k" . #'projectile-toggle-between-implementation-and-test)
-	      :map paredit-mode-map
-	      ("C-j" . #'helm-projectile)
-	      ("M-q" . #'helm-projectile-ag)
-	      ("M-k" . #'projectile-toggle-between-implementation-and-test)
-	      :map groovy-mode-map
 	      ("C-j" . #'helm-projectile)
 	      ("M-q" . #'helm-projectile-ag)
 	      ("M-k" . #'projectile-toggle-between-implementation-and-test)
@@ -237,7 +229,12 @@
 (use-package hydra)
 
 ;; Note groovy mode automatically adds itself to auto-mode-alist
-(use-package groovy-mode)
+(use-package groovy-mode
+  :after helm-projectile
+  :bind (:map groovy-mode-map
+              ("C-j" . #'helm-projectile)
+	      ("M-q" . #'helm-projectile-ag)
+	      ("M-k" . #'projectile-toggle-between-implementation-and-test)))
 
 ;; https://github.com/parkouss/speed-type
 (use-package speed-type
@@ -355,6 +352,7 @@
 
 ;; https://github.com/anwyn/slime-company
 (use-package slime-company
+  :after company
   ;; We have to call this before slime is loaded:
   ;; https://github.com/anwyn/slime-company/issues/11
   :init
@@ -403,12 +401,16 @@
 
 ;; http://danmidwood.com/content/2014/11/21/animated-paredit.html
 (use-package paredit
+  :after helm-projectile
   :bind (:map paredit-mode-map
 	      ("C-0" . paredit-forward-slurp-sexp)
 	      ("C-9" . paredit-forward-barf-sexp)
               ("M-f" . paredit-forward)
               ("M-b" . paredit-backward)
-	      ("M-s" . paredit-forward-down))
+	      ("M-s" . paredit-forward-down)
+              ("C-j" . #'helm-projectile)
+	      ("M-q" . #'helm-projectile-ag)
+	      ("M-k" . #'projectile-toggle-between-implementation-and-test))
   :config
   (add-hook 'lisp-mode-hook #'enable-paredit-mode)
   (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
