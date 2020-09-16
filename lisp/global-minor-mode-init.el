@@ -24,6 +24,8 @@
 (fset 'yes-or-no-p 'y-or-n-p)          ; Use y/n instead of yes/no
 ;; https://www.emacswiki.org/emacs/DisabledCommands
 (setq disabled-command-function nil)   ; Enable all disabled commands
+(setq mac-command-modifier 'meta)
+(setq mac-option-modifier 'control)
 
 (require 'dired)
 (require 'dired-x)
