@@ -52,6 +52,11 @@
      :url "https://github.com/quelpa/quelpa-use-package.git"))
   (require 'quelpa-use-package))
 
+(use-package exec-path-from-shell
+  :config
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
+
 (use-package doom-themes
   :config
   (setq doom-themes-enable-bold t ; if nil, bold is universally disabled
