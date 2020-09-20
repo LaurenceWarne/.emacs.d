@@ -54,7 +54,7 @@
 
 (use-package exec-path-from-shell
   :config
-  (when (memq window-system '(mac ns x))
+  (when (memq window-system '(mac ns))
     (exec-path-from-shell-initialize)))
 
 (use-package doom-themes
@@ -150,13 +150,16 @@
   (projectile-mode 1)
   (setq projectile-other-file-alist
 	(append projectile-other-file-alist
-		'(("md"   . ("el" "java" "py" "yml" "ini" "gradle"))
-                  ("ini"  . ("el" "java" "py" "yml" "md" "gradle"))
-                  ("yml"  . ("el" "java" "py" "ini" "md" "gradle"))
-                  ("el"   . ("el" "md"))
-		  ("py"   . ("py" "md" "ini" "yml"))
-		  ("java" . ("java" "md" "gradle" "yml"))
-                  ("org"  . ("org"))))))
+		'(("md"    . ("el" "java" "py" "scala" "yml" "ini" "gradle"))
+                  ("ini"   . ("el" "java" "py" "scala" "yml" "md" "gradle"))
+                  ("yml"   . ("el" "java" "py" "scala" "ini" "md" "gradle"))
+                  ("el"    . ("el" "md"))
+		  ("py"    . ("py" "md" "ini" "yml"))
+		  ("java"  . ("java" "md" "gradle" "yml"))
+		  ("scala" . ("scala" "sc" "md" "gradle" "yml"))
+		  ("sc"    . ("scala" "sc" "md" "gradle" "yml"))
+		  ("sbt"   . ("scala" "sbt" "md" "gradle" "yml"))
+                  ("org"   . ("org"))))))
 
 ;; http://tuhdo.github.io/helm-intro.html
 (use-package helm
@@ -675,7 +678,11 @@
 ;    (add-hook 'python-mode-hook 'importmagic-mode))
 
 (use-package scala-mode
-  :mode "\\.s\\(c\\|cala\\|bt\\)$")
+  :mode "\\.s\\(c\\|cala\\|bt\\)$"
+  :bind (:map scala-mode-map
+              ("C-j" . #'helm-projectile)
+	      ("M-q" . #'helm-projectile-ag)
+	      ("M-k" . #'projectile-toggle-between-implementation-and-test)))
 
 ;; https://scalameta.org/metals/docs/editors/emacs.html
 ;; Note this package requires installation of a binary (see above link)
