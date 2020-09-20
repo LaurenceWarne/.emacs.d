@@ -675,7 +675,7 @@
 ;    (add-hook 'python-mode-hook 'importmagic-mode))
 
 (use-package scala-mode
-  :mode "\\.s\\(cala\\|bt\\)$")
+  :mode "\\.s\\(c\\|cala\\|bt\\)$")
 
 ;; https://scalameta.org/metals/docs/editors/emacs.html
 ;; Note this package requires installation of a binary (see above link)
