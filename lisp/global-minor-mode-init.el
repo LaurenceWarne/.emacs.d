@@ -25,7 +25,7 @@
 ;; https://www.emacswiki.org/emacs/DisabledCommands
 (setq disabled-command-function nil)   ; Enable all disabled commands
 (setq mac-command-modifier 'meta)
-(setq mac-option-modifier 'control)
+(setq mac-right-option-modifier 'control)
 
 (require 'dired)
 (require 'dired-x)
