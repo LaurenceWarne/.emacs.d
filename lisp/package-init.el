@@ -246,8 +246,9 @@
 
 ;; https://github.com/parkouss/speed-type
 (use-package speed-type
+  :quelpa (speed-type :fetcher github :repo "laurencewarne/speed-type" :upgrade t)
   :commands (speed-type-code-region speed-type-text speed-type-region speed-type-buffer)
-  :load-path "~/projects/speed-type"
+  ;; :load-path "~/projects/speed-type"
   :config
   (setq speed-type-default-lang "English"))
 
@@ -337,8 +338,10 @@
 
 ;; https://github.com/LaurenceWarne/jdoc-jumper
 (use-package jdoc-jumper
-  :commands jdoc-jumper-jump-from-point
-  :load-path "~/projects/jdoc-jumper")
+  :ensure nil
+  :quelpa (jdoc-jumper :fetcher github :repo "laurencewarne/jdoc-jumper" :upgrade t)
+  ;; :load-path "~/projects/jdoc-jumper"
+  :commands jdoc-jumper-jump-from-point)
 
 ;; https://github.com/politza/pdf-tools/blob/master/README.org
 (use-package pdf-tools
@@ -375,7 +378,8 @@
   (define-key slime-repl-mode-map (kbd "C-c C-d C-d") 'slime-pop-find-definition-stack))
 
 (use-package steam
-  :load-path "~/projects/steam.el"
+  ;; :load-path "~/projects/steam.el"
+  :quelpa (steam :fetcher github :repo "laurencewarne/steam.el" :upgrade t)
   :config
   (setq steam-username "39422361280608732623190235"
 	org-startup-with-inline-images t))
@@ -461,8 +465,8 @@
 
 (use-package mc-biome-viewer
     :ensure nil
-    :load-path "~/projects/mc-biome-viewer"
-    ;:quelpa (mc-biome-viewer :fetcher github :repo "LaurenceWarne/mc-biome-viewer")
+    ;; :load-path "~/projects/mc-biome-viewer"
+    :quelpa (mc-biome-viewer :fetcher github :repo "LaurenceWarne/mc-biome-viewer" :upgrade t)
     ;; Example configuration
     :config
     (setq mc-biome-viewer-column-chunks-in-camera 48)  ; But fewer chunks will be faster
@@ -476,29 +480,30 @@
 
 ;; https://github.com/ardumont/org2jekyll
 (use-package org2jekyll
-    :load-path "~/projects/org2jekyll"
-    :config
-    (setq org2jekyll-blog-author "Laurence Warne"
-	  org2jekyll-source-directory (expand-file-name "~/posts/")
-	  org2jekyll-jekyll-directory (expand-file-name "~/Documents/")
-	  org2jekyll-jekyll-drafts-dir ""
-	  org2jekyll-jekyll-posts-dir "_posts/"
-	  post-project
-	  `("post"
-	    :base-directory ,(org2jekyll-input-directory)
-	    :base-extension "org"
-	    :publishing-directory ,(org2jekyll-output-directory org2jekyll-jekyll-posts-dir)
-	    :publishing-function org-html-publish-to-html
-	    :headline-levels 4
-	    :section-numbers nil
-	    :with-toc nil
-	    :html-head "<link rel=\"stylesheet\" href=\"./css/style.css\" type=\"text/css\"/>"
-	    :html-preamble t
-	    :recursive t
-	    :make-index t
-	    :html-extension "html"
-	    :body-only t))
-    (setq org-publish-project-alist (cons post-project org-publish-project-alist)))
+  :quelpa (org2jekyll :fetcher github :repo "laurencewarne/org2jekyll" :upgrade t)
+  ;; :load-path "~/projects/org2jekyll"
+  :config
+  (setq org2jekyll-blog-author "Laurence Warne"
+        org2jekyll-source-directory (expand-file-name "~/posts/")
+        org2jekyll-jekyll-directory (expand-file-name "~/Documents/")
+        org2jekyll-jekyll-drafts-dir ""
+        org2jekyll-jekyll-posts-dir "_posts/"
+        post-project
+        `("post"
+          :base-directory ,(org2jekyll-input-directory)
+          :base-extension "org"
+          :publishing-directory ,(org2jekyll-output-directory org2jekyll-jekyll-posts-dir)
+          :publishing-function org-html-publish-to-html
+          :headline-levels 4
+          :section-numbers nil
+          :with-toc nil
+          :html-head "<link rel=\"stylesheet\" href=\"./css/style.css\" type=\"text/css\"/>"
+          :html-preamble t
+          :recursive t
+          :make-index t
+          :html-extension "html"
+          :body-only t))
+  (setq org-publish-project-alist (cons post-project org-publish-project-alist)))
 
 ;; https://github.com/hniksic/emacs-htmlize
 (use-package htmlize)
@@ -578,22 +583,23 @@
   (setq cquery-executable "/usr/local/src/cquery/build/cquery"))
 
 (use-package ox-yaow
-    :ensure nil
-    :load-path "~/projects/ox-yaow.el"
-    :config
-    (setq org-publish-project-alist
-	  (cons	'("wiki"
-		 :base-directory "~/org/"
-		 :base-extension "org"
-		 :publishing-directory "~/wiki/"
-		 :html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/htmlize.css\"/><link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/readtheorg.css\"/><script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js\"></script><script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/js/readtheorg.js\"></script>"
-		 :html-preamble t
-		 :recursive t
-		 :publishing-function ox-yaow-publish-to-html
-		 :preparation-function ox-yaow-preparation-fn
-		 :completion-function ox-yaow-completion-fn
-		 :ox-yaow-depth 1)
-		org-publish-project-alist)))
+  :ensure nil
+  :quelpa (ox-yaow :fetcher github :repo "laurencewarne/ox-yaow.el" :upgrade t)
+  ;; :load-path "~/projects/ox-yaow.el"
+  :config
+  (setq org-publish-project-alist
+        (cons '("wiki"
+                :base-directory "~/org/"
+                :base-extension "org"
+                :publishing-directory "~/wiki/"
+                :html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/htmlize.css\"/><link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/readtheorg.css\"/><script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js\"></script><script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/js/readtheorg.js\"></script>"
+                :html-preamble t
+                :recursive t
+                :publishing-function ox-yaow-publish-to-html
+                :preparation-function ox-yaow-preparation-fn
+                :completion-function ox-yaow-completion-fn
+                :ox-yaow-depth 1)
+              org-publish-project-alist)))
 
 ;; https://github.com/yoshiki/yaml-mode
 (use-package yaml-mode)
@@ -617,6 +623,7 @@
 
 ;; https://github.com/kjambunathan/fontmenu
 (use-package fontmenu
+  :quelpa (fontmenu :fetcher github :repo "laurencewarne/fontmenu" :upgrade t)
   :load-path "~/projects/fontmenu")
 
 ;; https://github.com/mineo/yatemplate
