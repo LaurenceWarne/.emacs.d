@@ -695,5 +695,10 @@
 ;; Note this package requires installation of a binary (see above link)
 (use-package lsp-metals
   :after lsp lsp-ui scala-mode
-  :hook (scala-mode . lsp)
-  (lsp-mode . lsp-lens-mode))
+  :hook ((scala-mode . lsp)
+         (scala-mode . (lambda () (add-hook 'before-save-hook 'lsp-format-buffer)))
+         (lsp-mode . lsp-lens-mode)))
+
+;; https://github.com/spotify/dockerfile-mode
+(use-package dockerfile-mode
+  :mode "Dockerfile\\'")
