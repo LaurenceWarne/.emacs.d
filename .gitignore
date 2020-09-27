@@ -68,3 +68,4 @@ transient/**
 mc-biome-viewer/**
 projectile.cache
 *.jar
+.dap-breakpoints
