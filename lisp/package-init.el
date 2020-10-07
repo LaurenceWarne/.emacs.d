@@ -446,7 +446,9 @@
   ("C-h k" . #'helpful-key))
 
 ;; https://magit.vc/
-(use-package magit)
+(use-package magit
+  :bind (:map magit-mode-map
+              ("C-c g" . #'magit-file-dispatch)))
 
 ;; https://github.com/syohex/emacs-zoom-window
 (use-package zoom-window
@@ -687,14 +689,21 @@
 ;    :config
 ;    (add-hook 'python-mode-hook 'importmagic-mode))
 
+;; https://github.com/hvesalai/emacs-scala-mode
 (use-package scala-mode
-  :after smartparens
+  :after smartparens projectile
   :mode "\\.s\\(c\\|cala\\|bt\\)$"
   :bind (:map scala-mode-map
               ("C-j" . #'helm-projectile)
 	      ("M-q" . #'helm-projectile-ag)
 	      ("M-k" . #'projectile-toggle-between-implementation-and-test))
   :config
+  (projectile-register-project-type 'mill '("build.sc")
+                                    ;:project-file "build.sc"
+                                    :compile "mill __.compile"
+                                    :test "mill __.test.test"
+                                    :run "mill run"
+                                    :test-suffix "Test")
   (require 'smartparens)
   (add-hook 'scala-mode-hook #'smartparens-mode)
   (add-hook 'scala-mode-hook (lambda () (electric-pair-local-mode -1))))
