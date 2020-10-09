@@ -447,7 +447,7 @@
 
 ;; https://magit.vc/
 (use-package magit
-  :bind (:map magit-mode-map
+  :bind (:map magit-file-mode-map
               ("C-c g" . #'magit-file-dispatch)))
 
 ;; https://github.com/syohex/emacs-zoom-window
