@@ -719,3 +719,11 @@
 ;; https://github.com/spotify/dockerfile-mode
 (use-package dockerfile-mode
   :mode "Dockerfile\\'")
+
+;; https://github.com/ppareit/graphviz-dot-mode
+(use-package graphviz-dot-mode
+  :config
+  (setq graphviz-dot-indent-width 4))
+
+;; (use-package company-graphviz-dot
+;;   :after company graphviz-dot-mode)
