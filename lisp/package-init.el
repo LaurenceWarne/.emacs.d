@@ -405,6 +405,7 @@
 (use-package esup
   :commands esup)
 
+;; https://github.com/jschaf/emacs-lorem-ipsum
 (use-package lorem-ipsum
   :commands
   (lorem-ipsum-insert-sentences
