@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name : match
+# key: m
+# --
+$1 match {
+  case ${2:pattern} => $0
+}
