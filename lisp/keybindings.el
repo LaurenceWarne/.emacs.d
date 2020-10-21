@@ -45,3 +45,7 @@
 	  (lambda ()
 	    (local-set-key (kbd "b") 'dired-up-directory)
 	    (local-set-key (kbd "k") 'kill-this-buffer)))
+
+(add-hook 'eshell-mode-hook
+          (lambda ()
+            (local-set-key (kbd "C-l") #'eshell/clear)))
