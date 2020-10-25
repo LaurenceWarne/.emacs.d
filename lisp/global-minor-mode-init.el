@@ -26,6 +26,7 @@
 (setq disabled-command-function nil)   ; Enable all disabled commands
 (setq mac-command-modifier 'meta)
 (setq mac-right-option-modifier 'control)
+(setq ns-use-native-fullscreen nil)    ; Fix Emacs jumping into its own workspace whenever it's fullscreened
 
 (require 'dired)
 (require 'dired-x)
