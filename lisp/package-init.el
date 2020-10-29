@@ -697,7 +697,8 @@
   :bind (:map scala-mode-map
               ("C-j" . #'helm-projectile)
 	      ("M-q" . #'helm-projectile-ag)
-	      ("M-k" . #'projectile-toggle-between-implementation-and-test))
+	      ("M-k" . #'projectile-toggle-between-implementation-and-test)
+              ("C-c C-c" . #'projectile-test-project))
   :config
   (projectile-register-project-type 'mill '("build.sc")
                                     ;:project-file "build.sc"

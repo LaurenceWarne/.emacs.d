@@ -27,6 +27,7 @@
 (setq mac-command-modifier 'meta)
 (setq mac-right-option-modifier 'control)
 (setq ns-use-native-fullscreen nil)    ; Fix Emacs jumping into its own workspace whenever it's fullscreened
+(setq compilation-scroll-output t)
 
 (require 'dired)
 (require 'dired-x)
@@ -92,3 +93,14 @@
 	    (electric-pair-local-mode -1)
             ;; https://github.com/bbatsov/emacs-lisp-style-guide
 	    (setq indent-tabs-mode nil)))
+
+;; Stolen from (http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html)
+(require 'ansi-color)
+(defun endless/colorize-compilation ()
+  "Colorize from `compilation-filter-start' to `point'."
+  (let ((inhibit-read-only t))
+    (ansi-color-apply-on-region
+     compilation-filter-start (point))))
+
+(add-hook 'compilation-filter-hook
+          #'endless/colorize-compilation)
