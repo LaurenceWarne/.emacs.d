@@ -727,5 +727,25 @@
   :config
   (setq graphviz-dot-indent-width 4))
 
-;; (use-package company-graphviz-dot
-;;   :after company graphviz-dot-mode)
+;; https://depp.brause.cc/shackle
+(use-package shackle
+  :config
+  (cl-defun lw-shackle-get-window (buffer alist plist &optional (other-window t))
+    (save-selected-window
+      (when other-window (other-window 1))
+      (let ((win (split-window-below)))
+        (select-window win)
+        (switch-to-buffer buffer)
+        (local-set-key (kbd "q") 'kill-buffer-and-window)  ; won't work in interactive buffers
+        win)))
+  (defalias 'lw-shackle-get-window-cur
+    (lambda (buffer alist plist)
+      (lw-shackle-get-window buffer alist plist nil)))
+
+  (setq shackle-rules '((compilation-mode :select nil :custom lw-shackle-get-window)
+                        ("magit: .*" :regexp t :select t :custom lw-shackle-get-window-cur)))
+  (shackle-mode 1))
+
+(use-package company-graphviz-dot
+  :disabled
+  :after company graphviz-dot-mode)
