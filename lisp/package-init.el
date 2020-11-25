@@ -228,6 +228,7 @@
 	 ("C-h w" . helm-descbinds)))
 
 (use-package company
+  :quelpa (company :fetcher github :repo "company-mode/company-mode")
   :config
   ;; We usually want make sure we have appropriate backends before enabling
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
@@ -448,8 +449,8 @@
 
 ;; https://magit.vc/
 (use-package magit
-  :bind (:map magit-file-mode-map
-              ("C-c g" . #'magit-file-dispatch)))
+  :config
+  (global-set-key (kbd "C-c g") 'magit-file-dispatch))
 
 ;; https://github.com/syohex/emacs-zoom-window
 (use-package zoom-window
@@ -458,6 +459,8 @@
 
 ;; https://github.com/sebastiencs/company-box
 (use-package company-box
+  :disabled
+  :quelpa (company-box :fetcher github :repo "sebastiencs/company-box")
   :hook (company-mode . company-box-mode)
   :config
   (setq company-box-icons-alist 'company-box-icons-all-the-icons))
