@@ -132,6 +132,9 @@
   :bind (:map smartparens-mode-map
 	      ("C-0" . sp-forward-slurp-sexp)
 	      ("C-9" . sp-forward-barf-sexp)
+	      ("C--" . sp-unwrap-sexp)
+	      ("M-r" . sp-backward-up-sexp)
+	      ("M-d" . sp-kill-sexp)
               ("M-f" . sp-forward-sexp)
               ("M-b" . sp-backward-sexp)
               ("M-s" . sp-down-sexp))
@@ -228,7 +231,7 @@
 	 ("C-h w" . helm-descbinds)))
 
 (use-package company
-  :quelpa (company :fetcher github :repo "company-mode/company-mode")
+  :quelpa (company :fetcher github :repo "company-mode/company-mode" :stable t)
   :config
   ;; We usually want make sure we have appropriate backends before enabling
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
@@ -460,7 +463,8 @@
 ;; https://github.com/sebastiencs/company-box
 (use-package company-box
   :disabled
-  :quelpa (company-box :fetcher github :repo "sebastiencs/company-box")
+  :quelpa (company-box :fetcher github :repo "sebastiencs/company-box" :stable t)
+  :after company
   :hook (company-mode . company-box-mode)
   :config
   (setq company-box-icons-alist 'company-box-icons-all-the-icons))
