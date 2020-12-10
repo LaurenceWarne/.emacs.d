@@ -135,7 +135,6 @@
 	      ("C--" . sp-unwrap-sexp)
 	      ("C-r" . sp-up-sexp)
 	      ("M-r" . sp-backward-up-sexp)
-	      ("M-d" . sp-kill-sexp)
               ("M-f" . sp-forward-sexp)
               ("M-b" . sp-backward-sexp)
               ("M-s" . sp-down-sexp))
@@ -146,6 +145,8 @@
   (add-hook 'java-mode-hook (lambda () (electric-pair-local-mode -1)))
   (add-hook 'python-mode-hook #'smartparens-mode)
   (add-hook 'python-mode-hook (lambda () (electric-pair-local-mode -1)))
+  (add-hook 'org-mode-hook #'smartparens-mode)
+  (add-hook 'org-mode-hook (lambda () (electric-pair-local-mode -1)))
   (require 'smartparens-config))
   ;(smartparens-global-mode 1))
 
