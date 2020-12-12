@@ -458,7 +458,12 @@
 ;; https://magit.vc/
 (use-package magit
   :config
-  (global-set-key (kbd "C-c g") 'magit-file-dispatch))
+  (global-set-key (kbd "C-c g") 'magit-file-dispatch)
+  (defun lw-magit-checkout-last (&optional start-point)
+    (interactive)
+    (magit-branch-checkout "-" start-point))
+  (transient-append-suffix 'magit-branch "w"
+    '("-" "last branch" lw-magit-checkout-last)))
 
 ;; https://github.com/syohex/emacs-zoom-window
 (use-package zoom-window
