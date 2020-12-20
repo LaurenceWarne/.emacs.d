@@ -732,7 +732,7 @@
 (use-package lsp-metals
   :after lsp lsp-ui scala-mode
   :hook ((scala-mode . lsp)
-         (scala-mode . (lambda () (add-hook 'before-save-hook 'lsp-format-buffer)))
+         (scala-mode . (lambda () (add-hook 'before-save-hook 'lsp-format-buffer nil t)))
          (lsp-mode . lsp-lens-mode)))
 
 ;; https://github.com/spotify/dockerfile-mode
@@ -766,3 +766,10 @@
 (use-package company-graphviz-dot
   :disabled
   :after company graphviz-dot-mode)
+
+;; https://github.com/dalanicolai/pdf-continuous-scroll-mode.el
+(use-package pdf-continuous-scroll-mode
+  :disabled t
+  :ensure nil
+  :quelpa (pdf-continuous-scroll-mode :fetcher github :repo "dalanicolai/pdf-continuous-scroll-mode.el")
+  :hook (pdf-view-mode . pdf-continuous-scroll-mode))
