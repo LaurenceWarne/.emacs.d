@@ -472,11 +472,10 @@
 ;; https://github.com/sebastiencs/company-box
 ;; Need to M-x install-all-the-icons
 (use-package company-box
-  :quelpa (company-box :fetcher github :repo "sebastiencs/company-box" :stable t)
   :after company
   :hook (company-mode . company-box-mode)
   :config
-  (setq company-box-icons-alist 'company-box-icons-all-the-icons))p
+  (setq company-box-icons-alist 'company-box-icons-all-the-icons))
 
 ;; https://github.com/magnars/expand-region.el
 (use-package expand-region
@@ -783,7 +782,18 @@
   (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
   (eaf-bind-key take_photo "p" eaf-camera-keybinding))
 
-
 (use-package openapi-yaml-mode
+  :after eaf
   :ensure nil
-  :quelpa (openapi-yaml-mode :fetcher github :repo "magoyette/openapi-yaml-mode"))
+  :quelpa (openapi-yaml-mode :fetcher github :repo "magoyette/openapi-yaml-mode")
+  :config
+  (defun lw-openapi-to-html ()
+    (interactive)
+    (shell-command
+      (concat
+        "java -jar ~/Downloads/swagger-codegen-cli.jar generate -i "
+        (buffer-file-name)
+        " -l html2 -o out"))
+    (let ((dir default-directory))
+      (other-window 1)
+      (eaf-open (concat dir "out/index.html")))))
