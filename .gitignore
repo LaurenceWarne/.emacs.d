@@ -70,3 +70,5 @@ mc-biome-viewer/**
 projectile.cache
 *.jar
 .dap-breakpoints
+site-lisp/**
+eaf/**

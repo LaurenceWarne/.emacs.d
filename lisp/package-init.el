@@ -233,7 +233,6 @@
 	 ("C-h w" . helm-descbinds)))
 
 (use-package company
-  :quelpa (company :fetcher github :repo "company-mode/company-mode" :stable t)
   :config
   ;; We usually want make sure we have appropriate backends before enabling
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
@@ -471,13 +470,13 @@
   (global-set-key (kbd "M-i") 'zoom-window-zoom))
 
 ;; https://github.com/sebastiencs/company-box
+;; Need to M-x install-all-the-icons
 (use-package company-box
-  :disabled
   :quelpa (company-box :fetcher github :repo "sebastiencs/company-box" :stable t)
   :after company
   :hook (company-mode . company-box-mode)
   :config
-  (setq company-box-icons-alist 'company-box-icons-all-the-icons))
+  (setq company-box-icons-alist 'company-box-icons-all-the-icons))p
 
 ;; https://github.com/magnars/expand-region.el
 (use-package expand-region
@@ -769,7 +768,22 @@
 
 ;; https://github.com/dalanicolai/pdf-continuous-scroll-mode.el
 (use-package pdf-continuous-scroll-mode
-  :disabled t
   :ensure nil
   :quelpa (pdf-continuous-scroll-mode :fetcher github :repo "dalanicolai/pdf-continuous-scroll-mode.el")
   :hook (pdf-view-mode . pdf-continuous-scroll-mode))
+
+;; https://github.com/manateelazycat/emacs-application-framework#dependency-list
+;; Note extra installation steps are required, see above link
+(use-package eaf
+  :load-path "~/.emacs.d/site-lisp/emacs-application-framework" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
+  :custom
+  (eaf-find-alternate-file-in-dired t)
+  :config
+  (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key take_photo "p" eaf-camera-keybinding))
+
+
+(use-package openapi-yaml-mode
+  :ensure nil
+  :quelpa (openapi-yaml-mode :fetcher github :repo "magoyette/openapi-yaml-mode"))
