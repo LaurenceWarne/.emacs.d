@@ -778,6 +778,7 @@
   :custom
   (eaf-find-alternate-file-in-dired t)
   :config
+  (setq eaf-python-command (concat user-emacs-directory "eaf/venv/bin/python3"))
   (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
   (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
   (eaf-bind-key take_photo "p" eaf-camera-keybinding))
@@ -787,13 +788,18 @@
   :ensure nil
   :quelpa (openapi-yaml-mode :fetcher github :repo "magoyette/openapi-yaml-mode")
   :config
+  (setq lw-openapi-jar-path "~/Downloads/swagger-codegen-cli.jar"
+        lw-openapi-output-dir "out/openapi")
   (defun lw-openapi-to-html ()
     (interactive)
     (shell-command
       (concat
-        "java -jar ~/Downloads/swagger-codegen-cli.jar generate -i "
-        (buffer-file-name)
-        " -l html2 -o out"))
+       "java -jar "
+       lw-openapi-jar-path
+       " "
+       (buffer-file-name)
+       " -l html2 -o " lw-openapi-output-dir))
     (let ((dir default-directory))
       (other-window 1)
-      (eaf-open (concat dir "out/index.html")))))
+      (eaf-open (concat dir lw-openapi-output-dir "/index.html"))))
+  (define-key openapi-yaml-mode-map (kbd "C-c C-c") #'lw-openapi-to-html))
