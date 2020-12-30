@@ -744,6 +744,7 @@
 
 ;; https://depp.brause.cc/shackle
 (use-package shackle
+  :if (string= window-system "x")  ; Probably should allow Wayland also
   :config
   (cl-defun lw-shackle-get-window (buffer alist plist &optional (other-window t))
     (save-selected-window
