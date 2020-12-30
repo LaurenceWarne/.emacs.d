@@ -775,6 +775,7 @@
 ;; https://github.com/manateelazycat/emacs-application-framework#dependency-list
 ;; Note extra installation steps are required, see above link
 (use-package eaf
+  :if (eq system-type 'gnu/linux)
   :load-path "~/.emacs.d/site-lisp/emacs-application-framework" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
   :custom
   (eaf-find-alternate-file-in-dired t)
