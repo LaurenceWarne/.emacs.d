@@ -274,7 +274,8 @@
   :config
   (setq lsp-keep-workspace-alive nil
 	lsp-enable-file-watchers nil
-	lsp-enable-links nil))
+	lsp-enable-links nil)
+  (add-hook 'scala-mode-hook (lambda () (lsp-headerline-breadcrumb-mode -1))))
 
 (use-package company-lsp
   :after lsp-mode company)
@@ -608,19 +609,28 @@
   :quelpa (ox-yaow :fetcher github :repo "laurencewarne/ox-yaow.el" :upgrade t)
   ;; :load-path "~/projects/ox-yaow.el"
   :config
-  (setq org-publish-project-alist
-        (cons '("wiki"
-                :base-directory "~/org/"
-                :base-extension "org"
-                :publishing-directory "~/wiki/"
-                :html-head "<link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/htmlize.css\"/><link rel=\"stylesheet\" type=\"text/css\" href=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/css/readtheorg.css\"/><script src=\"https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js\"></script><script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/lib/js/jquery.stickytableheaders.min.js\"></script><script type=\"text/javascript\" src=\"https://fniessen.github.io/org-html-themes/styles/readtheorg/js/readtheorg.js\"></script>"
-                :html-preamble t
-                :recursive t
-                :publishing-function ox-yaow-publish-to-html
-                :preparation-function ox-yaow-preparation-fn
-                :completion-function ox-yaow-completion-fn
-                :ox-yaow-depth 1)
-              org-publish-project-alist)))
+  ;; Stolen from https://github.com/fniessen/org-html-themes
+  (setq rto-css '("https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"
+                  "https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/readtheorg.css")
+        rto-js '("https://fniessen.github.io/org-html-themes/src/lib/js/jquery.stickytableheaders.min.js"
+                 "https://fniessen.github.io/org-html-themes/src/readtheorg_theme/js/readtheorg.js")
+        extra-js '("https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"
+                   "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js" )
+        ox-yaow-html-head (concat (mapconcat (lambda (url) (concat "<link rel=\"stylesheet\" type=\"text/css\" href=\"" url "\"/>\n")) rto-css "")
+                                  (mapconcat (lambda (url) (concat "<script src=\"" url "\"></script>\n")) (append rto-js extra-js) ""))
+        org-publish-project-alist (cons
+                                   `("wiki"
+                                     :base-directory "~/org/"
+                                     :base-extension "org"
+                                     :publishing-directory "~/wiki/"
+                                     :html-head ,ox-yaow-html-head
+                                     :html-preamble t
+                                     :recursive t
+                                     :publishing-function ox-yaow-publish-to-html
+                                     :preparation-function ox-yaow-preparation-fn
+                                     :completion-function ox-yaow-completion-fn
+                                     :ox-yaow-depth 1)
+                                   org-publish-project-alist)))
 
 ;; https://github.com/yoshiki/yaml-mode
 (use-package yaml-mode)
