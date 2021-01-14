@@ -158,16 +158,16 @@
   (projectile-mode 1)
   (setq projectile-other-file-alist
 	(append projectile-other-file-alist
-		'(("md"    . ("el" "java" "py" "scala" "yml" "ini" "gradle"))
-                  ("ini"   . ("el" "java" "py" "scala" "yml" "md" "gradle"))
-                  ("yml"   . ("el" "java" "py" "scala" "ini" "md" "gradle"))
-                  ("el"    . ("el" "md"))
-		  ("py"    . ("py" "md" "ini" "yml"))
-		  ("java"  . ("java" "md" "gradle" "yml"))
-		  ("scala" . ("scala" "sc" "md" "gradle" "yml"))
-		  ("sc"    . ("scala" "sc" "md" "gradle" "yml"))
-		  ("sbt"   . ("scala" "sbt" "md" "gradle" "yml"))
-                  ("org"   . ("org"))))))
+		'(("md"    . ("el" "java" "py" "scala" "yml" "yaml" "ini" "gradle"))
+          ("ini"   . ("el" "java" "py" "scala" "yml" "yaml" "md" "gradle"))
+          ("yml"   . ("el" "java" "py" "scala" "ini" "md" "gradle"))
+          ("el"    . ("el" "md"))
+		  ("py"    . ("py" "md" "ini" "yml" "yaml"))
+		  ("java"  . ("java" "md" "gradle" "yml" "yaml"))
+		  ("scala" . ("scala" "sc" "md" "gradle" "yml" "yaml" "jenkinsfile" "org" "tf"))
+		  ("sc"    . ("scala" "sc" "md" "gradle" "yml" "yaml"))
+		  ("sbt"   . ("scala" "sbt" "md" "gradle" "yml" "yaml"))
+          ("org"   . ("org"))))))
 
 ;; http://tuhdo.github.io/helm-intro.html
 (use-package helm
