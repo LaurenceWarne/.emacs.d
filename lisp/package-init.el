@@ -160,8 +160,9 @@
 	(append projectile-other-file-alist
 		'(("md"    . ("el" "java" "py" "scala" "yml" "yaml" "ini" "gradle"))
           ("ini"   . ("el" "java" "py" "scala" "yml" "yaml" "md" "gradle"))
-          ("yml"   . ("el" "java" "py" "scala" "ini" "md" "gradle"))
-          ("el"    . ("el" "md"))
+          ("yml"   . ("el" "java" "py" "scala" "ini" "md" "gradle" "yml" "yaml"))
+          ("yaml"  . ("el" "java" "py" "scala" "ini" "md" "gradle" "yml" "yaml"))
+          ("el"    . ("el" "md" "org"))
 		  ("py"    . ("py" "md" "ini" "yml" "yaml"))
 		  ("java"  . ("java" "md" "gradle" "yml" "yaml"))
 		  ("scala" . ("scala" "sc" "md" "gradle" "yml" "yaml" "jenkinsfile" "org" "tf"))
@@ -815,3 +816,6 @@
       (other-window 1)
       (eaf-open (concat dir lw-openapi-output-dir "/index.html"))))
   (define-key openapi-yaml-mode-map (kbd "C-c C-c") #'lw-openapi-to-html))
+
+;; https://github.com/larstvei/ox-gfm
+(use-package ox-gfm)
