@@ -168,7 +168,9 @@
 		  ("scala" . ("scala" "sc" "md" "gradle" "yml" "yaml" "jenkinsfile" "org" "tf"))
 		  ("sc"    . ("scala" "sc" "md" "gradle" "yml" "yaml"))
 		  ("sbt"   . ("scala" "sbt" "md" "gradle" "yml" "yaml"))
-          ("org"   . ("org"))))))
+          ("org"   . ("org"))))
+    projectile-project-types
+    (--remove-first (eq 'bloop (car it)) projectile-project-types)))
 
 ;; http://tuhdo.github.io/helm-intro.html
 (use-package helm
@@ -755,7 +757,6 @@
 
 ;; https://depp.brause.cc/shackle
 (use-package shackle
-  :if (string= window-system "x")  ; Probably should allow Wayland also
   :config
   (cl-defun lw-shackle-get-window (buffer alist plist &optional (other-window t))
     (save-selected-window
