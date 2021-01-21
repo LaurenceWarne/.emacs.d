@@ -171,11 +171,6 @@
           ("org"   . ("org"))))
     projectile-project-types
     (--remove (member (car it) '(bloop sbt)) projectile-project-types))
-  (setq lw-sbt-related-files
-      (list
-       (projectile-related-files-fn-test-with-suffix "scala" "Spec")
-       (projectile-related-files-fn-test-with-suffix "scala" "Test")
-       (projectile-related-files-fn-test-with-suffix "scala" "Tests")))
   (defun lw-sbt-command (arg)
     (if (locate-file "sbtn" exec-path)
         (concat "sbtn " arg)
@@ -187,7 +182,7 @@
                                     :compile #'lw-sbt-compile-command
                                     :test  #'lw-sbt-test-command
                                     :run #'lw-sbt-run-command
-                                    :related-files-fn #'lw-sbt-related-files))
+                                    :test-suffix "Tests"))
 
 ;; http://tuhdo.github.io/helm-intro.html
 (use-package helm
