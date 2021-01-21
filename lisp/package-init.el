@@ -170,7 +170,24 @@
 		  ("sbt"   . ("scala" "sbt" "md" "gradle" "yml" "yaml"))
           ("org"   . ("org"))))
     projectile-project-types
-    (--remove-first (eq 'bloop (car it)) projectile-project-types)))
+    (--remove (member (car it) '(bloop sbt)) projectile-project-types))
+  (setq lw-sbt-related-files
+      (list
+       (projectile-related-files-fn-test-with-suffix "scala" "Spec")
+       (projectile-related-files-fn-test-with-suffix "scala" "Test")
+       (projectile-related-files-fn-test-with-suffix "scala" "Tests")))
+  (defun lw-sbt-command (arg)
+    (if (locate-file "sbtn" exec-path)
+        (concat "sbtn " arg)
+      (concat "sbt " arg)))
+  (defalias 'lw-sbt-compile-command (lambda () (lw-sbt-command "compile")))
+  (defalias 'lw-sbt-test-command (lambda () (lw-sbt-command "test")))
+  (defalias 'lw-sbt-run-command (lambda () (lw-sbt-command "run")))
+  (projectile-register-project-type 'sbt '("build.sbt")
+                                    :compile #'lw-sbt-compile-command
+                                    :test  #'lw-sbt-test-command
+                                    :run #'lw-sbt-run-command
+                                    :related-files-fn #'lw-sbt-related-files))
 
 ;; http://tuhdo.github.io/helm-intro.html
 (use-package helm
