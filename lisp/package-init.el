@@ -89,14 +89,13 @@
         org-startup-truncated nil)   ; Default to normal Emacs line wrapping behaviour
   :pin org)
 
+;; https://github.com/Alexander-Miller/pfuture
+(use-package pfuture)
+
 (use-package ace-window
   :config
   (bind-key "M-o" 'ace-window))
 
-;; NOTE:
-;; for this package to work you need to run:
-;; $ pip3 install jedi flake8 autopep8 black yapf --user
-;; See:
 ;; https://github.com/jorgenschaefer/elpy
 (use-package elpy
    :bind (:map python-mode-map
@@ -162,26 +161,25 @@
           ("ini"   . ("el" "java" "py" "scala" "yml" "yaml" "md" "gradle"))
           ("yml"   . ("el" "java" "py" "scala" "ini" "md" "gradle" "yml" "yaml"))
           ("yaml"  . ("el" "java" "py" "scala" "ini" "md" "gradle" "yml" "yaml"))
+          ("conf"  . ("el" "java" "py" "scala" "ini" "md" "gradle" "yml" "yaml"))
           ("el"    . ("el" "md" "org"))
-		  ("py"    . ("py" "md" "ini" "yml" "yaml"))
-		  ("java"  . ("java" "md" "gradle" "yml" "yaml"))
-		  ("scala" . ("scala" "sc" "md" "gradle" "yml" "yaml" "jenkinsfile" "org" "tf"))
-		  ("sc"    . ("scala" "sc" "md" "gradle" "yml" "yaml"))
-		  ("sbt"   . ("scala" "sbt" "md" "gradle" "yml" "yaml"))
+          ("py"    . ("py" "md" "ini" "yml" "yaml"))
+          ("java"  . ("java" "md" "gradle" "yml" "yaml"))
+          ("scala" . ("scala" "sc" "md" "gradle" "yml" "yaml" "jenkinsfile" "org" "tf"))
+          ("sc"    . ("scala" "sc" "md" "gradle" "yml" "yaml" "conf"))
+          ("sbt"   . ("scala" "sbt" "md" "gradle" "yml" "yaml" "conf"))
           ("org"   . ("org"))))
     projectile-project-types
     (--remove (member (car it) '(bloop sbt)) projectile-project-types))
-  (defun lw-sbt-command (arg)
-    (if (locate-file "sbtn" exec-path)
-        (concat "sbtn " arg)
-      (concat "sbt " arg)))
-  (defalias 'lw-sbt-compile-command (lambda () (lw-sbt-command "compile")))
-  (defalias 'lw-sbt-test-command (lambda () (lw-sbt-command "test")))
-  (defalias 'lw-sbt-run-command (lambda () (lw-sbt-command "run")))
+  (defun lw-sbt-command ()
+    (if (locate-file "sbtn" exec-path) "sbtn" "sbt"))
+  (defalias 'lw-sbt-compile-cmd (lambda () (concat (lw-sbt-command) " compile")))
+  (defalias 'lw-sbt-test-cmd (lambda () (concat (lw-sbt-command) "test")))
+  (defalias 'lw-sbt-run-cmd (lambda () (concat (lw-sbt-command) "run")))
   (projectile-register-project-type 'sbt '("build.sbt")
-                                    :compile #'lw-sbt-compile-command
-                                    :test  #'lw-sbt-test-command
-                                    :run #'lw-sbt-run-command
+                                    :compile #'lw-sbt-compile-cmd
+                                    :test  #'lw-sbt-test-cmd
+                                    :run #'lw-sbt-run-cmd
                                     :test-suffix "Tests"))
 
 ;; http://tuhdo.github.io/helm-intro.html
@@ -732,12 +730,12 @@
 
 ;; https://github.com/hvesalai/emacs-scala-mode
 (use-package scala-mode
-  :after smartparens projectile
+  :after smartparens projectile pfuture
   :mode "\\.s\\(c\\|cala\\|bt\\)$"
   :bind (:map scala-mode-map
               ("C-j" . #'helm-projectile)
-	      ("M-q" . #'helm-projectile-ag)
-	      ("M-k" . #'projectile-toggle-between-implementation-and-test)
+	          ("M-q" . #'helm-projectile-ag)
+	          ("M-k" . #'projectile-toggle-between-implementation-and-test)
               ("C-c C-c" . #'projectile-test-project))
   :config
   (projectile-register-project-type 'mill '("build.sc")
@@ -746,6 +744,24 @@
                                     :test "mill __.test.test"
                                     :run "mill run"
                                     :test-suffix "Test")
+  (defun lw-sbt-callback-fn (buf)
+    (print "FINISHED")
+    (with-current-buffer buf
+      (revert-buffer :ignore-auto :noconfirm)))
+  (defun lw-sbt-scalafix ()
+    (let ((default-directory (projectile-project-root))
+          (buf (current-buffer)))
+      (when (eq (projectile-project-type) 'sbt)
+        (cd (projectile-project-root))
+        (pfuture-callback `(,(lw-sbt-command)
+                            ,(concat "'scalafix --files "
+                                     buffer-file-name
+                                     "'"))
+          :on-status-change (lambda (pfuture-process status _pfuture-buffer)
+                           (message "Pfuture Debug: Process [%s] changed sttaus to [%s]" pfuture-process status))
+          :directory (projectile-project-root)
+          :on-success (lambda (process status output) (lw-sbt-callback-fn buf))
+          :on-error (lambda (process status output) (lw-sbt-callback-fn buf))))))
   (require 'smartparens)
   (add-hook 'scala-mode-hook #'smartparens-mode)
   (add-hook 'scala-mode-hook (lambda () (electric-pair-local-mode -1))))
