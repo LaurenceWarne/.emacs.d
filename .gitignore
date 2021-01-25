@@ -72,3 +72,4 @@ projectile.cache
 .dap-breakpoints
 site-lisp/**
 eaf/**
+/lisp/project/
