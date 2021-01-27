@@ -179,8 +179,8 @@
   (defun lw-sbt-command ()
     (if (locate-file "sbtn" exec-path) "sbtn" "sbt"))
   (defalias 'lw-sbt-compile-cmd (lambda () (concat (lw-sbt-command) " compile")))
-  (defalias 'lw-sbt-test-cmd (lambda () (concat (lw-sbt-command) "test")))
-  (defalias 'lw-sbt-run-cmd (lambda () (concat (lw-sbt-command) "run")))
+  (defalias 'lw-sbt-test-cmd (lambda () (concat (lw-sbt-command) " test")))
+  (defalias 'lw-sbt-run-cmd (lambda () (concat (lw-sbt-command) " run")))
   (projectile-register-project-type 'sbt '("build.sbt")
                                     :compile #'lw-sbt-compile-cmd
                                     :test  #'lw-sbt-test-cmd
