@@ -31,6 +31,9 @@
 (global-set-key (kbd "M-;") 'eval-expression)
 (global-set-key (kbd "M-@") 'abbrev-prefix-mark)
 (global-set-key (kbd "C-x C-o") 'find-file-other-window)
+(global-set-key (kbd "C-x /") 'comment-dwim)
+(global-set-key (kbd "C-x f") 'lw-put-file-name-on-clipboard)
+;; (global-set-key (kbd "C-x w") 'buffer-file-name)
 
 ;;; Local keybindings
 

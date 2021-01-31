@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: obj
+# key: obj
+# --
+
+object ${1:`(file-name-sans-extension (buffer-name))`} {
+    $0
+}

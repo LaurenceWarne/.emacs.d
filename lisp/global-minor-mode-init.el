@@ -13,11 +13,12 @@
 (show-paren-mode 1)        ; Turn on bracket match highlight
 (desktop-save-mode 1)      ; Save and automatically load previous emacs session on start up
 (electric-pair-mode 1)     ; Have that nice brace/parentheses auto indent
-(set-face-attribute 'default nil
-                    :height 60
-                    :family "Bitstream Vera Sans Mono"
-                    :weight 'normal
-                    :width 'normal)
+(when (eq system-type 'gnu/linux)
+  (set-face-attribute 'default nil
+                      :height 100
+                      :family "Bitstream Vera Sans Mono"
+                      :weight 'normal
+                      :width 'normal))
 (scroll-bar-mode -1)       ; No scrollbar
 (tool-bar-mode -1)         ; Get rid of the tool bar
 (menu-bar-mode -1)         ; Get rid of the menu bar
