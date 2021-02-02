@@ -853,3 +853,6 @@
 
 ;; https://github.com/larstvei/ox-gfm
 (use-package ox-gfm)
+
+;; https://github.com/kiwanami/emacs-edbi
+(use-package edbi)

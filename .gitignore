@@ -73,3 +73,4 @@ projectile.cache
 site-lisp/**
 eaf/**
 /lisp/project/
+/.edbi-ds-history
