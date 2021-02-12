@@ -856,3 +856,7 @@
 
 ;; https://github.com/kiwanami/emacs-edbi
 (use-package edbi)
+
+;; https://github.com/Silex/docker.el
+(use-package docker
+  :bind ("C-c d" . docker))
