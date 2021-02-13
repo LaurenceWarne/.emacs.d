@@ -793,12 +793,14 @@
   :config
   (cl-defun lw-shackle-get-window (buffer alist plist &optional (other-window t))
     (save-selected-window
-      (when other-window (other-window 1))
-      (let ((win (split-window-below)))
-        (select-window win)
-        (switch-to-buffer buffer)
-        (local-set-key (kbd "q") 'kill-buffer-and-window)  ; won't work in interactive buffers
-        win)))
+      (if-let ((existing-window (get-buffer-window buffer)))
+          existing-window
+        (when other-window (other-window 1))
+        (let ((win (split-window-below)))
+          (select-window win)
+          (switch-to-buffer buffer)
+          (local-set-key (kbd "q") 'kill-buffer-and-window)  ; won't work in interactive buffers
+          win))))
   (defalias 'lw-shackle-get-window-cur
     (lambda (buffer alist plist)
       (lw-shackle-get-window buffer alist plist nil)))
