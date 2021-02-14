@@ -213,14 +213,19 @@
   (defun lw-projectile-test-file ()
     (interactive)
     (when-let* ((project (--first (eq (car it) (projectile-project-type)) projectile-project-types))
-                (test-file-fn (plist-get (cdr project) 'test-file-fn)))
-      (funcall test-file-fn)))
+                (test-file-fn (plist-get (cdr project) 'test-file-fn))
+                (command-str (funcall test-file-fn)))
+      (projectile--run-project-cmd command-str
+                                   (make-hash-table)
+                                   :show-prompt 0
+                                   :prompt-prefix "Test command: "
+                                   :save-buffers t)))
   (define-key projectile-mode-map (kbd "C-c C-f") #'lw-projectile-test-file)
   (defun lw-sbt-test-file-fn ()
     (interactive)
-    (compile (concat "sbt 'testOnly "
+    (concat (lw-sbt-command) " 'testOnly "
                      (lw-jvm-get-file-package)
-                     "." (f-no-ext (buffer-name))"'")))
+                     "." (f-no-ext (buffer-name)) "'"))
   (defun lw-sbt-command ()
     (if (locate-file "sbtn" exec-path) "sbtn" "sbt"))
   (defalias 'lw-sbt-compile-cmd (lambda () (concat (lw-sbt-command) " compile")))
