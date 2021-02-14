@@ -152,3 +152,10 @@
         (insert filename)
         (clipboard-kill-region (point-min) (point-max)))
       (message filename))))
+
+; Copied from somewhere
+(defun lw-jvm-get-file-package ()
+  (mapconcat 'identity
+             (split-string
+              (replace-regexp-in-string ".*src\\(/\\(main\\|test\\)\\)?\\(/scala\\)?"
+                                        "" default-directory) "/" t) "."))

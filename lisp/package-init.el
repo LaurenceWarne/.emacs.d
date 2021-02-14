@@ -92,6 +92,11 @@
 ;; https://github.com/Alexander-Miller/pfuture
 (use-package pfuture)
 
+;; https://github.com/magnars/dash.el
+(use-package dash
+  :config
+  (global-dash-fontify-mode))
+
 (use-package ace-window
   :config
   (bind-key "M-o" 'ace-window))
@@ -176,6 +181,46 @@
                           (projectile-related-files-fn-test-with-suffix "scala" "Spec"))
     projectile-project-types
     (--remove (member (car it) '(bloop sbt)) projectile-project-types))
+  (defun lw-projectile-run-test-file ()
+    "Run a the test file in the current buffer, as opposed to all tests."
+    (interactive)
+    (when-let* ((project (--first (eq (car it) (projectile-project-type)) projectile-project-types))
+              (project-plist (cdr project))
+              (test-file-fn (plist-get project-plist 'test-file-fn)))
+      (funcall test-file-fn)))
+  (cl-defun lw-projectile-register-project-type-override (old-fn project-type marker-files &key project-file compilation-dir configure compile install package test run test-suffix test-prefix src-dir test-dir related-files-fn test-file-fn)
+    (funcall old-fn project-type marker-files
+             :project-file project-file
+             :compilation-dir compilation-dir
+             :configure configure
+             :compile compile
+             :install install
+             :package package
+             :test test
+             :run run
+             :test-suffix test-suffix
+             :test-prefix test-prefix
+             :src-dir src-dir
+             :test-dir test-dir
+             :related-files-fn related-files-fn)
+      (setq projectile-project-types
+          (--map-when (eq (car it) project-type)
+                      (append it (list 'test-file-fn test-file-fn))
+                      projectile-project-types)))
+  (advice-add 'projectile-register-project-type
+              :around
+              #'lw-projectile-register-project-type-override)
+  (defun lw-projectile-test-file ()
+    (interactive)
+    (when-let* ((project (--first (eq (car it) (projectile-project-type)) projectile-project-types))
+                (test-file-fn (plist-get (cdr project) 'test-file-fn)))
+      (funcall test-file-fn)))
+  (define-key projectile-mode-map (kbd "C-c C-f") #'lw-projectile-test-file)
+  (defun lw-sbt-test-file-fn ()
+    (interactive)
+    (compile (concat "sbt 'testOnly "
+                     (lw-jvm-get-file-package)
+                     "." (f-no-ext (buffer-name))"'")))
   (defun lw-sbt-command ()
     (if (locate-file "sbtn" exec-path) "sbtn" "sbt"))
   (defalias 'lw-sbt-compile-cmd (lambda () (concat (lw-sbt-command) " compile")))
@@ -185,7 +230,8 @@
                                     :compile #'lw-sbt-compile-cmd
                                     :test  #'lw-sbt-test-cmd
                                     :run #'lw-sbt-run-cmd
-                                    :related-files-fn lw-sbt-related-files))
+                                    :related-files-fn lw-sbt-related-files
+                                    :test-file-fn #'lw-sbt-test-file-fn))
 
 ;; http://tuhdo.github.io/helm-intro.html
 (use-package helm
