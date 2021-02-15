@@ -857,7 +857,9 @@
       (lw-shackle-get-window buffer alist plist nil)))
 
   (setq shackle-rules '((compilation-mode :select nil :custom lw-shackle-get-window)
-                        ("magit: .*" :regexp t :select t :custom lw-shackle-get-window-cur)))
+                        ("magit: .*" :regexp t :select t :custom lw-shackle-get-window-cur)
+                        ;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
+                        ))
   (shackle-mode 1))
 
 (use-package company-graphviz-dot
@@ -912,4 +914,14 @@
 
 ;; https://github.com/Silex/docker.el
 (use-package docker
-  :bind ("C-c d" . docker))
+  :bind (("C-c d" . docker)
+         :map docker-container-mode-map
+         ("q" . kill-buffer-and-window)
+         :map docker-image-mode-map
+         ("q" . kill-buffer-and-window)
+         :map docker-network-mode-map
+         ("q" . kill-buffer-and-window)
+         :map docker-volume-mode-map
+         ("q" . kill-buffer-and-window)
+         :map docker-machine-mode-map
+         ("q" . kill-buffer-and-window)))

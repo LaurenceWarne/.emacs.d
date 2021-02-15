@@ -16,6 +16,9 @@
 ;; Set custom file, prevent init.el file pollution.
 (setq custom-file (concat lw-custom-init-files-directory "custom.el"))
 
+(when (< (string-to-number emacs-version) 27)
+  (message "An Emacs version < 27 is in use, some things may not work!"))
+
 ;;; File loading
 
 (condition-case e
