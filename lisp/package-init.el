@@ -346,9 +346,6 @@
 	lsp-enable-links nil)
   (add-hook 'scala-mode-hook (lambda () (lsp-headerline-breadcrumb-mode -1))))
 
-(use-package company-lsp
-  :after lsp-mode company)
-
 (use-package lsp-ui
   :after lsp-mode
   :config
