@@ -134,25 +134,21 @@
 (use-package smartparens
   :demand t
   :bind (:map smartparens-mode-map
-	      ("C-0" . sp-forward-slurp-sexp)
-	      ("C-9" . sp-forward-barf-sexp)
-	      ("C--" . sp-unwrap-sexp)
-	      ("C-r" . sp-up-sexp)
-	      ("M-r" . sp-backward-up-sexp)
+              ("C-0" . sp-forward-slurp-sexp)
+              ("C-9" . sp-forward-barf-sexp)
+              ("C--" . sp-unwrap-sexp)
+              ("C-r" . sp-up-sexp)
+              ("M-r" . sp-backward-up-sexp)
               ("M-f" . sp-forward-sexp)
               ("M-b" . sp-backward-sexp)
-              ("M-s" . sp-down-sexp))
+              ("M-s" . sp-down-sexp)
+              ("M-t" . sp-transpose-sexp))
   :config
-  (add-hook 'inferior-python-mode-hook #'smartparens-mode)
-  (add-hook 'inferior-python-mode-hook (lambda () (electric-pair-local-mode -1)))
-  (add-hook 'java-mode-hook #'smartparens-mode)
-  (add-hook 'java-mode-hook (lambda () (electric-pair-local-mode -1)))
-  (add-hook 'python-mode-hook #'smartparens-mode)
-  (add-hook 'python-mode-hook (lambda () (electric-pair-local-mode -1)))
-  (add-hook 'org-mode-hook #'smartparens-mode)
-  (add-hook 'org-mode-hook (lambda () (electric-pair-local-mode -1)))
-  (require 'smartparens-config))
-  ;(smartparens-global-mode 1))
+  (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
+  (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
+  (add-hook 'slime-repl-mode-hook #'smartparens-strict-mode)
+  (add-hook 'ielm-mode-hook #'smartparens-strict-mode)
+  (smartparens-global-mode 1))
 
 (use-package projectile
   :demand t
@@ -486,27 +482,6 @@
 
 ;; https://github.com/millejoh/emacs-ipython-notebook
 (use-package ein)
-
-;; http://danmidwood.com/content/2014/11/21/animated-paredit.html
-(use-package paredit
-  :after helm-projectile
-  :bind (:map paredit-mode-map
-	      ("C-0" . paredit-forward-slurp-sexp)
-	      ("C-9" . paredit-forward-barf-sexp)
-              ("M-f" . paredit-forward)
-              ("M-b" . paredit-backward)
-	      ("M-s" . paredit-forward-down)
-              ("C--" . paredit-splice-sexp)
-	      ("C-r" . paredit-forward-up)
-	      ("M-r" . paredit-backward-up)
-              ("C-j" . #'helm-projectile)
-	      ("M-q" . #'helm-projectile-ag)
-	      ("M-k" . #'projectile-toggle-between-implementation-and-test))
-  :config
-  (add-hook 'lisp-mode-hook #'enable-paredit-mode)
-  (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
-  (add-hook 'slime-repl-mode-hook #'enable-paredit-mode)
-  (add-hook 'ielm-mode-hook #'enable-paredit-mode))
 
 ;; https://github.com/alphapapa/org-rifle
 (use-package helm-org-rifle
