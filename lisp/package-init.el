@@ -911,6 +911,7 @@
 
 ;; https://github.com/Silex/docker.el
 (use-package docker
+  :load-path "~/projects/docker.el"
   :bind (("C-c d" . docker)
          :map docker-container-mode-map
          ("q" . kill-buffer-and-window)
@@ -921,4 +922,11 @@
          :map docker-volume-mode-map
          ("q" . kill-buffer-and-window)
          :map docker-machine-mode-map
-         ("q" . kill-buffer-and-window)))
+         ("q" . kill-buffer-and-window))
+  :config
+  (docker-register-run-args-for-regex
+   "^postgres"
+   `("-e POSTGRES_PASSWORD=postgres" . ,docker-run-default-args))
+  (docker-register-run-args-for-regex
+   "^nginx"
+   `("-p 8080:80" . ,docker-run-default-args)))
