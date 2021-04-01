@@ -148,6 +148,7 @@
   (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
   (add-hook 'slime-repl-mode-hook #'smartparens-strict-mode)
   (add-hook 'ielm-mode-hook #'smartparens-strict-mode)
+  (require 'smartparens-config)
   (smartparens-global-mode 1))
 
 (use-package projectile
@@ -899,9 +900,6 @@
          :map docker-machine-mode-map
          ("q" . kill-buffer-and-window))
   :config
-  (docker-register-run-args-for-regex
-   "^postgres"
-   `("-e POSTGRES_PASSWORD=postgres" . ,docker-run-default-args))
-  (docker-register-run-args-for-regex
-   "^nginx"
-   `("-p 8080:80" . ,docker-run-default-args)))
+  (add-to-list
+   'docker-image-run-custom-args
+   `("^postgres" ("-e POSTGRES_PASSWORD=postgres" . ,docker-run-default-args))))
