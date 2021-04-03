@@ -903,3 +903,13 @@
   (add-to-list
    'docker-image-run-custom-args
    `("^postgres" ("-e POSTGRES_PASSWORD=postgres" . ,docker-run-default-args))))
+
+;; https://github.com/jcs-elpa/goto-line-preview
+(use-package goto-line-preview
+  :config
+  (global-set-key [remap goto-line] 'goto-line-preview))
+
+;; https://github.com/jcs-elpa/company-fuzzy
+(use-package company-fuzzy
+  :config
+  (global-company-fuzzy-mode 1))
