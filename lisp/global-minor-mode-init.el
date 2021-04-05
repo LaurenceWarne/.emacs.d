@@ -12,6 +12,7 @@
 (delete-selection-mode 1)  ; Make typing delete/overwrites selected text
 (show-paren-mode 1)        ; Turn on bracket match highlight
 (desktop-save-mode 1)      ; Save and automatically load previous emacs session on start up
+(savehist-mode 1)          ; Save any variables added to `savehist-additional-variables'
 (when (eq system-type 'gnu/linux)
   (set-face-attribute 'default nil
                       :height 100
