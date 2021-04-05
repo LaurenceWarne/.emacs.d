@@ -911,5 +911,6 @@
 
 ;; https://github.com/jcs-elpa/company-fuzzy
 (use-package company-fuzzy
+  :disabled  ; Too slow!
   :config
   (global-company-fuzzy-mode 1))
