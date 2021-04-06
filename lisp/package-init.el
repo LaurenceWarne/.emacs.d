@@ -60,11 +60,11 @@
 (use-package doom-themes
   :config
   (setq doom-themes-enable-bold t ; if nil, bold is universally disabled
-	doom-themes-enable-italic t ; if nil, italics is universally disabled
+    doom-themes-enable-italic t ; if nil, italics is universally disabled
 
-	;; doom-one specific settings
-	doom-one-brighter-modeline nil
-	doom-one-brighter-comments nil)
+    ;; doom-one specific settings
+    doom-one-brighter-modeline nil
+    doom-one-brighter-comments nil)
   ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
   ;; may have their own settings.
   (load-theme 'doom-acario-dark t)
@@ -104,7 +104,7 @@
 ;; https://github.com/jorgenschaefer/elpy
 (use-package elpy
    :bind (:map python-mode-map
-	      ("C-x C-e" . #'elpy-shell-send-statement))
+          ("C-x C-e" . #'elpy-shell-send-statement))
    ;; Enable Elpy in all future Python buffers.
   :init (elpy-enable)
   :config (setq elpy-rpc-python-command "python3")
@@ -129,7 +129,7 @@
   :config
   (yas-global-mode 1)
   (setq yas-indent-line 'auto
-	yas-also-auto-indent-first-line t))
+    yas-also-auto-indent-first-line t))
 
 (use-package smartparens
   :demand t
@@ -158,8 +158,8 @@
   :config
   (projectile-mode 1)
   (setq projectile-other-file-alist
-	(append projectile-other-file-alist
-		'(("md"    . ("el" "java" "py" "scala" "yml" "yaml" "ini" "gradle"))
+    (append projectile-other-file-alist
+        '(("md"    . ("el" "java" "py" "scala" "yml" "yaml" "ini" "gradle"))
           ("ini"   . ("el" "java" "py" "scala" "yml" "yaml" "md" "gradle"))
           ("yml"   . ("el" "java" "py" "scala" "ini" "md" "gradle" "yml" "yaml"))
           ("yaml"  . ("el" "java" "py" "scala" "ini" "md" "gradle" "yml" "yaml"))
@@ -249,8 +249,8 @@
   (helm-mode 1)
   ;; Makes helm-boring-file-regexp-list act as a .gitignore
   (setq helm-ff-skip-boring-files t
-	helm-M-x-fuzzy-match t
-	helm-split-window-in-side-p t)
+    helm-M-x-fuzzy-match t
+    helm-split-window-in-side-p t)
   (define-key helm-map (kbd "C-,") 'helm-beginning-of-buffer)
   (define-key helm-map (kbd "C-.") 'helm-end-of-buffer)
   (define-key helm-map (kbd "C-k") 'helm-buffer-run-kill-buffers)
@@ -265,7 +265,7 @@
   :config
   (helm-flx-mode +1)
   (setq helm-flx-for-helm-find-files t ; t by default
-  	helm-flx-for-helm-locate t))   ; nil by default
+    helm-flx-for-helm-locate t))   ; nil by default
 
 (use-package helm-ag
   :after helm
@@ -275,17 +275,17 @@
   ;; Don't add helm-ag to after because its loading is deferred
   :after (helm projectile)
   :bind (:map python-mode-map
-	      ("C-j" . #'helm-projectile)
-	      ("M-q" . #'helm-projectile-ag)
-	      ("M-k" . #'projectile-toggle-between-implementation-and-test)
-	      :map java-mode-map
-	      ("C-j" . #'helm-projectile)
-	      ("M-q" . #'helm-projectile-ag)
-	      ("M-k" . #'projectile-toggle-between-implementation-and-test)
-	      :map emacs-lisp-mode-map
-	      ("C-j" . #'helm-projectile)
-	      ("M-q" . #'helm-projectile-ag)
-	      ("M-k" . #'projectile-toggle-between-implementation-and-test)
+          ("C-j" . #'helm-projectile)
+          ("M-q" . #'helm-projectile-ag)
+          ("M-k" . #'projectile-toggle-between-implementation-and-test)
+          :map java-mode-map
+          ("C-j" . #'helm-projectile)
+          ("M-q" . #'helm-projectile-ag)
+          ("M-k" . #'projectile-toggle-between-implementation-and-test)
+          :map emacs-lisp-mode-map
+          ("C-j" . #'helm-projectile)
+          ("M-q" . #'helm-projectile-ag)
+          ("M-k" . #'projectile-toggle-between-implementation-and-test)
               :map org-mode-map
               ("C-j" . #'helm-projectile))
   :config
@@ -296,7 +296,7 @@
   :after helm
   :defer t
   :bind (("C-h b" . helm-descbinds)
-	 ("C-h w" . helm-descbinds)))
+     ("C-h w" . helm-descbinds)))
 
 (use-package company
   :config
@@ -315,8 +315,8 @@
   :after helm-projectile
   :bind (:map groovy-mode-map
               ("C-j" . #'helm-projectile)
-	      ("M-q" . #'helm-projectile-ag)
-	      ("M-k" . #'projectile-toggle-between-implementation-and-test)))
+          ("M-q" . #'helm-projectile-ag)
+          ("M-k" . #'projectile-toggle-between-implementation-and-test)))
 
 ;; https://github.com/parkouss/speed-type
 (use-package speed-type
@@ -334,14 +334,16 @@
   :after yasnippet)
 
 (use-package lsp-mode
+  :after scala-mode
   :hook
   (java-mode . lsp-deferred)
+  (scala-mode . lsp-deferred)
   (lsp-mode . lsp-lens-mode)
   :config
   (setq lsp-keep-workspace-alive nil
-	lsp-enable-file-watchers nil
-	lsp-enable-links nil)
-  (add-hook 'scala-mode-hook (lambda () (lsp-headerline-breadcrumb-mode -1))))
+    lsp-enable-file-watchers nil
+    lsp-enable-links nil
+    lsp-headerline-breadcrumb-enable nil))
 
 (use-package lsp-ui
   :after lsp-mode
@@ -356,13 +358,18 @@
   :after lsp-mode
   :config
   (setq lsp-java-format-comments-enabled nil
-	lsp-java-format-on-type-enabled nil
-	lsp-java-save-actions-organize-imports t)
+    lsp-java-format-on-type-enabled nil
+    lsp-java-save-actions-organize-imports t)
   ;; Do we need to start the server (if not already running) here as well?
   (setq lsp-java-vmargs
-	;; Needs lombok in the gradle cache
-  	'("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.10/625fc0055674dff70dbc76efa36d0f2c89b04a24/lombok-1.18.10.jar" "-Xbootclasspath/a:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.10/625fc0055674dff70dbc76efa36d0f2c89b04a24/lombok-1.18.10.jar"))
+    ;; Needs lombok in the gradle cache
+    '("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.10/625fc0055674dff70dbc76efa36d0f2c89b04a24/lombok-1.18.10.jar" "-Xbootclasspath/a:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.10/625fc0055674dff70dbc76efa36d0f2c89b04a24/lombok-1.18.10.jar"))
   (setq tab-width 4))
+
+(use-package dap-mode
+  :after lsp-mode)
+
+(use-package dap-java :ensure nil)
 
 (use-package helm-lsp
   :after lsp-mode helm
@@ -425,13 +432,13 @@
   (define-key pdf-view-mode-map (kbd "C--") 'pdf-view-shrink)
   (define-key pdf-view-mode-map (kbd "C-=") 'pdf-view-enlarge)
   (set-face-attribute 'pdf-isearch-lazy nil
-		      :inherit 'lazy-highlight
-		      :foreground "black"
-		      :background "grey")
+              :inherit 'lazy-highlight
+              :foreground "black"
+              :background "grey")
   (set-face-attribute 'pdf-isearch-match nil
-		      :inherit 'isearch
-		      :foreground "white"
-		      :background "black"))
+              :inherit 'isearch
+              :foreground "white"
+              :background "black"))
 
 ;; https://github.com/anwyn/slime-company
 (use-package slime-company
@@ -445,7 +452,7 @@
   :config
   ;; Set your lisp system and, optionally, some contribs
   (setq inferior-lisp-program "/usr/local/bin/sbcl"
-	slime-contribs '(slime-fancy))
+    slime-contribs '(slime-fancy))
   (define-key slime-repl-mode-map (kbd "M-,") 'slime-describe-symbol)
   (define-key slime-repl-mode-map (kbd "C-c C-d C-d") 'slime-pop-find-definition-stack))
 
@@ -454,7 +461,7 @@
   :quelpa (steam :fetcher github :repo "laurencewarne/steam.el" :upgrade t)
   :config
   (setq steam-username "39422361280608732623190235"
-	org-startup-with-inline-images t))
+    org-startup-with-inline-images t))
 
 (use-package beacon
   :config
@@ -586,33 +593,33 @@
   :hook (dired-mode . dired-filter-group-mode)
   :config
   (setq dired-filter-group-saved-groups
-	'(("default"
-	   ("Git"
-	    (regexp . "^\\.git"))
-	   ("Python"
-	    (extension . "py"))
-	   ("Java"
-	    (extension . "java"))
-	   ("Lisp"
-	    (extension "el" "cl" "elc"))
-	   ("Org"
-	    (extension . "org"))
-	   ("PDF"
-	    (extension . "pdf"))
-	   ("LaTeX"
-	    (extension "tex" "bib"))
-	   ("HTML"
-	    (extension "html"))
-	   ("Archives"
-	    (extension "zip" "rar" "gz" "bz2" "tar"))
-	   ("Images"
-	    (extension "jpg" "png" "jpeg" "gif" "bmp" "svg"))
-	   ("Media"
-	    (extension "mp3" "mp4" "avi" "mpg" "flv" "ogg"))
-	   ("Configuration"
-	    (regexp . "^\\.[^(git)]+"))
-	   ("Backup"
-	    (regexp . ".*~"))))))
+    '(("default"
+       ("Git"
+        (regexp . "^\\.git"))
+       ("Python"
+        (extension . "py"))
+       ("Java"
+        (extension . "java"))
+       ("Lisp"
+        (extension "el" "cl" "elc"))
+       ("Org"
+        (extension . "org"))
+       ("PDF"
+        (extension . "pdf"))
+       ("LaTeX"
+        (extension "tex" "bib"))
+       ("HTML"
+        (extension "html"))
+       ("Archives"
+        (extension "zip" "rar" "gz" "bz2" "tar"))
+       ("Images"
+        (extension "jpg" "png" "jpeg" "gif" "bmp" "svg"))
+       ("Media"
+        (extension "mp3" "mp4" "avi" "mpg" "flv" "ogg"))
+       ("Configuration"
+        (regexp . "^\\.[^(git)]+"))
+       ("Backup"
+        (regexp . ".*~"))))))
 
 ;; https://github.com/Fuco1/dired-hacks#dired-rainbow
 (use-package dired-rainbow
@@ -639,12 +646,6 @@
   (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*"))
 
 (use-package pcre2el)
-
-;; Requires cquery: https://github.com/cquery-project/cquery/wiki/Emacs
-;; https://github.com/cquery-project/emacs-cquery
-(use-package cquery
-  :config
-  (setq cquery-executable "/usr/local/src/cquery/build/cquery"))
 
 (use-package ox-yaow
   :ensure nil
@@ -763,8 +764,8 @@
   :mode "\\.s\\(c\\|cala\\|bt\\)$"
   :bind (:map scala-mode-map
               ("C-j" . #'helm-projectile)
-	          ("M-q" . #'helm-projectile-ag)
-	          ("M-k" . #'projectile-toggle-between-implementation-and-test)
+              ("M-q" . #'helm-projectile-ag)
+              ("M-k" . #'projectile-toggle-between-implementation-and-test)
               ("C-c C-c" . #'projectile-test-project))
   :config
   (projectile-register-project-type 'mill '("build.sc")
@@ -790,18 +791,15 @@
                            (message "Pfuture Debug: Process [%s] changed sttaus to [%s]" pfuture-process status))
           :directory (projectile-project-root)
           :on-success (lambda (process status output) (lw-sbt-callback-fn buf))
-          :on-error (lambda (process status output) (lw-sbt-callback-fn buf))))))
-  (require 'smartparens)
-  (add-hook 'scala-mode-hook #'smartparens-mode)
-  (add-hook 'scala-mode-hook (lambda () (electric-pair-local-mode -1))))
+          :on-error (lambda (process status output) (lw-sbt-callback-fn buf)))))))
 
 ;; https://scalameta.org/metals/docs/editors/emacs.html
 ;; Note this package requires installation of a binary (see above link)
 (use-package lsp-metals
   :after lsp lsp-ui scala-mode
-  :hook ((scala-mode . lsp)
-         (scala-mode . (lambda () (add-hook 'before-save-hook 'lsp-format-buffer nil t)))
-         (lsp-mode . lsp-lens-mode)))
+  :hook
+  (scala-mode . (lambda () (add-hook 'before-save-hook 'lsp-format-buffer nil t)))
+  (lsp-mode . lsp-lens-mode))
 
 ;; https://github.com/spotify/dockerfile-mode
 (use-package dockerfile-mode
