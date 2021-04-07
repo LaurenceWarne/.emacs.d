@@ -339,6 +339,7 @@
   (java-mode . lsp-deferred)
   (scala-mode . lsp-deferred)
   (lsp-mode . lsp-lens-mode)
+  (scala-mode . (lambda () (add-hook 'before-save-hook 'lsp-format-buffer nil t)))
   :config
   (setq lsp-keep-workspace-alive nil
     lsp-enable-file-watchers nil
@@ -796,10 +797,7 @@
 ;; https://scalameta.org/metals/docs/editors/emacs.html
 ;; Note this package requires installation of a binary (see above link)
 (use-package lsp-metals
-  :after lsp lsp-ui scala-mode
-  :hook
-  (scala-mode . (lambda () (add-hook 'before-save-hook 'lsp-format-buffer nil t)))
-  (lsp-mode . lsp-lens-mode))
+  :after lsp lsp-ui scala-mode)
 
 ;; https://github.com/spotify/dockerfile-mode
 (use-package dockerfile-mode
