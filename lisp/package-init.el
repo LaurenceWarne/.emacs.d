@@ -461,8 +461,7 @@
   ;; :load-path "~/projects/steam.el"
   :quelpa (steam :fetcher github :repo "laurencewarne/steam.el" :upgrade t)
   :config
-  (setq steam-username "39422361280608732623190235"
-    org-startup-with-inline-images t))
+  (setq steam-username "39422361280608732623190235"))
 
 (use-package beacon
   :config
@@ -883,7 +882,7 @@
 
 ;; https://github.com/Silex/docker.el
 (use-package docker
-  :load-path "~/projects/docker.el"
+  :quelpa (speed-type :fetcher github :repo "laurencewarne/docker" :upgrade t)
   :bind (("C-c d" . docker)
          :map docker-container-mode-map
          ("q" . kill-buffer-and-window)
@@ -910,3 +909,13 @@
   :disabled  ; Too slow!
   :config
   (global-company-fuzzy-mode 1))
+
+;; https://github.com/jcs-elpa/docstr
+(use-package docstr
+  :after scala-mode
+  :hook
+  (scala-mode . docstr-mode)
+  (java-mode . docstr-mode)
+  (python-mode . docstr-mode)
+  :config
+  (setq docstr-key-support t))
