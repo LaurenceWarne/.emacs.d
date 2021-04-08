@@ -344,7 +344,10 @@
   (setq lsp-keep-workspace-alive nil
     lsp-enable-file-watchers nil
     lsp-enable-links nil
-    lsp-headerline-breadcrumb-enable nil))
+    lsp-headerline-breadcrumb-enable nil)
+  (when-let* ((go-dir (concat (getenv "HOME") "/go/bin/sqls"))
+              (_ (f-exists? go-dir)))
+    (setq lsp-sqls-server go-dir)))
 
 (use-package lsp-ui
   :after lsp-mode
