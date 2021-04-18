@@ -87,6 +87,7 @@
         org-startup-with-inline-images t
         org-startup-folded nil
         org-startup-truncated nil)   ; Default to normal Emacs line wrapping behaviour
+  (set-face-attribute 'org-headline-done nil :strike-through t)
   :pin org)
 
 ;; https://github.com/Alexander-Miller/pfuture
@@ -915,6 +916,7 @@
 
 ;; https://github.com/jcs-elpa/docstr
 (use-package docstr
+  :quelpa (docstr :fetcher github :repo "laurencewarne/docstr" :upgrade t)
   :after scala-mode
   :hook
   (scala-mode . docstr-mode)
