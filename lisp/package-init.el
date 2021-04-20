@@ -88,6 +88,11 @@
         org-startup-folded nil
         org-startup-truncated nil)   ; Default to normal Emacs line wrapping behaviour
   (set-face-attribute 'org-headline-done nil :strike-through t)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t)
+     (shell . t)
+     (emacs-lisp . t)))
   :pin org)
 
 ;; https://github.com/Alexander-Miller/pfuture
