@@ -81,7 +81,9 @@
               ("M-p" . outline-previous-heading)
               ("M-[" . org-backward-heading-same-level)
               ("M-]" . org-forward-heading-same-level)
-              ("M-h" . (lambda () (interactive) (org-latex-preview '(16)))))
+              ("M-h" . (lambda () (interactive) (org-latex-preview '(16))))
+              ("C-)" . nil)
+              ("C-(" . nil))
   :config
   (setq org-use-speed-commands t     ; Shortcut for org commands when on headlines
         org-startup-with-inline-images t
