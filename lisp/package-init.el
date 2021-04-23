@@ -165,7 +165,8 @@
   ("M-p" . projectile-switch-project)
   :config
   (projectile-mode 1)
-  (setq projectile-other-file-alist
+  (setq projectile-create-missing-test-files t
+        projectile-other-file-alist
     (append projectile-other-file-alist
         '(("md"    . ("el" "java" "py" "scala" "yml" "yaml" "ini" "gradle"))
           ("ini"   . ("el" "java" "py" "scala" "yml" "yaml" "md" "gradle"))
@@ -294,8 +295,8 @@
           ("C-j" . #'helm-projectile)
           ("M-q" . #'helm-projectile-ag)
           ("M-k" . #'projectile-toggle-between-implementation-and-test)
-              :map org-mode-map
-              ("C-j" . #'helm-projectile))
+          :map org-mode-map
+          ("C-j" . #'helm-projectile))
   :config
   (helm-projectile-on)
   (setq projectile-completion-system 'helm))
@@ -323,8 +324,8 @@
   :after helm-projectile
   :bind (:map groovy-mode-map
               ("C-j" . #'helm-projectile)
-          ("M-q" . #'helm-projectile-ag)
-          ("M-k" . #'projectile-toggle-between-implementation-and-test)))
+              ("M-q" . #'helm-projectile-ag)
+              ("M-k" . #'projectile-toggle-between-implementation-and-test)))
 
 ;; https://github.com/parkouss/speed-type
 (use-package speed-type
