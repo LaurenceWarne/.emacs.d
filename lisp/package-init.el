@@ -88,7 +88,12 @@
   (setq org-use-speed-commands t     ; Shortcut for org commands when on headlines
         org-startup-with-inline-images t
         org-startup-folded nil
-        org-startup-truncated nil)   ; Default to normal Emacs line wrapping behaviour
+        org-startup-truncated nil    ; Default to normal Emacs line wrapping behaviour
+        org-feed-alist
+        '(("Org"
+           "https://blog.tecosaur.com/tmio/rss.xml"
+           "~/org/feeds.org"
+           "Weekly Org Entries")))
   (set-face-attribute 'org-headline-done nil :strike-through t)
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -163,6 +168,8 @@
   :demand t
   :bind
   ("M-p" . projectile-switch-project)
+  ("C-c C-c" . projectile-test-project)
+  ("C-c C-r" . projectile-run-project)
   :config
   (projectile-mode 1)
   (setq projectile-create-missing-test-files t
@@ -240,9 +247,12 @@
   (projectile-register-project-type 'sbt '("build.sbt")
                                     :compile #'lw-sbt-compile-cmd
                                     :test  #'lw-sbt-test-cmd
+                                    ;; Only for projectile-create-missing-test-files
+                                    :test-suffix "Test"
                                     :run #'lw-sbt-run-cmd
                                     :related-files-fn lw-sbt-related-files
-                                    :test-file-fn #'lw-sbt-test-file-fn))
+                                    :test-file-fn #'lw-sbt-test-file-fn)
+  (projectile-update-project-type 'mill :related-files-fn lw-sbt-related-files))
 
 ;; http://tuhdo.github.io/helm-intro.html
 (use-package helm
@@ -544,7 +554,9 @@
   :config
   (global-set-key (kbd "M-'") 'er/expand-region))
 
-(use-package magit-todos)
+(use-package magit-todos
+  :config
+  (magit-todos-mode))
 
 (use-package mc-biome-viewer
     :ensure nil
@@ -777,15 +789,8 @@
   :bind (:map scala-mode-map
               ("C-j" . #'helm-projectile)
               ("M-q" . #'helm-projectile-ag)
-              ("M-k" . #'projectile-toggle-between-implementation-and-test)
-              ("C-c C-c" . #'projectile-test-project))
+              ("M-k" . #'projectile-toggle-between-implementation-and-test))
   :config
-  (projectile-register-project-type 'mill '("build.sc")
-                                    ;:project-file "build.sc"
-                                    :compile "mill __.compile"
-                                    :test "mill __.test.test"
-                                    :run "mill run"
-                                    :test-suffix "Test")
   (defun lw-sbt-callback-fn (buf)
     (print "FINISHED")
     (with-current-buffer buf
