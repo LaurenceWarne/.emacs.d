@@ -110,6 +110,8 @@
   :config
   (global-dash-fontify-mode))
 
+(use-package f)
+
 (use-package ace-window
   :config
   (bind-key "M-o" 'ace-window))
@@ -790,13 +792,21 @@
 
 ;; https://github.com/hvesalai/emacs-scala-mode
 (use-package scala-mode
-  :after smartparens projectile pfuture
+  :after f smartparens projectile pfuture
   :mode "\\.s\\(c\\|cala\\|bt\\)$"
   :bind (:map scala-mode-map
               ("C-j" . #'helm-projectile)
               ("M-q" . #'helm-projectile-ag)
               ("M-k" . #'projectile-toggle-between-implementation-and-test))
   :config
+  ;; :shake-fist: https://github.com/sdkman/sdkman-cli/issues/568
+  (let ((sdkman-dir "~/.sdkman/candidates/"))
+    (when (f-directory-p sdkman-dir)
+      (-each (f-directories
+              (f-expand sdkman-dir)
+              (lambda (dir) (equal '("current" "bin") (last (f-split dir) 2)))
+              t)
+        (lambda (path) (setenv "PATH" (concat path ":" (getenv "PATH")))))))
   (defun lw-sbt-callback-fn (buf)
     (print "FINISHED")
     (with-current-buffer buf
