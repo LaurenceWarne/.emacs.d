@@ -164,8 +164,9 @@
   (require 'smartparens-config)
   (smartparens-global-mode 1))
 
+;; https://github.com/bbatsov/projectile
 (use-package projectile
-  :demand t
+  :quelpa (projectile :fetcher github :repo "laurencewarne/projectile" :upgrade t)
   :bind
   ("M-p" . projectile-switch-project)
   ("C-c C-c" . projectile-test-project)
@@ -174,35 +175,39 @@
   (projectile-mode 1)
   (setq projectile-create-missing-test-files t
         projectile-other-file-alist
-    (append projectile-other-file-alist
-        '(("md"    . ("el" "java" "py" "scala" "yml" "yaml" "ini" "gradle"))
-          ("ini"   . ("el" "java" "py" "scala" "yml" "yaml" "md" "gradle"))
-          ("yml"   . ("el" "java" "py" "scala" "ini" "md" "gradle" "yml" "yaml"))
-          ("yaml"  . ("el" "java" "py" "scala" "ini" "md" "gradle" "yml" "yaml"))
-          ("conf"  . ("el" "java" "py" "scala" "ini" "md" "gradle" "yml" "yaml"))
-          ("el"    . ("el" "md" "org"))
-          ("py"    . ("py" "md" "ini" "yml" "yaml"))
-          ("java"  . ("java" "md" "gradle" "yml" "yaml"))
-          ("scala" . ("scala" "sc" "md" "gradle" "yml" "yaml" "jenkinsfile" "org" "tf"))
-          ("sc"    . ("scala" "sc" "md" "gradle" "yml" "yaml" "conf"))
-          ("sbt"   . ("scala" "sbt" "md" "gradle" "yml" "yaml" "conf"))
-          ("org"   . ("org"))))
-    lw-sbt-related-files (list
-                          (projectile-related-files-fn-test-with-suffix "scala" "Test")
-                          (projectile-related-files-fn-test-with-suffix "scala" "Tests")
-                          (projectile-related-files-fn-test-with-suffix "scala" "Suite")
-                          (projectile-related-files-fn-test-with-suffix "scala" "Spec"))
-    projectile-project-types
-    (--remove (member (car it) '(bloop sbt)) projectile-project-types))
+        (append projectile-other-file-alist
+                '(("md"    . ("el" "java" "py" "scala" "yml" "yaml" "ini" "gradle"))
+                  ("ini"   . ("el" "java" "py" "scala" "yml" "yaml" "md" "gradle"))
+                  ("yml"   . ("el" "java" "py" "scala" "ini" "md" "gradle" "yml" "yaml"))
+                  ("yaml"  . ("el" "java" "py" "scala" "ini" "md" "gradle" "yml" "yaml"))
+                  ("conf"  . ("el" "java" "py" "scala" "ini" "md" "gradle" "yml" "yaml"))
+                  ("el"    . ("el" "md" "org"))
+                  ("py"    . ("py" "md" "ini" "yml" "yaml"))
+                  ("java"  . ("java" "md" "gradle" "yml" "yaml"))
+                  ("scala" . ("scala" "sc" "md" "gradle" "yml" "yaml" "jenkinsfile" "org" "tf"))
+                  ("sc"    . ("scala" "sc" "md" "gradle" "yml" "yaml" "conf"))
+                  ("sbt"   . ("scala" "sbt" "md" "gradle" "yml" "yaml" "conf"))
+                  ("org"   . ("org"))))
+        lw-sbt-related-files
+        (list
+         (projectile-related-files-fn-test-with-suffix "scala" "Test")
+         (projectile-related-files-fn-test-with-suffix "scala" "Tests")
+         (projectile-related-files-fn-test-with-suffix "scala" "Suite")
+         (projectile-related-files-fn-test-with-suffix "scala" "Spec"))
+        ;; Since bloop takes priority over sbt (.bloop file)
+        projectile-project-types
+        (--remove (eq (car it) 'bloop) projectile-project-types))
   (defun lw-projectile-run-test-file ()
     "Run a the test file in the current buffer, as opposed to all tests."
     (interactive)
-    (when-let* ((project (--first (eq (car it) (projectile-project-type)) projectile-project-types))
-              (project-plist (cdr project))
-              (test-file-fn (plist-get project-plist 'test-file-fn)))
+    (when-let* ((project (--first (eq (car it) (projectile-project-type))
+                                  projectile-project-types))
+                (project-plist (cdr project))
+                (test-file-fn (plist-get project-plist 'test-file-fn)))
       (funcall test-file-fn)))
-  (cl-defun lw-projectile-register-project-type-override (old-fn project-type marker-files &key project-file compilation-dir configure compile install package test run test-suffix test-prefix src-dir test-dir related-files-fn test-file-fn)
-    (funcall old-fn project-type marker-files
+  (cl-defun lw-projectile-update-project-type-override (old-fn project-type &key marker-files project-file compilation-dir configure compile install package test run test-suffix test-prefix src-dir test-dir related-files-fn test-file-fn)
+    (funcall old-fn project-type
+             :marker-files marker-files
              :project-file project-file
              :compilation-dir compilation-dir
              :configure configure
@@ -216,13 +221,13 @@
              :src-dir src-dir
              :test-dir test-dir
              :related-files-fn related-files-fn)
-      (setq projectile-project-types
-          (--map-when (eq (car it) project-type)
+    (setq projectile-project-types
+          (--map-when (and test-file-fn (eq (car it) project-type))
                       (append it (list 'test-file-fn test-file-fn))
                       projectile-project-types)))
-  (advice-add 'projectile-register-project-type
+  (advice-add 'projectile-update-project-type
               :around
-              #'lw-projectile-register-project-type-override)
+              #'lw-projectile-update-project-type-override)
   (defun lw-projectile-test-file ()
     (interactive)
     (when-let* ((project (--first (eq (car it) (projectile-project-type)) projectile-project-types))
@@ -237,21 +242,22 @@
   (defun lw-sbt-test-file-fn ()
     (interactive)
     (concat (lw-sbt-command) " 'testOnly "
-                     (lw-jvm-get-file-package)
-                     "." (f-no-ext (buffer-name)) "'"))
+            (lw-jvm-get-file-package)
+            "." (f-no-ext (buffer-name)) "'"))
   (defun lw-sbt-command ()
     (if (locate-file "sbtn" exec-path) "sbtn" "sbt"))
   (defalias 'lw-sbt-compile-cmd (lambda () (concat (lw-sbt-command) " compile")))
   (defalias 'lw-sbt-test-cmd (lambda () (concat (lw-sbt-command) " test")))
   (defalias 'lw-sbt-run-cmd (lambda () (concat (lw-sbt-command) " run")))
-  (projectile-register-project-type 'sbt '("build.sbt")
-                                    :compile #'lw-sbt-compile-cmd
-                                    :test  #'lw-sbt-test-cmd
-                                    ;; Only for projectile-create-missing-test-files
-                                    :test-suffix "Test"
-                                    :run #'lw-sbt-run-cmd
-                                    :related-files-fn lw-sbt-related-files
-                                    :test-file-fn #'lw-sbt-test-file-fn)
+  (projectile-update-project-type 'sbt
+                                  :compile #'lw-sbt-compile-cmd
+                                  :test  #'lw-sbt-test-cmd
+                                  ;; Only for projectile-create-missing-test-files
+                                  :test-suffix "Test"
+                                  :run #'lw-sbt-run-cmd
+                                  :src-dir "src/test/"
+                                  :related-files-fn lw-sbt-related-files
+                                  :test-file-fn #'lw-sbt-test-file-fn)
   (projectile-update-project-type 'mill :related-files-fn lw-sbt-related-files))
 
 ;; http://tuhdo.github.io/helm-intro.html
@@ -315,7 +321,7 @@
   :after helm
   :defer t
   :bind (("C-h b" . helm-descbinds)
-     ("C-h w" . helm-descbinds)))
+         ("C-h w" . helm-descbinds)))
 
 (use-package company
   :config
