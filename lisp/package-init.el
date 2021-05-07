@@ -792,7 +792,7 @@
 
 ;; https://github.com/hvesalai/emacs-scala-mode
 (use-package scala-mode
-  :after f smartparens projectile pfuture
+  :after f smartparens projectile
   :mode "\\.s\\(c\\|cala\\|bt\\)$"
   :bind (:map scala-mode-map
               ("C-j" . #'helm-projectile)
@@ -806,25 +806,7 @@
               (f-expand sdkman-dir)
               (lambda (dir) (equal '("current" "bin") (last (f-split dir) 2)))
               t)
-        (lambda (path) (setenv "PATH" (concat path ":" (getenv "PATH")))))))
-  (defun lw-sbt-callback-fn (buf)
-    (print "FINISHED")
-    (with-current-buffer buf
-      (revert-buffer :ignore-auto :noconfirm)))
-  (defun lw-sbt-scalafix ()
-    (let ((default-directory (projectile-project-root))
-          (buf (current-buffer)))
-      (when (eq (projectile-project-type) 'sbt)
-        (cd (projectile-project-root))
-        (pfuture-callback `(,(lw-sbt-command)
-                            ,(concat "'scalafix --files "
-                                     buffer-file-name
-                                     "'"))
-          :on-status-change (lambda (pfuture-process status _pfuture-buffer)
-                           (message "Pfuture Debug: Process [%s] changed sttaus to [%s]" pfuture-process status))
-          :directory (projectile-project-root)
-          :on-success (lambda (process status output) (lw-sbt-callback-fn buf))
-          :on-error (lambda (process status output) (lw-sbt-callback-fn buf)))))))
+        (lambda (path) (setenv "PATH" (concat path ":" (getenv "PATH"))))))))
 
 ;; https://scalameta.org/metals/docs/editors/emacs.html
 ;; Note this package requires installation of a binary (see above link)
