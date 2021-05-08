@@ -119,7 +119,7 @@
 ;; https://github.com/jorgenschaefer/elpy
 (use-package elpy
    :bind (:map python-mode-map
-          ("C-x C-e" . #'elpy-shell-send-statement))
+               ("C-x C-e" . #'elpy-shell-send-statement))
    ;; Enable Elpy in all future Python buffers.
   :init (elpy-enable)
   :config (setq elpy-rpc-python-command "python3")
@@ -159,11 +159,12 @@
               ("M-s" . sp-down-sexp)
               ("M-t" . sp-transpose-sexp))
   :config
+  (require 'smartparens-config)
+  (setq sp-escape-quotes-after-insert t)
   (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
   (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
   (add-hook 'slime-repl-mode-hook #'smartparens-strict-mode)
   (add-hook 'ielm-mode-hook #'smartparens-strict-mode)
-  (require 'smartparens-config)
   (smartparens-global-mode 1))
 
 ;; https://github.com/bbatsov/projectile
