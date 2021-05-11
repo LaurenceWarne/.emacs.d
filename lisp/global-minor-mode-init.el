@@ -33,6 +33,7 @@
 (setq mac-right-option-modifier 'control)
 (setq ns-use-native-fullscreen nil)    ; Fix Emacs jumping into its own workspace whenever it's fullscreened
 (setq compilation-scroll-output t)
+(setq confirm-kill-processes nil)      ; Don't ask for exit confirmation when there are subprocesses
 
 (require 'dired)
 (require 'dired-x)
