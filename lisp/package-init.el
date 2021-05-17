@@ -936,3 +936,8 @@
   (python-mode . docstr-mode)
   :config
   (setq docstr-key-support t))
+
+;; https://github.com/jorgenschaefer/emacs-buttercup
+;; We install this package to get the correct indentation for `describe' and
+;; `it' blocks when writing tests.
+(use-package buttercup)
