@@ -258,7 +258,6 @@
                                   ;; Only for projectile-create-missing-test-files
                                   :test-suffix "Test"
                                   :run #'lw-sbt-run-cmd
-                                  :src-dir "src/test/"
                                   :related-files-fn lw-sbt-related-files
                                   :test-file-fn #'lw-sbt-test-file-fn)
   (projectile-update-project-type 'mill :related-files-fn lw-sbt-related-files))
@@ -374,7 +373,7 @@
     lsp-enable-links nil
     lsp-headerline-breadcrumb-enable nil)
   (when-let* ((go-dir (concat (getenv "HOME") "/go/bin/sqls"))
-              (_ (f-exists? go-dir)))
+              ((f-exists? go-dir)))
     (setq lsp-sqls-server go-dir)))
 
 (use-package lsp-ui
@@ -392,10 +391,6 @@
   (setq lsp-java-format-comments-enabled nil
     lsp-java-format-on-type-enabled nil
     lsp-java-save-actions-organize-imports t)
-  ;; Do we need to start the server (if not already running) here as well?
-  (setq lsp-java-vmargs
-    ;; Needs lombok in the gradle cache
-    '("-noverify" "-Xmx1G" "-XX:+UseG1GC" "-XX:+UseStringDeduplication" "-javaagent:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.10/625fc0055674dff70dbc76efa36d0f2c89b04a24/lombok-1.18.10.jar" "-Xbootclasspath/a:/home/laurencewarne/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.10/625fc0055674dff70dbc76efa36d0f2c89b04a24/lombok-1.18.10.jar"))
   (setq tab-width 4))
 
 (use-package dap-mode
