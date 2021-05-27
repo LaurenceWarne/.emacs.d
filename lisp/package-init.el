@@ -258,6 +258,8 @@
                                   ;; Only for projectile-create-missing-test-files
                                   :test-suffix "Test"
                                   :run #'lw-sbt-run-cmd
+                                  :src-dir (lambda (file-path) (projectile-complementary-dir file-path "test" "main"))
+                                  :test-dir (lambda (file-path) (projectile-complementary-dir file-path "main" "test"))
                                   :related-files-fn lw-sbt-related-files
                                   :test-file-fn #'lw-sbt-test-file-fn)
   (projectile-update-project-type 'mill :related-files-fn lw-sbt-related-files))
@@ -317,7 +319,16 @@
           ("C-j" . #'helm-projectile))
   :config
   (helm-projectile-on)
-  (setq projectile-completion-system 'helm))
+  (setq projectile-completion-system 'helm)
+  ;; Here because :config in projectile is kinda... full
+  (defun lw-switch-to-last-buffer()
+    "Switch to buffer returned by (other-buffer)."
+    (interactive)
+    (if (projectile-project-type)
+        (switch-to-buffer (cadr (projectile-project-buffers)))
+      ;; Check here if line is empty
+      (switch-to-buffer nil)))
+  (global-set-key (kbd "M-j") 'lw-switch-to-last-buffer))
 
 (use-package helm-descbinds
   :after helm

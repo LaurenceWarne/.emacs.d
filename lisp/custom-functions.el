@@ -39,12 +39,6 @@
   (back-to-indentation)
   (kill-line))
 
-(defun lw-switch-to-last-buffer()
-  "Switch to buffer returned by (other-buffer)."
-  (interactive)
-  ;; Check here if line is empty
-  (switch-to-buffer nil))
-
 (defun lw-newline-and-indent-ignoring-current-line()
   "Create a new line below the current line and go to it."
   (interactive)
