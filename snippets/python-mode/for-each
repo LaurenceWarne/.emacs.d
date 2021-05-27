@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name : for-each
+# key: fo
+# --
+for ${var} in ${collection}:
+    $0

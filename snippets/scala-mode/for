@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name : for
+# key: f
+# --
+for {
+  $0
+}
