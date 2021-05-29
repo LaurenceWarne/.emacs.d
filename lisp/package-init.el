@@ -197,6 +197,10 @@
          (projectile-related-files-fn-test-with-suffix "scala" "Tests")
          (projectile-related-files-fn-test-with-suffix "scala" "Suite")
          (projectile-related-files-fn-test-with-suffix "scala" "Spec"))
+        lw-eldev-related-files
+        (list
+         (projectile-related-files-fn-test-with-suffix "el" "-test")
+         (projectile-related-files-fn-test-with-prefix "el" "test-"))
         ;; Since bloop takes priority over sbt (.bloop file)
         projectile-project-types
         (--remove (eq (car it) 'bloop) projectile-project-types))
@@ -258,11 +262,12 @@
                                   ;; Only for projectile-create-missing-test-files
                                   :test-suffix "Test"
                                   :run #'lw-sbt-run-cmd
-                                  :src-dir (lambda (file-path) (projectile-complementary-dir file-path "test" "main"))
+                                  ;:src-dir (lambda (file-path) (projectile-complementary-dir file-path "test" "main"))
                                   :test-dir (lambda (file-path) (projectile-complementary-dir file-path "main" "test"))
                                   :related-files-fn lw-sbt-related-files
                                   :test-file-fn #'lw-sbt-test-file-fn)
-  (projectile-update-project-type 'mill :related-files-fn lw-sbt-related-files))
+  (projectile-update-project-type 'mill :related-files-fn lw-sbt-related-files)
+  (projectile-update-project-type 'emacs-eldev :related-files-fn lw-eldev-related-files))
 
 ;; http://tuhdo.github.io/helm-intro.html
 (use-package helm
