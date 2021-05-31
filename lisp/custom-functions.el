@@ -148,8 +148,8 @@
       (message filename))))
 
 ; Copied from somewhere
-(defun lw-jvm-get-file-package ()
+(defun lw-jvm-get-file-package (&optional directory)
   (mapconcat 'identity
              (split-string
               (replace-regexp-in-string ".*src\\(/\\(main\\|test\\)\\)?\\(/scala\\)?"
-                                        "" default-directory) "/" t) "."))
+                                        "" (or directory default-directory)) "/" t) "."))

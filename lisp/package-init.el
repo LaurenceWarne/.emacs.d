@@ -207,10 +207,11 @@
   (defun lw-projectile-run-test-file ()
     "Run a the test file in the current buffer, as opposed to all tests."
     (interactive)
-    (when-let* ((project (--first (eq (car it) (projectile-project-type))
-                                  projectile-project-types))
-                (project-plist (cdr project))
-                (test-file-fn (plist-get project-plist 'test-file-fn)))
+    (when-let (test-file-fn
+               (projectile-project-type-attribute
+                (projectile-project-type) 'test-file-fn))
+      (unless (projectile-test-file-p (buffer-file-name))
+        (with-current-buffer))
       (funcall test-file-fn)))
   (cl-defun lw-projectile-update-project-type-override (old-fn project-type &key marker-files project-file compilation-dir configure compile install package test run test-suffix test-prefix src-dir test-dir related-files-fn test-file-fn)
     (funcall old-fn project-type
@@ -237,20 +238,23 @@
               #'lw-projectile-update-project-type-override)
   (defun lw-projectile-test-file ()
     (interactive)
-    (when-let* ((project (--first (eq (car it) (projectile-project-type)) projectile-project-types))
-                (test-file-fn (plist-get (cdr project) 'test-file-fn))
-                (command-str (funcall test-file-fn)))
+    (when-let* ((test-file-fn
+                 (projectile-project-type-attribute
+                  (projectile-project-type) 'test-file-fn))
+                (current-file (buffer-file-name))
+                (target-file (if (projectile-test-file-p current-file) current-file (projectile-find-implementation-or-test current-file)))
+                (command-str (funcall test-file-fn target-file)))
       (projectile--run-project-cmd command-str
                                    (make-hash-table)
                                    :show-prompt 0
                                    :prompt-prefix "Test command: "
                                    :save-buffers t)))
   (define-key projectile-mode-map (kbd "C-c C-f") #'lw-projectile-test-file)
-  (defun lw-sbt-test-file-fn ()
+  (defun lw-sbt-test-file-fn (file-name)
     (interactive)
     (concat (lw-sbt-command) " 'testOnly "
-            (lw-jvm-get-file-package)
-            "." (f-no-ext (buffer-name)) "'"))
+            (lw-jvm-get-file-package (f-dirname file-name))
+            "." (f-no-ext (f-filename file-name)) "'"))
   (defun lw-sbt-command ()
     (if (locate-file "sbtn" exec-path) "sbtn" "sbt"))
   (defalias 'lw-sbt-compile-cmd (lambda () (concat (lw-sbt-command) " compile")))
