@@ -107,6 +107,15 @@
    '((python . t)
      (shell . t)
      (emacs-lisp . t)))
+  ;; Horrfic hack to disable highlight-indent-mode in python snippets
+  ;; which are exported using org mode.
+  ;; See the defintion of `org-html-fontify-code' for why this works
+  (defun python-no-elpy-mode()
+    (interactive)
+    (let ((python-mode-hook nil))
+      (python-mode)))
+  (add-to-list 'org-src-lang-modes '("python" . python-no-elpy))
+  ;; End hack
   :pin org)
 
 ;; https://github.com/Alexander-Miller/pfuture
