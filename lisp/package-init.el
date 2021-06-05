@@ -83,17 +83,24 @@
               ("M-]" . org-forward-heading-same-level)
               ("M-h" . (lambda () (interactive) (org-latex-preview '(16))))
               ("C-)" . nil)
-              ("C-(" . nil))
+              ("C-)" . nil)
+              ("C-#" . nil))
   :config
-  (setq org-use-speed-commands t     ; Shortcut for org commands when on headlines
-        org-startup-with-inline-images t
-        org-startup-folded nil
-        org-startup-truncated nil    ; Default to normal Emacs line wrapping behaviour
-        org-feed-alist
-        '(("Org"
-           "https://blog.tecosaur.com/tmio/rss.xml"
-           "~/org/feeds.org"
-           "Weekly Org Entries")))
+  (setq
+   ;; Shortcut for org commands when on headlines
+   org-use-speed-commands t
+   org-startup-with-inline-images t
+   org-startup-folded nil
+   ;; Default to normal Emacs line wrapping behaviour
+   org-startup-truncated nil
+   org-startup-indented t
+   ;; Default of 2 is super annoying with `org-src-tab-acts-natively'
+   org-edit-src-content-indentation 0
+   org-feed-alist
+   '(("Org"
+      "https://blog.tecosaur.com/tmio/rss.xml"
+      "~/org/feeds.org"
+      "Weekly Org Entries")))
   (set-face-attribute 'org-headline-done nil :strike-through t)
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -169,7 +176,8 @@
 
 ;; https://github.com/bbatsov/projectile
 (use-package projectile
-  :quelpa (projectile :fetcher github :repo "laurencewarne/projectile" :upgrade t)
+  :load-path "~/projects/projectile"
+  ;:quelpa (projectile :fetcher github :repo "laurencewarne/projectile" :upgrade t)
   :bind
   ("M-p" . projectile-switch-project)
   ("C-c C-c" . projectile-test-project)
@@ -271,6 +279,16 @@
                                   :related-files-fn lw-sbt-related-files
                                   :test-file-fn #'lw-sbt-test-file-fn)
   (projectile-update-project-type 'mill :related-files-fn lw-sbt-related-files)
+  (projectile-update-project-type
+   'maven
+   :test-dir
+   (lambda (file-path) (projectile-complementary-dir file-path "main" "test")))
+  (projectile-update-project-type
+   'gradlew
+   :test-suffix
+   "Test"
+   :test-dir
+   (lambda (file-path) (projectile-complementary-dir file-path "main" "test")))
   (projectile-update-project-type 'emacs-eldev :related-files-fn lw-eldev-related-files))
 
 ;; http://tuhdo.github.io/helm-intro.html
@@ -956,3 +974,6 @@
 ;; We install this package to get the correct indentation for `describe' and
 ;; `it' blocks when writing tests.
 (use-package buttercup)
+
+;; https://gitlab.com/pidu/git-timemachine
+(use-package git-timemachine)
