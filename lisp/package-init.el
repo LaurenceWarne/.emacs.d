@@ -100,7 +100,8 @@
    '(("Org"
       "https://blog.tecosaur.com/tmio/rss.xml"
       "~/org/feeds.org"
-      "Weekly Org Entries")))
+      "Weekly Org Entries"))
+   org-confirm-babel-evaluate nil)
   (set-face-attribute 'org-headline-done nil :strike-through t)
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -108,7 +109,7 @@
      (shell . t)
      (emacs-lisp . t)))
   ;; Horrfic hack to disable highlight-indent-mode in python snippets
-  ;; which are exported using org mode.
+  ;; which are exported to html using org export.
   ;; See the defintion of `org-html-fontify-code' for why this works
   (defun python-no-elpy-mode()
     (interactive)
@@ -723,6 +724,7 @@
 (use-package pcre2el)
 
 (use-package ox-yaow
+  :after org
   :ensure nil
   :quelpa (ox-yaow :fetcher github :repo "laurencewarne/ox-yaow.el" :upgrade t)
   ;; :load-path "~/projects/ox-yaow.el"
@@ -744,6 +746,7 @@
                                      :html-head ,ox-yaow-html-head
                                      :html-preamble t
                                      :recursive t
+                                     :exlude ".*steam\.org"
                                      :publishing-function ox-yaow-publish-to-html
                                      :preparation-function ox-yaow-preparation-fn
                                      :completion-function ox-yaow-completion-fn
