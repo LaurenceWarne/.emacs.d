@@ -111,9 +111,9 @@
   ;; Horrfic hack to disable highlight-indent-mode in python snippets
   ;; which are exported to html using org export.
   ;; See the defintion of `org-html-fontify-code' for why this works
-  (defun python-no-elpy-mode()
+  (defun python-no-elpy-mode ()
     (interactive)
-    (let ((python-mode-hook nil))
+    (let (python-mode-hook)
       (python-mode)))
   (add-to-list 'org-src-lang-modes '("python" . python-no-elpy))
   ;; End hack
@@ -187,7 +187,7 @@
 ;; https://github.com/bbatsov/projectile
 (use-package projectile
   :load-path "~/projects/projectile"
-  ;:quelpa (projectile :fetcher github :repo "laurencewarne/projectile" :upgrade t)
+  :demand t
   :bind
   ("M-p" . projectile-switch-project)
   ("C-c C-c" . projectile-test-project)
@@ -229,7 +229,9 @@
                (projectile-project-type-attribute
                 (projectile-project-type) 'test-file-fn))
       (unless (projectile-test-file-p (buffer-file-name))
-        (with-current-buffer))
+        (save-current-buffer
+          (projectile-toggle-between-implementation-and-test)
+          (funcall test-file-fn)))
       (funcall test-file-fn)))
   (cl-defun lw-projectile-update-project-type-override (old-fn project-type &key marker-files project-file compilation-dir configure compile install package test run test-suffix test-prefix src-dir test-dir related-files-fn test-file-fn)
     (funcall old-fn project-type
@@ -580,8 +582,10 @@
 
 ;; https://magit.vc/
 (use-package magit
+  :bind
+  ("C-x g" . #'magit)
+  ("C-c g" . #'magit-file-dispatch)
   :config
-  (global-set-key (kbd "C-c g") 'magit-file-dispatch)
   (defun lw-magit-checkout-last (&optional start-point)
     (interactive)
     (magit-branch-checkout "-" start-point))
@@ -750,7 +754,7 @@
                                      :publishing-function ox-yaow-publish-to-html
                                      :preparation-function ox-yaow-preparation-fn
                                      :completion-function ox-yaow-completion-fn
-                                     :ox-yaow-depth 1)
+                                     :ox-yaow-depth 2)
                                    org-publish-project-alist)))
 
 ;; https://github.com/yoshiki/yaml-mode
