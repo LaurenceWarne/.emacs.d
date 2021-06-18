@@ -754,6 +754,7 @@
                                      :publishing-function ox-yaow-publish-to-html
                                      :preparation-function ox-yaow-preparation-fn
                                      :completion-function ox-yaow-completion-fn
+                                     :ox-yaow-file-blacklist ("~/org/maths/answers.org")
                                      :ox-yaow-depth 2)
                                    org-publish-project-alist)))
 
