@@ -60,11 +60,11 @@
 (use-package doom-themes
   :config
   (setq doom-themes-enable-bold t ; if nil, bold is universally disabled
-    doom-themes-enable-italic t ; if nil, italics is universally disabled
+        doom-themes-enable-italic t ; if nil, italics is universally disabled
 
-    ;; doom-one specific settings
-    doom-one-brighter-modeline nil
-    doom-one-brighter-comments nil)
+        ;; doom-one specific settings
+        doom-one-brighter-modeline nil
+        doom-one-brighter-comments nil)
   ;; Load the theme (doom-one, doom-molokai, etc); keep in mind that each theme
   ;; may have their own settings.
   (load-theme 'doom-acario-dark t)
@@ -135,9 +135,9 @@
 
 ;; https://github.com/jorgenschaefer/elpy
 (use-package elpy
-   :bind (:map python-mode-map
-               ("C-x C-e" . #'elpy-shell-send-statement))
-   ;; Enable Elpy in all future Python buffers.
+  :bind (:map python-mode-map
+              ("C-x C-e" . #'elpy-shell-send-statement))
+  ;; Enable Elpy in all future Python buffers.
   :init (elpy-enable)
   :config (setq elpy-rpc-python-command "python3")
   ;; Fix python does not support readline warning
@@ -152,7 +152,7 @@
   ("M-#" . avy-copy-line)
   :config
   (setq avy-keys-alist
-      `((avy-goto-char-2 . (?a ?s ?d ?f ?j ?k ?l)))))
+        `((avy-goto-char-2 . (?a ?s ?d ?f ?j ?k ?l)))))
 
 (use-package yasnippet
   :defer t
@@ -161,7 +161,7 @@
   :config
   (yas-global-mode 1)
   (setq yas-indent-line 'auto
-    yas-also-auto-indent-first-line t))
+        yas-also-auto-indent-first-line t))
 
 (use-package smartparens
   :demand t
@@ -186,7 +186,8 @@
 
 ;; https://github.com/bbatsov/projectile
 (use-package projectile
-  :load-path "~/projects/projectile"
+  :ensure nil
+  :quelpa (projectile :fetcher github :repo "bbatsov/projectile" :upgrade t)
   :demand t
   :bind
   ("M-p" . projectile-switch-project)
@@ -286,7 +287,7 @@
                                   ;; Only for projectile-create-missing-test-files
                                   :test-suffix "Test"
                                   :run #'lw-sbt-run-cmd
-                                  ;:src-dir (lambda (file-path) (projectile-complementary-dir file-path "test" "main"))
+                                        ;:src-dir (lambda (file-path) (projectile-complementary-dir file-path "test" "main"))
                                   :test-dir (lambda (file-path) (projectile-complementary-dir file-path "main" "test"))
                                   :related-files-fn lw-sbt-related-files
                                   :test-file-fn #'lw-sbt-test-file-fn)
@@ -317,8 +318,8 @@
   (helm-mode 1)
   ;; Makes helm-boring-file-regexp-list act as a .gitignore
   (setq helm-ff-skip-boring-files t
-    helm-M-x-fuzzy-match t
-    helm-split-window-in-side-p t)
+        helm-M-x-fuzzy-match t
+        helm-split-window-in-side-p t)
   (define-key helm-map (kbd "C-,") 'helm-beginning-of-buffer)
   (define-key helm-map (kbd "C-.") 'helm-end-of-buffer)
   (define-key helm-map (kbd "C-k") 'helm-buffer-run-kill-buffers)
@@ -333,7 +334,7 @@
   :config
   (helm-flx-mode +1)
   (setq helm-flx-for-helm-find-files t ; t by default
-    helm-flx-for-helm-locate t))   ; nil by default
+        helm-flx-for-helm-locate t))   ; nil by default
 
 (use-package helm-ag
   :after helm
@@ -343,19 +344,19 @@
   ;; Don't add helm-ag to after because its loading is deferred
   :after (helm projectile)
   :bind (:map python-mode-map
-          ("C-j" . #'helm-projectile)
-          ("M-q" . #'helm-projectile-ag)
-          ("M-k" . #'projectile-toggle-between-implementation-and-test)
-          :map java-mode-map
-          ("C-j" . #'helm-projectile)
-          ("M-q" . #'helm-projectile-ag)
-          ("M-k" . #'projectile-toggle-between-implementation-and-test)
-          :map emacs-lisp-mode-map
-          ("C-j" . #'helm-projectile)
-          ("M-q" . #'helm-projectile-ag)
-          ("M-k" . #'projectile-toggle-between-implementation-and-test)
-          :map org-mode-map
-          ("C-j" . #'helm-projectile))
+              ("C-j" . #'helm-projectile)
+              ("M-q" . #'helm-projectile-ag)
+              ("M-k" . #'projectile-toggle-between-implementation-and-test)
+              :map java-mode-map
+              ("C-j" . #'helm-projectile)
+              ("M-q" . #'helm-projectile-ag)
+              ("M-k" . #'projectile-toggle-between-implementation-and-test)
+              :map emacs-lisp-mode-map
+              ("C-j" . #'helm-projectile)
+              ("M-q" . #'helm-projectile-ag)
+              ("M-k" . #'projectile-toggle-between-implementation-and-test)
+              :map org-mode-map
+              ("C-j" . #'helm-projectile))
   :config
   (helm-projectile-on)
   (setq projectile-completion-system 'helm)
@@ -419,9 +420,9 @@
   (scala-mode . (lambda () (add-hook 'before-save-hook 'lsp-format-buffer nil t)))
   :config
   (setq lsp-keep-workspace-alive nil
-    lsp-enable-file-watchers nil
-    lsp-enable-links nil
-    lsp-headerline-breadcrumb-enable nil)
+        lsp-enable-file-watchers nil
+        lsp-enable-links nil
+        lsp-headerline-breadcrumb-enable nil)
   (when-let* ((go-dir (concat (getenv "HOME") "/go/bin/sqls"))
               ((f-exists? go-dir)))
     (setq lsp-sqls-server go-dir)))
@@ -439,8 +440,8 @@
   :after lsp-mode
   :config
   (setq lsp-java-format-comments-enabled nil
-    lsp-java-format-on-type-enabled nil
-    lsp-java-save-actions-organize-imports t)
+        lsp-java-format-on-type-enabled nil
+        lsp-java-save-actions-organize-imports t)
   (setq tab-width 4))
 
 (use-package dap-mode
@@ -464,7 +465,7 @@
   :config
   (solaire-global-mode +1)
   (solaire-mode-swap-bg))
-            
+
 (use-package rainbow-delimiters
   :config
   (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
@@ -509,13 +510,13 @@
   (define-key pdf-view-mode-map (kbd "C--") 'pdf-view-shrink)
   (define-key pdf-view-mode-map (kbd "C-=") 'pdf-view-enlarge)
   (set-face-attribute 'pdf-isearch-lazy nil
-              :inherit 'lazy-highlight
-              :foreground "black"
-              :background "grey")
+                      :inherit 'lazy-highlight
+                      :foreground "black"
+                      :background "grey")
   (set-face-attribute 'pdf-isearch-match nil
-              :inherit 'isearch
-              :foreground "white"
-              :background "black"))
+                      :inherit 'isearch
+                      :foreground "white"
+                      :background "black"))
 
 ;; https://github.com/anwyn/slime-company
 (use-package slime-company
@@ -529,7 +530,7 @@
   :config
   ;; Set your lisp system and, optionally, some contribs
   (setq inferior-lisp-program "/usr/local/bin/sbcl"
-    slime-contribs '(slime-fancy))
+        slime-contribs '(slime-fancy))
   (define-key slime-repl-mode-map (kbd "M-,") 'slime-describe-symbol)
   (define-key slime-repl-mode-map (kbd "C-c C-d C-d") 'slime-pop-find-definition-stack))
 
@@ -615,19 +616,19 @@
   (magit-todos-mode))
 
 (use-package mc-biome-viewer
-    :ensure nil
-    ;; :load-path "~/projects/mc-biome-viewer"
-    :quelpa (mc-biome-viewer :fetcher github :repo "LaurenceWarne/mc-biome-viewer" :upgrade t)
-    ;; Example configuration
-    :config
-    (setq mc-biome-viewer-column-chunks-in-camera 48)  ; But fewer chunks will be faster
-    (puthash "ice plains" '(:foreground "silver") mc-biome-viewer-biome-to-face-map))
+  :ensure nil
+  ;; :load-path "~/projects/mc-biome-viewer"
+  :quelpa (mc-biome-viewer :fetcher github :repo "LaurenceWarne/mc-biome-viewer" :upgrade t)
+  ;; Example configuration
+  :config
+  (setq mc-biome-viewer-column-chunks-in-camera 48)  ; But fewer chunks will be faster
+  (puthash "ice plains" '(:foreground "silver") mc-biome-viewer-biome-to-face-map))
 
 ;; https://github.com/dgutov/diff-hl
 (use-package diff-hl
-    :config
-    (global-diff-hl-mode)
-    (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
+  :config
+  (global-diff-hl-mode)
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
 ;; https://github.com/ardumont/org2jekyll
 (use-package org2jekyll
@@ -673,33 +674,33 @@
   :hook (dired-mode . dired-filter-group-mode)
   :config
   (setq dired-filter-group-saved-groups
-    '(("default"
-       ("Git"
-        (regexp . "^\\.git"))
-       ("Python"
-        (extension . "py"))
-       ("Java"
-        (extension . "java"))
-       ("Lisp"
-        (extension "el" "cl" "elc"))
-       ("Org"
-        (extension . "org"))
-       ("PDF"
-        (extension . "pdf"))
-       ("LaTeX"
-        (extension "tex" "bib"))
-       ("HTML"
-        (extension "html"))
-       ("Archives"
-        (extension "zip" "rar" "gz" "bz2" "tar"))
-       ("Images"
-        (extension "jpg" "png" "jpeg" "gif" "bmp" "svg"))
-       ("Media"
-        (extension "mp3" "mp4" "avi" "mpg" "flv" "ogg"))
-       ("Configuration"
-        (regexp . "^\\.[^(git)]+"))
-       ("Backup"
-        (regexp . ".*~"))))))
+        '(("default"
+           ("Git"
+            (regexp . "^\\.git"))
+           ("Python"
+            (extension . "py"))
+           ("Java"
+            (extension . "java"))
+           ("Lisp"
+            (extension "el" "cl" "elc"))
+           ("Org"
+            (extension . "org"))
+           ("PDF"
+            (extension . "pdf"))
+           ("LaTeX"
+            (extension "tex" "bib"))
+           ("HTML"
+            (extension "html"))
+           ("Archives"
+            (extension "zip" "rar" "gz" "bz2" "tar"))
+           ("Images"
+            (extension "jpg" "png" "jpeg" "gif" "bmp" "svg"))
+           ("Media"
+            (extension "mp3" "mp4" "avi" "mpg" "flv" "ogg"))
+           ("Configuration"
+            (regexp . "^\\.[^(git)]+"))
+           ("Backup"
+            (regexp . ".*~"))))))
 
 ;; https://github.com/Fuco1/dired-hacks#dired-rainbow
 (use-package dired-rainbow
@@ -794,7 +795,7 @@
 
 ;; https://github.com/io12/org-fragtog
 (use-package org-fragtog
- :hook (org-mode . org-fragtog-mode))
+  :hook (org-mode . org-fragtog-mode))
 
 ;; https://github.com/alphapapa/snow.el
 (use-package snow
@@ -836,10 +837,10 @@
 ;; Also requires:
 ;; pip3 install importmagic epc --user
 ;; https://github.com/anachronic/importmagic.el
-;(use-package importmagic
-;    :ensure t
-;    :config
-;    (add-hook 'python-mode-hook 'importmagic-mode))
+                                        ;(use-package importmagic
+                                        ;    :ensure t
+                                        ;    :config
+                                        ;    (add-hook 'python-mode-hook 'importmagic-mode))
 
 ;; https://github.com/hvesalai/emacs-scala-mode
 (use-package scala-mode
@@ -892,7 +893,7 @@
 
   (setq shackle-rules '((compilation-mode :select nil :custom lw-shackle-get-window)
                         ("magit: .*" :regexp t :select t :custom lw-shackle-get-window-cur)
-                        ;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
+                                        ;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
                         ))
   (shackle-mode 1))
 
@@ -929,12 +930,12 @@
   (defun lw-openapi-to-html ()
     (interactive)
     (shell-command
-      (concat
-       "java -jar "
-       lw-openapi-jar-path
-       " "
-       (buffer-file-name)
-       " -l html2 -o " lw-openapi-output-dir))
+     (concat
+      "java -jar "
+      lw-openapi-jar-path
+      " "
+      (buffer-file-name)
+      " -l html2 -o " lw-openapi-output-dir))
     (let ((dir default-directory))
       (other-window 1)
       (eaf-open (concat dir lw-openapi-output-dir "/index.html"))))
@@ -948,7 +949,8 @@
 
 ;; https://github.com/Silex/docker.el
 (use-package docker
-  :quelpa (speed-type :fetcher github :repo "laurencewarne/docker" :upgrade t)
+  :ensure nil
+  :quelpa (docker :fetcher github :repo "Silex/docker.el" :upgrade t)
   :bind (("C-c d" . docker)
          :map docker-container-mode-map
          ("q" . kill-buffer-and-window)
@@ -994,3 +996,8 @@
 
 ;; https://gitlab.com/pidu/git-timemachine
 (use-package git-timemachine)
+
+;; https://github.com/LaurenceWarne/libro-finito
+(use-package finito
+  :ensure nil  
+  :quelpa (finito :fetcher github :repo "laurencewarne/libro-finito" :upgrade t))
