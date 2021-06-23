@@ -1,4 +1,4 @@
-;;;; package-init.el -- installs/initializes packages
+;;;; package-init.el -- installs/initializes packages -*- lexical-binding: t -*-
 ;;; Commentary:
 
 ;; Use use-package to install and configure packages in a readable way.
@@ -188,6 +188,7 @@
 (use-package projectile
   :ensure nil
   :quelpa (projectile :fetcher github :repo "bbatsov/projectile" :upgrade t)
+  ;:load-path "~/projects/projectile"
   :demand t
   :bind
   ("M-p" . projectile-switch-project)
@@ -281,28 +282,36 @@
   (defalias 'lw-sbt-compile-cmd (lambda () (concat (lw-sbt-command) " compile")))
   (defalias 'lw-sbt-test-cmd (lambda () (concat (lw-sbt-command) " test")))
   (defalias 'lw-sbt-run-cmd (lambda () (concat (lw-sbt-command) " run")))
-  (projectile-update-project-type 'sbt
-                                  :compile #'lw-sbt-compile-cmd
-                                  :test  #'lw-sbt-test-cmd
-                                  ;; Only for projectile-create-missing-test-files
-                                  :test-suffix "Test"
-                                  :run #'lw-sbt-run-cmd
-                                        ;:src-dir (lambda (file-path) (projectile-complementary-dir file-path "test" "main"))
-                                  :test-dir (lambda (file-path) (projectile-complementary-dir file-path "main" "test"))
-                                  :related-files-fn lw-sbt-related-files
-                                  :test-file-fn #'lw-sbt-test-file-fn)
-  (projectile-update-project-type 'mill :related-files-fn lw-sbt-related-files)
+  (defun dir-swap (str replacement)
+    (lambda (file-path) (projectile-complementary-dir file-path str replacement)))
+  (projectile-update-project-type
+   'sbt
+   :compile #'lw-sbt-compile-cmd
+   :test  #'lw-sbt-test-cmd
+   ;; Only for projectile-create-missing-test-files
+   :test-suffix "Test"
+   :run #'lw-sbt-run-cmd
+   :src-dir (dir-swap "test" "main")
+   :test-dir (dir-swap "main" "test")
+   :related-files-fn lw-sbt-related-files
+   :test-file-fn #'lw-sbt-test-file-fn)
+  (projectile-update-project-type
+   'mill
+   :src-dir (dir-swap "test/src" "src")
+   :test-dir (dir-swap "src" "test/src"))
   (projectile-update-project-type
    'maven
-   :test-dir
-   (lambda (file-path) (projectile-complementary-dir file-path "main" "test")))
+   :src-dir (dir-swap "test" "main")
+   :test-dir (dir-swap "main" "test"))
   (projectile-update-project-type
    'gradlew
    :test-suffix
    "Test"
-   :test-dir
-   (lambda (file-path) (projectile-complementary-dir file-path "main" "test")))
-  (projectile-update-project-type 'emacs-eldev :related-files-fn lw-eldev-related-files))
+   :src-dir (dir-swap "test" "main")
+   :test-dir (dir-swap "main" "test"))
+  (projectile-update-project-type
+   'emacs-eldev
+   :related-files-fn lw-eldev-related-files))
 
 ;; http://tuhdo.github.io/helm-intro.html
 (use-package helm
@@ -343,6 +352,8 @@
 (use-package helm-projectile
   ;; Don't add helm-ag to after because its loading is deferred
   :after (helm projectile)
+  :init
+  (require 'markdown-mode)
   :bind (:map python-mode-map
               ("C-j" . #'helm-projectile)
               ("M-q" . #'helm-projectile-ag)
@@ -355,6 +366,9 @@
               ("C-j" . #'helm-projectile)
               ("M-q" . #'helm-projectile-ag)
               ("M-k" . #'projectile-toggle-between-implementation-and-test)
+              :map markdown-mode-map
+              ("C-j" . #'helm-projectile)
+              ("M-q" . #'helm-projectile-ag)
               :map org-mode-map
               ("C-j" . #'helm-projectile))
   :config
@@ -997,7 +1011,7 @@
 ;; https://gitlab.com/pidu/git-timemachine
 (use-package git-timemachine)
 
-;; https://github.com/LaurenceWarne/libro-finito
+;; https://github.com/LaurenceWarne/finito.el
 (use-package finito
   :ensure nil  
-  :quelpa (finito :fetcher github :repo "laurencewarne/libro-finito" :upgrade t))
+  :quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t))
