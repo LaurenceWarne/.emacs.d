@@ -329,6 +329,7 @@
   (setq helm-ff-skip-boring-files t
         helm-M-x-fuzzy-match t
         helm-split-window-in-side-p t)
+  (add-to-list 'savehist-additional-variables 'helm-M-x-input-history)
   (define-key helm-map (kbd "C-,") 'helm-beginning-of-buffer)
   (define-key helm-map (kbd "C-.") 'helm-end-of-buffer)
   (define-key helm-map (kbd "C-k") 'helm-buffer-run-kill-buffers)
@@ -1015,3 +1016,6 @@
 (use-package finito
   :ensure nil  
   :quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t))
+
+;; https://github.com/davazp/graphql-mode
+(use-package graphql-mode)

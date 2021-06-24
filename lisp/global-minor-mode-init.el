@@ -36,6 +36,9 @@
 (setq compilation-scroll-output t)
 (setq confirm-kill-processes nil)      ; Don't ask for exit confirmation when there are subprocesses
 
+(require 'savehist)
+(add-to-list 'savehist-additional-variables 'kill-ring)
+
 (require 'dired)
 (require 'dired-x)
 (add-hook 'dired-mode-hook (lambda ()
