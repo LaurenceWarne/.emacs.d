@@ -1014,8 +1014,10 @@
 
 ;; https://github.com/LaurenceWarne/finito.el
 (use-package finito
-  :ensure nil  
-  :quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t))
+  :load-path "~/projects/finito.el"
+  ;:ensure nil
+  ;:quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t)
+)
 
 ;; https://github.com/davazp/graphql-mode
 (use-package graphql-mode)
