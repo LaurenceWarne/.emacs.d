@@ -165,6 +165,19 @@
 
 (use-package smartparens
   :demand t
+  :init
+  (defun lw-clone-line-lisp ()
+    "Copy the current line to the next."
+    (interactive)
+    (let* ((p1 (progn (back-to-indentation) (point)))
+           (p2 (progn (sp-forward-sexp) (point)))
+           (contents (buffer-substring-no-properties p1 p2)))
+      (forward-line -1)
+      (end-of-line)
+      (open-line 1)
+      (forward-line)
+      (insert contents)
+      (indent-according-to-mode)))
   :bind (:map smartparens-mode-map
               ("C-0" . sp-forward-slurp-sexp)
               ("C-9" . sp-forward-barf-sexp)
@@ -174,7 +187,11 @@
               ("M-f" . sp-forward-sexp)
               ("M-b" . sp-backward-sexp)
               ("M-s" . sp-down-sexp)
-              ("M-t" . sp-transpose-sexp))
+              ("M-t" . sp-transpose-sexp)
+              :map smartparens-strict-mode-map
+              ("M-l" . lw-clone-line-lisp)
+              :map emacs-lisp-mode-map
+              (";" . sp-comment))
   :config
   (require 'smartparens-config)
   (setq sp-escape-quotes-after-insert t)
@@ -182,6 +199,7 @@
   (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
   (add-hook 'slime-repl-mode-hook #'smartparens-strict-mode)
   (add-hook 'ielm-mode-hook #'smartparens-strict-mode)
+  (add-hook 'minibuffer-inactive-mode-hook #'smartparens-strict-mode)
   (smartparens-global-mode 1))
 
 ;; https://github.com/bbatsov/projectile
@@ -627,6 +645,7 @@
   (global-set-key (kbd "M-'") 'er/expand-region))
 
 (use-package magit-todos
+  :after magit
   :config
   (magit-todos-mode))
 
@@ -1021,3 +1040,9 @@
 
 ;; https://github.com/davazp/graphql-mode
 (use-package graphql-mode)
+
+;;https://github.com/troyp/fn.el
+(use-package fn)
+
+;; https://github.com/vermiculus/graphql.el
+(use-package graphql)
