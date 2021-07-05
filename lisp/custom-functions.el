@@ -153,3 +153,13 @@
              (split-string
               (replace-regexp-in-string ".*src\\(/\\(main\\|test\\)\\)?\\(/scala\\)?"
                                         "" (or directory default-directory)) "/" t) "."))
+
+(defun lw-delete-compilation-window ()
+  "Delete any active compilation windows."
+  (interactive)
+  (mapc (lambda (window)
+          (when-let* ((buf (window-buffer window))
+                      ((compilation-buffer-p buf)))
+            (message "Killing buffer: %s" buf)
+            (kill-buffer buf)))
+        (window-list)))

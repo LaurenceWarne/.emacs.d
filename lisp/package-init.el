@@ -1041,8 +1041,8 @@
 ;; https://github.com/davazp/graphql-mode
 (use-package graphql-mode)
 
-;;https://github.com/troyp/fn.el
-(use-package fn)
+;; https://git.sr.ht/~tarsius/llama
+(use-package llama)
 
 ;; https://github.com/vermiculus/graphql.el
 (use-package graphql)
