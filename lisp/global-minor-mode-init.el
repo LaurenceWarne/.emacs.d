@@ -35,6 +35,7 @@
 (setq ns-use-native-fullscreen nil)    ; Fix Emacs jumping into its own workspace whenever it's fullscreened
 (setq compilation-scroll-output t)
 (setq confirm-kill-processes nil)      ; Don't ask for exit confirmation when there are subprocesses
+(setq browse-url-browser-function 'browse-url-firefox)
 
 (require 'savehist)
 (add-to-list 'savehist-additional-variables 'kill-ring)

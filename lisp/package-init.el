@@ -764,8 +764,6 @@
 
 (use-package ox-yaow
   :after org
-  :ensure nil
-  :quelpa (ox-yaow :fetcher github :repo "laurencewarne/ox-yaow.el" :upgrade t)
   ;; :load-path "~/projects/ox-yaow.el"
   :config
   ;; Stolen from https://github.com/fniessen/org-html-themes
