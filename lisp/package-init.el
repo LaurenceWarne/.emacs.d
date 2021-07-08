@@ -74,6 +74,7 @@
 ;; install) we place this use-package call before requiring org anywhere.
 ;; https://orgmode.org/
 (use-package org
+  :after dash
   :ensure org-plus-contrib
   :bind (:map org-mode-map
               ("C-," . beginning-of-buffer)
@@ -117,6 +118,26 @@
       (python-mode)))
   (add-to-list 'org-src-lang-modes '("python" . python-no-elpy))
   ;; End hack
+
+  (setq site-domain "laurencewarne.github.io")
+  ;; configure site-baseurl to "/directory/" if the site is inside a subdirectory.  Otherwise set it to  "/"
+  (setq site-baseurl "/wiki/")
+  ;; your disqus name
+  (setq disqus-shortname "laurencewarne-github-io")
+  (setq disqus-page-embed "https://laurencewarne-github-io.disqus.com/embed.js")
+  ;; function to simply replace a regular expression in the output
+  (defun my-final-filter (output backend info)
+    (let* ((file-path (plist-get info :input-file))
+           (base-dir (f-expand "~/org"))
+           (url (f-swap-ext (concat site-domain "/wiki/"
+                                    (f-relative file-path base-dir))
+                            "html")))
+      (-->
+          output
+        (replace-regexp-in-string "{{page_url}}" url it)
+        (replace-regexp-in-string "{{page_indentifier}}" file-path it)
+        (replace-regexp-in-string "{{page_embed}}" disqus-page-embed it))))
+  (setq org-export-filter-final-output-functions '(my-final-filter))
   :pin org)
 
 ;; https://github.com/Alexander-Miller/pfuture
@@ -1031,7 +1052,9 @@
 
 ;; https://github.com/LaurenceWarne/finito.el
 (use-package finito
+  :demand t
   :load-path "~/projects/finito.el"
+  :bind ("C-c b" . finito-dispatch)
   ;:ensure nil
   ;:quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t)
 )
