@@ -160,6 +160,7 @@
   (mapc (lambda (window)
           (when-let* ((buf (window-buffer window))
                       ((compilation-buffer-p buf)))
-            (message "Killing buffer: %s" buf)
+            (message "Killing Window: %s" window)
+            (delete-window window)
             (kill-buffer buf)))
         (window-list)))

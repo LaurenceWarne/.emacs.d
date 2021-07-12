@@ -119,13 +119,11 @@
   (add-to-list 'org-src-lang-modes '("python" . python-no-elpy))
   ;; End hack
 
+  ;; Based on http://snarvaez.poweredbygnulinux.com/notes/org-mode-publishing-adding-disqus-code.html
   (setq site-domain "laurencewarne.github.io")
-  ;; configure site-baseurl to "/directory/" if the site is inside a subdirectory.  Otherwise set it to  "/"
   (setq site-baseurl "/wiki/")
-  ;; your disqus name
   (setq disqus-shortname "laurencewarne-github-io")
   (setq disqus-page-embed "https://laurencewarne-github-io.disqus.com/embed.js")
-  ;; function to simply replace a regular expression in the output
   (defun my-final-filter (output backend info)
     (let* ((file-path (plist-get info :input-file))
            (base-dir (f-expand "~/org"))
@@ -220,7 +218,7 @@
   (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
   (add-hook 'slime-repl-mode-hook #'smartparens-strict-mode)
   (add-hook 'ielm-mode-hook #'smartparens-strict-mode)
-  (add-hook 'minibuffer-inactive-mode-hook #'smartparens-strict-mode)
+  (add-hook 'minibuffer-inactive-mode-hook #'smartparens-mode)
   (smartparens-global-mode 1))
 
 ;; https://github.com/bbatsov/projectile
