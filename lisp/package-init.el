@@ -264,9 +264,9 @@
   (defun lw-projectile-run-test-file ()
     "Run a the test file in the current buffer, as opposed to all tests."
     (interactive)
-    (when-let (test-file-fn
-               (projectile-project-type-attribute
-                (projectile-project-type) 'test-file-fn))
+    (when-let ((test-file-fn
+                (projectile-project-type-attribute
+                 (projectile-project-type) 'test-file-fn)))
       (unless (projectile-test-file-p (buffer-file-name))
         (save-current-buffer
           (projectile-toggle-between-implementation-and-test)
@@ -314,6 +314,11 @@
     (concat (lw-sbt-command) " 'testOnly "
             (lw-jvm-get-file-package (f-dirname file-name))
             "." (f-no-ext (f-filename file-name)) "'"))
+  (defun lw-mill-test-file-fn (file-name)
+    (interactive)
+    (concat "mill __.testOnly '"
+            (lw-jvm-get-file-package (f-dirname file-name))
+            "." (f-no-ext (f-filename file-name)) "'"))
   (defun lw-sbt-command ()
     (if (locate-file "sbtn" exec-path) "sbtn" "sbt"))
   (defalias 'lw-sbt-compile-cmd (lambda () (concat (lw-sbt-command) " compile")))
@@ -335,7 +340,8 @@
   (projectile-update-project-type
    'mill
    :src-dir (dir-swap "test/src" "src")
-   :test-dir (dir-swap "src" "test/src"))
+   :test-dir (dir-swap "src" "test/src")
+   :test-file-fn #'lw-mill-test-file-fn)
   (projectile-update-project-type
    'maven
    :src-dir (dir-swap "test" "main")
@@ -1065,3 +1071,7 @@
 
 ;; https://github.com/vermiculus/graphql.el
 (use-package graphql)
+
+;; https://github.com/akicho8/string-inflection
+(use-package string-inflection
+  :bind ("C-=" . string-inflection-all-cycle))
