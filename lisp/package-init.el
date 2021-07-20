@@ -525,8 +525,8 @@
   (solaire-mode-swap-bg))
 
 (use-package rainbow-delimiters
-  :config
-  (add-hook 'prog-mode-hook #'rainbow-delimiters-mode))
+  :hook
+  (prog-mode . rainbow-delimiters-mode))
 
 (use-package eyebrowse
   :config
@@ -622,9 +622,6 @@
   (lorem-ipsum-insert-sentences
    lorem-ipsum-insert-paragraphs
    lorem-ipsum-insert-list))
-
-;; https://github.com/millejoh/emacs-ipython-notebook
-(use-package ein)
 
 ;; https://github.com/alphapapa/org-rifle
 (use-package helm-org-rifle
@@ -1075,3 +1072,41 @@
 ;; https://github.com/akicho8/string-inflection
 (use-package string-inflection
   :bind ("C-=" . string-inflection-all-cycle))
+
+;; https://polymode.github.io/
+(use-package polymode
+  :after scala-mode
+  :hook (scala-mode . poly-scala-sql-mode)
+  :config
+  (require 'json-mode)
+  ;; See https://polymode.github.io/defining-polymodes/
+  (define-hostmode poly-scala-hostmode :mode 'scala-mode)
+  (define-hostmode poly-scala-hostmode
+    :mode 'scala-mode)
+  ;; Note we don't use the :head-mode and :tail-mode options since it messes
+  ;; up rainbow delims and the default poly-head-tail-mode used to fontify
+  ;; is fine
+  (define-innermode poly-sql-multiline-expr-scala-innermode
+    :mode 'sql-mode
+    :head-matcher (rx (or "fr" "sql") (= 3 (char "\"")))
+    :tail-matcher (rx (= 3 (char "\""))))
+  (define-innermode poly-sql-expr-scala-innermode
+    :mode 'sql-mode
+    :head-matcher '("\\(fr\"\\)[^\"]" . 1)
+    :tail-matcher (rx (char "\"")))
+  (define-innermode poly-json-expr-scala-innermode
+    :mode 'json-mode
+    :head-matcher (rx "json" (= 3 (char "\"")))
+    :tail-matcher (rx (= 3 (char "\""))))
+  (define-polymode poly-scala-sql-mode
+    :hostmode 'poly-scala-hostmode
+    :innermodes '(poly-sql-multiline-expr-scala-innermode
+                  poly-sql-expr-scala-innermode
+                  poly-json-expr-scala-innermode)))
+
+;; https://polymode.github.io/
+(use-package poly-markdown
+  :hook (markdown-mode . poly-markdown-mode))
+
+;; https://github.com/mattiase/xr
+(use-package xr)
