@@ -1110,3 +1110,13 @@
 
 ;; https://github.com/mattiase/xr
 (use-package xr)
+
+;; https://www.gnu.org/software/auctex/manual/auctex/index.html
+(use-package tex
+  :ensure auctex)
+
+(use-package company-auctex
+  :after tex
+  :hook (TeX-mode . company-mode)
+  :config
+  (company-auctex-init))
