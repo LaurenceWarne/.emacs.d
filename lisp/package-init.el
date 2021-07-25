@@ -917,7 +917,12 @@
 ;; https://scalameta.org/metals/docs/editors/emacs.html
 ;; Note this package requires installation of a binary (see above link)
 (use-package lsp-metals
-  :after lsp lsp-ui scala-mode)
+  :after lsp lsp-ui scala-mode
+  :custom
+  ;; Metals claims to support range formatting by default but it supports range
+  ;; formatting of multiline strings only. You might want to disable it so that
+  ;; emacs can use indentation provided by scala-mode.
+  (lsp-metals-server-args '("-J-Dmetals.allow-multiline-string-formatting=off")))
 
 ;; https://github.com/spotify/dockerfile-mode
 (use-package dockerfile-mode
@@ -1078,6 +1083,10 @@
   :after scala-mode
   :hook (scala-mode . poly-scala-sql-mode)
   :config
+  ;; https://emacs.stackexchange.com/questions/33684/proper-way-to-change-prefix-key-for-minor-mode-map?rq=1
+  (define-key polymode-mode-map (kbd "C-c n")
+    (lookup-key polymode-mode-map (kbd "M-n")))
+  (define-key polymode-mode-map (kbd "M-n") nil)
   (require 'json-mode)
   ;; See https://polymode.github.io/defining-polymodes/
   (define-hostmode poly-scala-hostmode :mode 'scala-mode)
