@@ -1,6 +1,6 @@
 # An Emacs Configuration
 
-The Emacs (27+) configuration that I use - the very **perfection** <!--The few hundred commits are just refinements of that perfect--> of elisp programming, anyone who says otherwise is a **liar**! Featuring:
+The Emacs (27+) configuration that I use - the very **perfection** <!--The few hundred commits are just refinements of that perfection--> of elisp programming, anyone who says otherwise is a **liar**! Featuring:
 
 - Scala development
 - Python development

@@ -85,7 +85,8 @@
               ("M-h" . (lambda () (interactive) (org-latex-preview '(16))))
               ("C-)" . nil)
               ("C-)" . nil)
-              ("C-#" . nil))
+              ("C-#" . nil)
+              ("C-'" . nil))
   :config
   (setq
    ;; Shortcut for org commands when on headlines
@@ -1080,38 +1081,31 @@
 
 ;; https://polymode.github.io/
 (use-package polymode
-  :after scala-mode
-  :hook (scala-mode . poly-scala-sql-mode)
+  :after org
   :config
   ;; https://emacs.stackexchange.com/questions/33684/proper-way-to-change-prefix-key-for-minor-mode-map?rq=1
   (define-key polymode-mode-map (kbd "C-c n")
     (lookup-key polymode-mode-map (kbd "M-n")))
   (define-key polymode-mode-map (kbd "M-n") nil)
-  (require 'json-mode)
-  ;; See https://polymode.github.io/defining-polymodes/
-  (define-hostmode poly-scala-hostmode :mode 'scala-mode)
-  (define-hostmode poly-scala-hostmode
-    :mode 'scala-mode)
-  ;; Note we don't use the :head-mode and :tail-mode options since it messes
-  ;; up rainbow delims and the default poly-head-tail-mode used to fontify
-  ;; is fine
-  (define-innermode poly-sql-multiline-expr-scala-innermode
-    :mode 'sql-mode
-    :head-matcher (rx (or "fr" "sql") (= 3 (char "\"")))
-    :tail-matcher (rx (= 3 (char "\""))))
-  (define-innermode poly-sql-expr-scala-innermode
-    :mode 'sql-mode
-    :head-matcher '("\\(fr\"\\)[^\"]" . 1)
-    :tail-matcher (rx (char "\"")))
-  (define-innermode poly-json-expr-scala-innermode
-    :mode 'json-mode
-    :head-matcher (rx "json" (= 3 (char "\"")))
-    :tail-matcher (rx (= 3 (char "\""))))
-  (define-polymode poly-scala-sql-mode
-    :hostmode 'poly-scala-hostmode
-    :innermodes '(poly-sql-multiline-expr-scala-innermode
-                  poly-sql-expr-scala-innermode
-                  poly-json-expr-scala-innermode)))
+  
+  ;; ;; See https://polymode.github.io/defining-polymodes/
+  ;; (define-hostmode poly-org-hostmode :mode 'org-mode)
+  ;; ;; Note we don't use the :head-mode and :tail-mode options since it messes
+  ;; ;; up rainbow delims and the default poly-head-tail-mode used to fontify
+  ;; ;; is fine
+  ;; (define-innermode poly-latex-multiline-expr-org-innermode
+  ;;   :mode 'LaTeX-mode
+  ;;   :head-matcher (rx "\\\[")
+  ;;   :tail-matcher (rx "\\\]"))
+  ;; (define-innermode poly-latex-expr-org-innermode
+  ;;   :mode 'LaTeX-mode
+  ;;   :head-matcher (rx "\\\(")
+  ;;   :tail-matcher (rx "\\\)"))
+  ;; (define-polymode poly-org-latex-mode
+  ;;   :hostmode 'poly-org-hostmode
+  ;;   :innermodes '(poly-latex-multiline-expr-org-innermode
+  ;;                 poly-latex-expr-org-innermode))
+  )
 
 ;; https://polymode.github.io/
 (use-package poly-markdown
