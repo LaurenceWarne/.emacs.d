@@ -1123,3 +1123,11 @@
   :hook (TeX-mode . company-mode)
   :config
   (company-auctex-init))
+
+;; https://github.com/magit/git-modes
+(use-package gitignore-mode
+  :mode ("/.dockerignore\\'" . gitignore-mode))
+
+(use-package gitconfig-mode)
+
+(use-package gitattributes-mode)
