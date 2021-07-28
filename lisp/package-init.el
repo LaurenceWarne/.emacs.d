@@ -436,6 +436,7 @@
          ("C-h w" . helm-descbinds)))
 
 (use-package company
+  :bind ("M-RET" . company-capf)
   :config
   ;; We usually want make sure we have appropriate backends before enabling
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
@@ -1061,7 +1062,9 @@
 (use-package finito
   :demand t
   :load-path "~/projects/finito.el"
-  :bind ("C-c b" . finito-dispatch)
+  :bind (("C-c b" . finito-dispatch)
+         :map finito-collection-view-mode-map
+         ("x" . finito-delete-data-for-book-at-point))
   ;:ensure nil
   ;:quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t)
 )

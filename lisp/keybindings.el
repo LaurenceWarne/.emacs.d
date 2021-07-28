@@ -33,6 +33,7 @@
 (global-set-key (kbd "C-x /") 'comment-dwim)
 (global-set-key (kbd "C-x f") 'lw-put-file-name-on-clipboard)
 (global-set-key (kbd "C-c k") 'lw-delete-compilation-window)
+(global-set-key (kbd "C-M-f") 'forward-word)
 ;; (global-set-key (kbd "C-x w") 'buffer-file-name)
 
 ;;; Local keybindings
