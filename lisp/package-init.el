@@ -208,6 +208,7 @@
               ("M-b" . sp-backward-sexp)
               ("M-s" . sp-down-sexp)
               ("M-t" . sp-transpose-sexp)
+              ("<C-backspace>" . lw-backword-kill-word-dwim)
               :map smartparens-strict-mode-map
               ("M-l" . lw-clone-line-lisp)
               :map emacs-lisp-mode-map
@@ -220,7 +221,20 @@
   (add-hook 'slime-repl-mode-hook #'smartparens-strict-mode)
   (add-hook 'ielm-mode-hook #'smartparens-strict-mode)
   (add-hook 'minibuffer-inactive-mode-hook #'smartparens-mode)
-  (smartparens-global-mode 1))
+  (smartparens-global-mode 1)
+
+  (defun lw-backword-kill-word-dwim (arg)
+    "Just to what I mean `backword-kill-word'!"
+    (interactive "p")
+    (let* ((start-of-line-point (save-mark-and-excursion
+                                  (move-beginning-of-line nil)
+                                  (point)))
+           (string-before-point (buffer-substring-no-properties
+                                 start-of-line-point
+                                 (point))))
+      (if (string-match-p "^\s+$" string-before-point)
+          (kill-backward-chars (1+ (length string-before-point)))
+        (sp-backward-kill-word arg)))))
 
 ;; https://github.com/bbatsov/projectile
 (use-package projectile
