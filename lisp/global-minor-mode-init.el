@@ -39,6 +39,7 @@
 
 (require 'savehist)
 (add-to-list 'savehist-additional-variables 'kill-ring)
+(add-to-list 'savehist-additional-variables 'query-replace-history)
 
 (require 'dired)
 (require 'dired-x)

@@ -898,20 +898,6 @@
   :config
   (which-key-mode))
 
-;; Also requires:
-;; pip3 install isort --user
-;; https://github.com/paetzke/py-isort.el
-(use-package py-isort
-  :hook (before-save . py-isort-before-save))
-
-;; Also requires:
-;; pip3 install importmagic epc --user
-;; https://github.com/anachronic/importmagic.el
-                                        ;(use-package importmagic
-                                        ;    :ensure t
-                                        ;    :config
-                                        ;    (add-hook 'python-mode-hook 'importmagic-mode))
-
 ;; https://github.com/hvesalai/emacs-scala-mode
 (use-package scala-mode
   :after f smartparens projectile
