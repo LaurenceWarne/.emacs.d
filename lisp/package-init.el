@@ -1062,12 +1062,14 @@
 (use-package finito
   :demand t
   :load-path "~/projects/finito.el"
-  :bind (("C-c b" . finito-dispatch)
+  :bind (("C-c b" . finito)
          :map finito-collection-view-mode-map
          ("x" . finito-delete-data-for-book-at-point))
-  ;:ensure nil
-  ;:quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t)
-)
+  ;;:ensure nil
+  ;;:quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t)
+  :config
+  (finito-download-server-if-not-exists)
+  (finito-start-server-if-not-already))
 
 ;; https://github.com/davazp/graphql-mode
 (use-package graphql-mode)
