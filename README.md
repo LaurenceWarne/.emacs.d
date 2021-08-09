@@ -16,4 +16,9 @@ Be sure to also check out popular Emacs distros:
 - [Spacemacs](https://www.spacemacs.org/)
 - [Centaur Emacs](https://seagle0128.github.io/.emacs.d/)
 
-The [Emacs style guide](https://github.com/bbatsov/emacs-lisp-style-guide) may also be helpful.
+Stuff which may also be useful:
+
+- The [Emacs style guide](https://github.com/bbatsov/emacs-lisp-style-guide) may also be helpful.
+- [Composite Customisation Types](https://www.gnu.org/software/emacs/manual/html_node/elisp/Composite-Types.html)
+- [Documentation Tips](https://www.gnu.org/software/emacs/manual/html_node/elisp/Documentation-Tips.html)
+
