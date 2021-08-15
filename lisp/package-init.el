@@ -560,9 +560,10 @@
 
 ;; https://github.com/Malabarba/camcorder.el
 (use-package camcorder
-  :commands camcorder-mode
-  :config
-  (define-key camcorder-mode-map (kbd "C-<f12>") 'camcorder-stop))
+  :commands camcorder-record
+  :bind (:map camcorder-mode-map
+              ("C-<f12>" . camcorder-stop)
+              ("C-M-k"   . camcorder-stop)))
 
 ;; https://github.com/purcell/package-lint
 (use-package package-lint)
@@ -802,7 +803,6 @@
 
 (use-package ox-yaow
   :after org
-  ;; :load-path "~/projects/ox-yaow.el"
   :config
   ;; Stolen from https://github.com/fniessen/org-html-themes
   (setq rto-css '("https://fniessen.github.io/org-html-themes/src/readtheorg_theme/css/htmlize.css"
@@ -825,6 +825,8 @@
                                      :publishing-function ox-yaow-publish-to-html
                                      :preparation-function ox-yaow-preparation-fn
                                      :completion-function ox-yaow-completion-fn
+                                     :ox-yaow-wiki-home-file "~/org/wiki.org"
+
                                      :ox-yaow-file-blacklist ("~/org/maths/answers.org")
                                      :ox-yaow-depth 2)
                                    org-publish-project-alist)))
@@ -1068,14 +1070,11 @@
   ;;:ensure nil
   ;;:quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t)
   :config
-  (finito-download-server-if-not-exists)
-  (finito-start-server-if-not-already))
+  (finito-download-server-if-not-exists
+   (lambda () (finito-start-server-if-not-already))))
 
 ;; https://github.com/davazp/graphql-mode
 (use-package graphql-mode)
-
-;; https://git.sr.ht/~tarsius/llama
-(use-package llama)
 
 ;; https://github.com/vermiculus/graphql.el
 (use-package graphql)
@@ -1136,3 +1135,17 @@
 (use-package gitconfig-mode)
 
 (use-package gitattributes-mode)
+
+;; https://github.com/alphapapa/dogears.el
+(use-package dogears
+  :ensure nil
+  :quelpa (dogears :fetcher github :repo "alphapapa/dogears.el")
+  :bind (:map global-map
+              ("M-g d" . dogears-go)
+              ("M-g M-b" . dogears-back)
+              ("M-g M-f" . dogears-forward)
+              ("M-g M-l" . dogears-list)
+              ("M-g M-D" . dogears-sidebar)
+              ("M-g M-m" . dogears-remember))
+  :config
+  (dogears-mode))
