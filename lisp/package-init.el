@@ -1063,12 +1063,12 @@
 ;; https://github.com/LaurenceWarne/finito.el
 (use-package finito
   :demand t
-  :load-path "~/projects/finito.el"
+  :ensure nil
+  :quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t)
+  ;:load-path "~/projects/finito.el"
   :bind (("C-c b" . finito)
          :map finito-collection-view-mode-map
          ("x" . finito-delete-data-for-book-at-point))
-  ;;:ensure nil
-  ;;:quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t)
   :config
   (finito-download-server-if-not-exists
    (lambda () (finito-start-server-if-not-already))))
@@ -1149,3 +1149,58 @@
               ("M-g M-m" . dogears-remember))
   :config
   (dogears-mode))
+
+;; https://github.com/abo-abo/hydra
+(use-package hydra
+  :bind (("C-c e" . hydra-flycheck/body)
+         ("C-c p" . hydra-profiler/body))
+  :config
+  (defhydra hydra-flycheck
+    (:pre (flycheck-list-errors)
+     :post (quit-windows-on "*Flycheck errors*")
+     :hint nil)
+  "Errors"
+  ("f" flycheck-error-list-set-filter "Filter")
+  ("n" flycheck-next-error "Next")
+  ("p" flycheck-previous-error "Previous")
+  ("gg" flycheck-first-error "First")
+  ("G" (progn (goto-char (point-max)) (flycheck-previous-error)) "Last")
+  ("q" nil))
+
+  (defun profiler-running-modes ()
+    (let ((running-modes
+           (-non-nil (list (if (profiler-cpu-running-p) "cpu")
+                           (if (profiler-memory-running-p) "mem")))))
+      (if running-modes
+          (s-join "+" running-modes)
+        "stopped")))
+
+  (defhydra hydra-profiler
+    (:color red :hint nil)
+    "
+elisp profiling (currently %s(profiler-running-modes))
+
+^^Start / stop                          Reporting
+^-^----------------------------------   ^-^----------------------------
+_s_: start (prompt for mode)            _r_: show report
+_c_: start CPU profiling
+_m_: start memory profiling             _f_: find profile
+_b_: start both CPU+memory profiling    _4_: find profile other window
+_._: stop profiling                     _5_: find profile other frame
+_R_: reset profiler logs
+
+_q_: quit
+_C_: customize profiler options
+"
+    ("s" hydra-profiler/profiler-start)
+    ("c" (hydra-profiler/profiler-start 'cpu))
+    ("m" (hydra-profiler/profiler-start 'mem))
+    ("b" (hydra-profiler/profiler-start 'cpu+mem))
+    ("." hydra-profiler/profiler-stop)
+    ("R" profiler-reset)
+    ("q" nil)
+    ("C" (customize-group "profiler"))
+    ("r" profiler-report :color blue)
+    ("f" profiler-find-profile)
+    ("4" profiler-find-profile-other-window)
+    ("5" profiler-find-profile-other-frame)))
