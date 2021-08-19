@@ -1158,19 +1158,54 @@
 ;; https://github.com/abo-abo/hydra
 (use-package hydra
   :bind (("C-c e" . hydra-flycheck/body)
-         ("C-c p" . hydra-profiler/body))
+         ("C-c p" . hydra-profiler/body)
+         ("C-c m" . hydra-macro/body))
   :config
+  (defhydra hydra-macro (:hint nil :color pink :pre 
+                               (when defining-kbd-macro
+                                 (kmacro-end-macro 1)))
+    "
+  ^Create-Cycle^   ^Basic^           ^Insert^        ^Save^         ^Edit^
+╭─────────────────────────────────────────────────────────────────────────╯
+     ^_i_^           [_e_] execute    [_n_] insert    [_b_] name      [_'_] previous
+     ^^↑^^           [_d_] delete     [_t_] set       [_K_] key       [_,_] last
+ _j_ ←   → _l_       [_o_] edit       [_a_] add       [_x_] register     
+     ^^↓^^           [_r_] region     [_f_] format    [_B_] defun
+     ^_k_^           [_m_] step
+    ^^   ^^          [_s_] swap"
+    ("j" kmacro-start-macro :color blue)
+    ("l" kmacro-end-or-call-macro-repeat)
+    ("i" kmacro-cycle-ring-previous)
+    ("k" kmacro-cycle-ring-next)
+    ("r" apply-macro-to-region-lines)
+    ("d" kmacro-delete-ring-head)
+    ("e" kmacro-end-or-call-macro-repeat)
+    ("o" kmacro-edit-macro-repeat)
+    ("m" kmacro-step-edit-macro)
+    ("s" kmacro-swap-ring)
+    ("n" kmacro-insert-counter)
+    ("t" kmacro-set-counter)
+    ("a" kmacro-add-counter)
+    ("f" kmacro-set-format)
+    ("b" kmacro-name-last-macro)
+    ("K" kmacro-bind-to-key)
+    ("B" insert-kbd-macro)
+    ("x" kmacro-to-register)
+    ("'" kmacro-edit-macro)
+    ("," edit-kbd-macro)
+    ("q" nil :color blue))
+
   (defhydra hydra-flycheck
     (:pre (flycheck-list-errors)
-     :post (quit-windows-on "*Flycheck errors*")
-     :hint nil)
-  "Errors"
-  ("f" flycheck-error-list-set-filter "Filter")
-  ("n" flycheck-next-error "Next")
-  ("p" flycheck-previous-error "Previous")
-  ("gg" flycheck-first-error "First")
-  ("G" (progn (goto-char (point-max)) (flycheck-previous-error)) "Last")
-  ("q" nil))
+          :post (quit-windows-on "*Flycheck errors*")
+          :hint nil)
+    "Errors"
+    ("f" flycheck-error-list-set-filter "Filter")
+    ("n" flycheck-next-error "Next")
+    ("p" flycheck-previous-error "Previous")
+    ("gg" flycheck-first-error "First")
+    ("G" (progn (goto-char (point-max)) (flycheck-previous-error)) "Last")
+    ("q" nil))
 
   (defun profiler-running-modes ()
     (let ((running-modes
