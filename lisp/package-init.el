@@ -1028,7 +1028,11 @@
   :config
   (add-to-list
    'docker-image-run-custom-args
-   `("^postgres" ("-e POSTGRES_PASSWORD=postgres" . ,docker-run-default-args))))
+   `("^postgres" ("-e POSTGRES_PASSWORD=postgres" . ,docker-run-default-args)))
+  (add-to-list
+   'docker-image-run-custom-args
+   `(".*url-to-pdf.*"
+     ("-d" "--name url2pdf" "-p 80:80" . ,docker-run-default-args))))
 
 ;; https://github.com/jcs-elpa/goto-line-preview
 (use-package goto-line-preview
@@ -1148,6 +1152,7 @@
               ("M-g M-D" . dogears-sidebar)
               ("M-g M-m" . dogears-remember))
   :config
+  (setq dogears-idle nil)
   (dogears-mode))
 
 ;; https://github.com/abo-abo/hydra
