@@ -372,29 +372,35 @@
 
 ;; http://tuhdo.github.io/helm-intro.html
 (use-package helm
+  :after org
   :demand t
-  :bind
-  ("M-y" . helm-show-kill-ring)
-  ("C-x C-f" . helm-find-files)
-  ("C-j" . helm-mini)
-  ("C-x b" . helm-buffers-list)
-  ("M-x" . helm-M-x)
-  ("C-s" . helm-occur)
+  :init
+  (require 'org)
+  :bind (("M-y" . helm-show-kill-ring)
+         ("C-x C-f" . helm-find-files)
+         ("C-j" . helm-mini)
+         ("C-x b" . helm-buffers-list)
+         ("M-x" . helm-M-x)
+         ("C-s" . helm-occur)
+         :map helm-map
+         ("C-," . helm-beginning-of-buffer)
+         ("C-." . helm-end-of-buffer)
+         ("C-k" . helm-buffer-run-kill-buffers)
+         ("M-D" . helm-delete-minibuffer-contents)
+         :map helm-occur-map
+         ("C-s" . helm-next-line)
+         ("C-r" . helm-previous-line)
+         :map org-mode-map
+         ("C-j" . helm-mini)
+         :map comint-mode-map
+         ("C-M-r" . helm-comint-input-ring))
   :config
   (helm-mode 1)
   ;; Makes helm-boring-file-regexp-list act as a .gitignore
   (setq helm-ff-skip-boring-files t
         helm-M-x-fuzzy-match t
         helm-split-window-in-side-p t)
-  (add-to-list 'savehist-additional-variables 'helm-M-x-input-history)
-  (define-key helm-map (kbd "C-,") 'helm-beginning-of-buffer)
-  (define-key helm-map (kbd "C-.") 'helm-end-of-buffer)
-  (define-key helm-map (kbd "C-k") 'helm-buffer-run-kill-buffers)
-  (define-key helm-map (kbd "M-D") 'helm-delete-minibuffer-contents)
-  (define-key helm-occur-map (kbd "C-s") 'helm-next-line)
-  (define-key helm-occur-map (kbd "C-r") 'helm-previous-line)
-  (require 'org)
-  (define-key org-mode-map (kbd "C-j") 'helm-mini))
+  (add-to-list 'savehist-additional-variables 'helm-M-x-input-history))
 
 (use-package helm-flx
   :after helm
@@ -478,8 +484,7 @@
   (setq speed-type-default-lang "English"))
 
 (use-package goto-last-change
-  :bind
-  ("C-'" . goto-last-change))
+  :bind ("C-'" . goto-last-change))
 
 (use-package java-snippets
   :after yasnippet)
@@ -641,22 +646,21 @@
 
 ;; https://github.com/alphapapa/org-rifle
 (use-package helm-org-rifle
+  :after helm
   :config
   (require 'org)
   (define-key org-mode-map (kbd "M-r") #'helm-org-rifle-org-directory))
 
 ;; https://github.com/Wilfred/helpful
 (use-package helpful
-  :bind
-  ("C-h f" . #'helpful-callable)
-  ("C-h v" . #'helpful-variable)
-  ("C-h k" . #'helpful-key))
+  :bind (("C-h f" . helpful-callable)
+         ("C-h v" . helpful-variable)
+         ("C-h k" . helpful-key)))
 
 ;; https://magit.vc/
 (use-package magit
-  :bind
-  ("C-x g" . #'magit)
-  ("C-c g" . #'magit-file-dispatch)
+  :bind(("C-x g" . magit)
+        ("C-c g" . magit-file-dispatch))
   :config
   (defun lw-magit-checkout-last (&optional start-point)
     (interactive)
@@ -666,8 +670,7 @@
 
 ;; https://github.com/syohex/emacs-zoom-window
 (use-package zoom-window
-  :config
-  (global-set-key (kbd "M-i") 'zoom-window-zoom))
+  :bind ("M-i" . zoom-window-zoom))
 
 ;; https://github.com/sebastiencs/company-box
 ;; Need to M-x install-all-the-icons
