@@ -180,8 +180,7 @@
   (autoload 'yasnippet "yasnippet" nil t)
   :config
   (yas-global-mode 1)
-  (setq yas-indent-line 'auto
-        yas-also-auto-indent-first-line t))
+  (setq yas-indent-line 'fixed))
 
 (use-package smartparens
   :demand t
