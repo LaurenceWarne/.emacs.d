@@ -104,6 +104,7 @@
       "~/org/feeds.org"
       "Weekly Org Entries"))
    org-confirm-babel-evaluate nil)
+  (add-to-list 'org-file-apps '("pdf" . emacs))
   (set-face-attribute 'org-headline-done nil :strike-through t)
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -197,6 +198,7 @@
       (forward-line)
       (insert contents)
       (indent-according-to-mode)))
+  :hook (helpful-mode . smartparens-mode)
   :bind (:map smartparens-mode-map
               ("C-0" . sp-forward-slurp-sexp)
               ("C-9" . sp-forward-barf-sexp)
