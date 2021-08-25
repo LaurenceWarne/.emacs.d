@@ -209,6 +209,8 @@
               ("M-b" . sp-backward-sexp)
               ("M-s" . sp-down-sexp)
               ("M-t" . sp-transpose-sexp)
+              ("C-M-e" . sp-end-of-sexp)
+              ("C-M-a" . sp-beginning-of-sexp)
               ("<C-backspace>" . lw-backword-kill-word-dwim)
               :map smartparens-strict-mode-map
               ("M-l" . lw-clone-line-lisp)
