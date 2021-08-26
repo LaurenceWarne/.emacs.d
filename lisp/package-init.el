@@ -960,10 +960,13 @@
     (lambda (buffer alist plist)
       (lw-shackle-get-window buffer alist plist nil)))
 
-  (setq shackle-rules '((compilation-mode :select nil :custom lw-shackle-get-window)
-                        ("magit: .*" :regexp t :select t :custom lw-shackle-get-window-cur)
-                                        ;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
-                        ))
+
+  (setq shackle-rules
+        '((compilation-mode :select nil :custom lw-shackle-get-window)
+          ("magit: .*" :regexp t :select t :custom lw-shackle-get-window-cur)
+          (".*Org-Babel.*" :regexp t :select t :custom lw-shackle-get-window-cur)
+          ;;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
+          ))
   (shackle-mode 1))
 
 (use-package company-graphviz-dot
