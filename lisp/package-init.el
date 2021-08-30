@@ -80,8 +80,6 @@
               ("C-," . beginning-of-buffer)
               ("M-n" . outline-next-heading)
               ("M-p" . outline-previous-heading)
-              ("M-[" . org-backward-heading-same-level)
-              ("M-]" . org-forward-heading-same-level)
               ("M-h" . (lambda () (interactive) (org-latex-preview '(16))))
               ("C-)" . nil)
               ("C-)" . nil)
@@ -525,11 +523,6 @@
         lsp-java-format-on-type-enabled nil
         lsp-java-save-actions-organize-imports t)
   (setq tab-width 4))
-
-(use-package dap-mode
-  :after lsp-mode)
-
-(use-package dap-java :ensure nil)
 
 (use-package helm-lsp
   :after lsp-mode helm
@@ -1076,9 +1069,9 @@
 ;; https://github.com/LaurenceWarne/finito.el
 (use-package finito
   :demand t
-  :ensure nil
-  :quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t)
-  ;:load-path "~/projects/finito.el"
+  ;;:ensure nil
+  ;;:quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t)
+  ;;:load-path "~/projects/finito.el"
   :bind (("C-c b" . finito)
          :map finito-collection-view-mode-map
          ("x" . finito-delete-data-for-book-at-point))
