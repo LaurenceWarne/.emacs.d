@@ -1018,15 +1018,24 @@
   :quelpa (docker :fetcher github :repo "Silex/docker.el" :upgrade t)
   :bind (("C-c d" . docker)
          :map docker-container-mode-map
-         ("q" . kill-buffer-and-window)
+         ("q" . kill-current-buffer)
+         ("k" . kill-current-buffer)
          :map docker-image-mode-map
-         ("q" . kill-buffer-and-window)
+         ("q" . kill-current-buffer)
+         ("k" . kill-current-buffer)
          :map docker-network-mode-map
-         ("q" . kill-buffer-and-window)
+         ("q" . kill-current-buffer)
+         ("k" . kill-current-buffer)
          :map docker-volume-mode-map
-         ("q" . kill-buffer-and-window)
+         ("q" . kill-current-buffer)
+         ("k" . kill-current-buffer)
          :map docker-machine-mode-map
-         ("q" . kill-buffer-and-window))
+         ("q" . kill-current-buffer)
+         ("k" . kill-current-buffer)
+         :map tablist-mode-map
+         ("k" . nil)
+         :map tablist-minor-mode-map
+         ("k" . nil))
   :config
   (add-to-list
    'docker-image-run-custom-args

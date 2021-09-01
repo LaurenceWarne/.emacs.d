@@ -39,6 +39,11 @@
 
 ;;; Local keybindings
 
+(add-hook 'read-only-mode-hook
+          (lambda ()
+            (local-set-key (kbd "k") 'kill-this-buffer)
+            (local-set-key (kbd "q") 'kill-this-buffer)))
+
 (add-hook 'java-mode-hook
           (lambda ()
 	    (local-set-key (kbd "M-j") nil)  ; Will now default to global map
