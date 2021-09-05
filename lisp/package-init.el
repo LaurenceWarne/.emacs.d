@@ -1168,7 +1168,7 @@
 
 ;; https://github.com/abo-abo/hydra
 (use-package hydra
-  :bind (("C-c e" . hydra-flycheck/body)
+  :bind (("C-c f" . hydra-flycheck/body)
          ("C-c p" . hydra-profiler/body)
          ("C-c m" . hydra-macro/body))
   :config
