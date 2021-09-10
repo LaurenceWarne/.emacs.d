@@ -414,7 +414,19 @@
 
 (use-package helm-ag
   :after helm
-  :bind (("C-q" . helm-do-ag)))
+  :config
+  (defun lw-helm-do-ag-current-directory ()
+    (interactive)
+    (let* ((ignored
+            (mapconcat
+             (lambda (i)
+               (concat "--ignore " i))
+             (append grep-find-ignored-files
+                     grep-find-ignored-directories
+                     (cadr (projectile-parse-dirconfig-file))) " "))
+           (helm-ag-base-command (concat helm-ag-base-command " " ignored)))
+      (helm-do-ag default-directory)))
+  (define-key dired-mode-map (kbd "M-q") #'lw-helm-do-ag-current-directory))
 
 (use-package helm-projectile
   ;; Don't add helm-ag to after because its loading is deferred
@@ -437,9 +449,7 @@
               ("C-j" . #'helm-projectile)
               ("M-q" . #'helm-projectile-ag)
               :map org-mode-map
-              ("C-j" . #'helm-projectile)
-              :map dired-mode-map
-              ("M-q" . #'helm-projectile-ag))
+              ("C-j" . #'helm-projectile))
   :config
   (helm-projectile-on)
   (setq projectile-completion-system 'helm)

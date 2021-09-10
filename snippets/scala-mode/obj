@@ -3,6 +3,6 @@
 # key: obj
 # --
 
-object ${1:`(file-name-sans-extension (buffer-name))`} {
+object ${1:`(file-name-sans-extension (buffer-name))`}$2 {
   $0
 }

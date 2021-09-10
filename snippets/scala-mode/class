@@ -3,6 +3,6 @@
 # key: cla
 # --
 
-class ${1:`(file-name-sans-extension (buffer-name))`} {
-    $0
+class ${1:`(file-name-sans-extension (buffer-name))`}$2 {
+  $0
 }
