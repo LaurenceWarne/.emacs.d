@@ -263,7 +263,8 @@
                   ("scala" . ("scala" "sc" "md" "gradle" "yml" "yaml" "jenkinsfile" "org" "tf"))
                   ("sc"    . ("scala" "sc" "md" "gradle" "yml" "yaml" "conf"))
                   ("sbt"   . ("scala" "sbt" "md" "gradle" "yml" "yaml" "conf"))
-                  ("org"   . ("org"))))
+                  ("org"   . ("org" "scala" "md"))
+                  ("gql"   . ("org" "scala" "md" "sc"))))
         lw-sbt-related-files
         (list
          (projectile-related-files-fn-test-with-suffix "scala" "Test")
@@ -436,7 +437,9 @@
               ("C-j" . #'helm-projectile)
               ("M-q" . #'helm-projectile-ag)
               :map org-mode-map
-              ("C-j" . #'helm-projectile))
+              ("C-j" . #'helm-projectile)
+              :map dired-mode-map
+              ("M-q" . #'helm-projectile-ag))
   :config
   (helm-projectile-on)
   (setq projectile-completion-system 'helm)
