@@ -1164,21 +1164,6 @@
 
 (use-package gitattributes-mode)
 
-;; https://github.com/alphapapa/dogears.el
-(use-package dogears
-  :ensure nil
-  :quelpa (dogears :fetcher github :repo "alphapapa/dogears.el")
-  :bind (:map global-map
-              ("M-g d" . dogears-go)
-              ("M-g M-b" . dogears-back)
-              ("M-g M-f" . dogears-forward)
-              ("M-g M-l" . dogears-list)
-              ("M-g M-D" . dogears-sidebar)
-              ("M-g M-m" . dogears-remember))
-  :config
-  (setq dogears-idle nil)
-  (dogears-mode))
-
 ;; https://github.com/abo-abo/hydra
 (use-package hydra
   :bind (("C-c f" . hydra-flycheck/body)
@@ -1268,3 +1253,29 @@ _C_: customize profiler options
     ("f" profiler-find-profile)
     ("4" profiler-find-profile-other-window)
     ("5" profiler-find-profile-other-frame)))
+
+;; https://github.com/alphapapa/dogears.el
+(use-package dogears
+  :after hydra
+  :config
+  (setq dogears-idle nil)
+  (dogears-mode)
+  (defhydra hydra-dogears
+    (:color red :hint nil)
+    "
+^^Dogears
+^-^------------------------------------------------------
+     .-\"-.        _m_: Bookmark 
+    /|6 6|\\       _g_: Go to a place
+   {/(-0-)\\}      _b_: Previous place
+    -/ ᷍ \\-       _f_: Next place      
+   (/ /᷍\\ \\)-'    _l_: List dogeared places
+    \"\"' '\"\"       _D_: Open Sidebar"
+    ("m" dogears-remember :color blue)
+    ("g" dogears-go)
+    ("b" dogears-back)
+    ("f" dogears-forward)
+    ("l" dogears-list)
+    ("D" dogears-sidebar)
+    ("m" dogears-remember))
+  (define-key global-map (kbd "M-g d") #'hydra-dogears/body))
