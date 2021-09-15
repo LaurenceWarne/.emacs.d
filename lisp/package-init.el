@@ -1279,3 +1279,70 @@ _C_: customize profiler options
     ("D" dogears-sidebar)
     ("m" dogears-remember))
   (define-key global-map (kbd "M-g d") #'hydra-dogears/body))
+
+;; (use-package eshell
+;;   :after s
+;;   :config
+;;   (require 'em-smart)
+;;   (setq eshell-history-size 1024
+;;         shell-prompt-regexp "^[^#$]*[#$] "
+;;         eshell-highlight-prompt nil)
+;;   (load "em-hist")           ; So the history vars are defined
+;;   (if (boundp 'eshell-save-history-on-exit)
+;;       (setq eshell-save-history-on-exit t)) ; Don't ask, just save
+;;   (if (boundp 'eshell-ask-to-save-history)
+;;     (setq eshell-ask-to-save-history 'always)) ; For older(?) version
+  
+;;   (defun lw-eshell-ef (fname-regexp &rest _)
+;;     (ef fname-regexp default-directory))
+;;   (defun lw-pwd-repl-home (pwd)
+;;     (let* ((home (expand-file-name (getenv "HOME"))))
+;;       (if (s-starts-with-p home pwd)
+;;           (concat "~" (substring pwd (length home)))
+;;         pwd)))
+
+;;   (defun lw-curr-dir-git-branch-string (pwd)
+;;     "Returns current git branch as a string, or the empty string if
+;; PWD is not in a git repo (or the git command is not found)."
+;;     (when (and (eshell-search-path "git")
+;;                (locate-dominating-file pwd ".git"))
+;;       (let ((git-output
+;;              (shell-command-to-string
+;;               (concat "cd " pwd " && git branch | grep '\\*' | sed -e 's/^\\* //'"))))
+;;         (propertize (concat "["
+;;                             (if (> (length git-output) 0)
+;;                                 (substring git-output 0 -1)
+;;                               "(no branch)")
+;;                             "]") 'face `(:foreground "green")))))
+;;   (setq eshell-prompt-function
+;;         (lambda ()
+;;           (concat
+;;            (propertize
+;;             (lw-pwd-repl-home (eshell/pwd))
+;;             'face `(:foreground "gold"))
+;;            (lw-curr-dir-git-branch-string (eshell/pwd))
+;;            (propertize "$ " 'face 'default)))))
+
+(use-package eshell-prompt-extras
+  :ensure nil
+  :quelpa (eshell-prompt-extras :fetcher github :repo "laurencewarne/eshell-prompt-extras.el")
+  :custom-face
+  (epe-pipeline-delimiter-face ((t :foreground "light green")))
+  (epe-pipeline-user-face ((t :foreground "aquamarine"
+                              :weight bold)))
+  (epe-pipeline-host-face ((t :foreground "lawn green")))
+  :config
+  (setq eshell-prompt-function #'epe-theme-pipeline
+        epe-pipeline-show-time nil)
+  (defun lw-eshell-clear-buffer ()
+    "Clear eshell buffer."
+    (interactive)
+    (let ((inhibit-read-only t))
+      (erase-buffer)
+      (eshell-send-input)))
+  ;; https://lists.gnu.org/r/bug-gnu-emacs/2019-06/msg01616.html
+  (add-hook
+   'eshell-mode-hook
+   (lambda ()
+     (define-key eshell-mode-map (kbd "C-l") #'lw-eshell-clear-buffer))
+   99))
