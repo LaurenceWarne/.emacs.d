@@ -36,7 +36,9 @@
 (defun lw-unix-line-discard()
   "Operates like ctrl-u on a unix terminal."
   (interactive)
-  (back-to-indentation)
+  (if (eq major-mode 'eshell-mode)
+      (eshell-bol)
+    (back-to-indentation))
   (kill-line))
 
 (defun lw-newline-and-indent-ignoring-current-line()
