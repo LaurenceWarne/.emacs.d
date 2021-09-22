@@ -243,10 +243,9 @@
   :quelpa (projectile :fetcher github :repo "bbatsov/projectile" :upgrade t)
   ;:load-path "~/projects/projectile"
   :demand t
-  :bind
-  ("M-p" . projectile-switch-project)
-  ("C-c C-c" . projectile-test-project)
-  ("C-c C-r" . projectile-run-project)
+  :bind (("M-p" . projectile-switch-project)
+         ("C-c C-c" . projectile-test-project)
+         ("C-c C-r" . projectile-run-project))
   :config
   (projectile-mode 1)
   (setq projectile-create-missing-test-files t
@@ -1288,7 +1287,6 @@ _C_: customize profiler options
   (epe-pipeline-user-face ((t :foreground "aquamarine"
                               :weight bold)))
   (epe-pipeline-host-face ((t :foreground "lawn green")))
-  :bind ("C-M-t" . eshell)
   :config
   (setq eshell-prompt-function #'epe-theme-pipeline
         epe-pipeline-show-time nil)
@@ -1305,6 +1303,14 @@ _C_: customize profiler options
         (delete-char 1 killflag)
       (end-of-buffer
        (kill-buffer-and-window))))
+  (defun lw-maybe-projectile-eshell ()
+    "Call `projectile-run-eshell' if within a project, else `eshell'."
+    (interactive)
+    ;; Don't need :after projectile
+    (if (bound-and-true-p projectile-project-root)
+        (projectile-run-eshell)
+      (eshell)))
+  (define-key global-map (kbd "C-M-t") #'lw-maybe-projectile-eshell)
   ;; https://lists.gnu.org/r/bug-gnu-emacs/2019-06/msg01616.html
   (add-hook
    'eshell-mode-hook
