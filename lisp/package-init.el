@@ -84,7 +84,8 @@
               ("C-)" . nil)
               ("C-)" . nil)
               ("C-#" . nil)
-              ("C-'" . nil))
+              ("C-'" . nil)
+              ("C-M-t" . nil))
   :config
   (setq
    ;; Shortcut for org commands when on headlines
@@ -959,12 +960,12 @@
         (let ((win (split-window-below)))
           (select-window win)
           (switch-to-buffer buffer)
-          (local-set-key (kbd "q") 'kill-buffer-and-window)  ; won't work in interactive buffers
+          ;; won't work in interactive buffers
+          (local-set-key (kbd "q") 'kill-buffer-and-window)
           win))))
   (defalias 'lw-shackle-get-window-cur
     (lambda (buffer alist plist)
       (lw-shackle-get-window buffer alist plist nil)))
-
 
   (setq shackle-rules
         '((compilation-mode :select nil :custom lw-shackle-get-window)
