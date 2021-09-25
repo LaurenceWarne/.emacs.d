@@ -1283,6 +1283,8 @@ _C_: customize profiler options
 
 (use-package eshell-prompt-extras
   :demand t
+  :load-path "~/projects/eshell-prompt-extras
+"
   :custom-face
   (epe-pipeline-delimiter-face ((t :foreground "light green")))
   (epe-pipeline-user-face ((t :foreground "aquamarine"
@@ -1294,9 +1296,13 @@ _C_: customize profiler options
   (defun lw-eshell-clear-buffer ()
     "Clear eshell buffer."
     (interactive)
-    (let ((inhibit-read-only t))
+    (let ((inhibit-read-only t)
+          (line (buffer-substring-no-properties
+                 (progn (eshell-bol) (point))
+	             (progn (end-of-line) (point)))))
       (erase-buffer)
-      (eshell-send-input)))
+      (eshell-send-input)
+      (insert line)))
   (defun lw-eshell-delete-char-or-exit (&optional killflag)
     "Call `delete-char' or exit the buffer + window if there is no forward char."
     (interactive)
