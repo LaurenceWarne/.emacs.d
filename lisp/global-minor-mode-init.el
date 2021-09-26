@@ -50,7 +50,6 @@
 (require 'python)
 (setq python-shell-interpreter "/usr/bin/python3")
 
-
 (defun eclipse-indent-setup ()
   (c-set-offset 'arglist-intro '+)
   (c-set-offset 'arglist-close 0))
