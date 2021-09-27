@@ -1326,3 +1326,14 @@ _C_: customize profiler options
      (define-key eshell-mode-map (kbd "C-l") #'lw-eshell-clear-buffer)
      (define-key eshell-mode-map (kbd "C-d") #'lw-eshell-delete-char-or-exit))
    99))
+
+(use-package haskell-mode)
+
+(use-package lsp-haskell
+  :after haskell-mode
+  :hook ((haskell-mode . lsp)
+         (haskell-literate-mode . lsp)))
+
+(use-package aggressive-indent
+  :config
+  (global-aggressive-indent-mode 1))
