@@ -61,7 +61,6 @@
   :config
   (setq doom-themes-enable-bold t ; if nil, bold is universally disabled
         doom-themes-enable-italic t ; if nil, italics is universally disabled
-
         ;; doom-one specific settings
         doom-one-brighter-modeline nil
         doom-one-brighter-comments nil)
@@ -973,6 +972,7 @@
           ("magit: .*" :regexp t :select t :custom lw-shackle-get-window-cur)
           (".*Org-Babel.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ("*eshell*" :select t :custom lw-shackle-get-window-cur)
+          ("*cfw:details*" :select t :custom lw-shackle-get-window-cur)
           ;;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ))
   (shackle-mode 1))
@@ -1284,8 +1284,6 @@ _C_: customize profiler options
 
 (use-package eshell-prompt-extras
   :demand t
-  :load-path "~/projects/eshell-prompt-extras
-"
   :custom-face
   (epe-pipeline-delimiter-face ((t :foreground "light green")))
   (epe-pipeline-user-face ((t :foreground "aquamarine"
@@ -1327,7 +1325,10 @@ _C_: customize profiler options
      (define-key eshell-mode-map (kbd "C-d") #'lw-eshell-delete-char-or-exit))
    99))
 
-(use-package haskell-mode)
+(use-package haskell-mode
+  :hook (haskell-mode . interactive-haskell-mode)
+  :bind (:map haskell-mode-map
+              ("C-c C-c" . haskell-process-cabal-build)))
 
 (use-package lsp-haskell
   :after haskell-mode
@@ -1337,3 +1338,11 @@ _C_: customize profiler options
 (use-package aggressive-indent
   :config
   (global-aggressive-indent-mode 1))
+
+(use-package calfw
+  :bind (("C-M-c" . cfw:open-calendar-buffer)
+         :map cfw:calendar-mode-map
+         ("k" . kill-current-buffer)))
+
+(use-package calfw-ical
+  :after calfw)
