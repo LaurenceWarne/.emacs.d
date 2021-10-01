@@ -23,25 +23,32 @@
 
 (condition-case e
     (load "global-minor-mode-init")
-  (error (message "error on loading global-minor-mode-init: %s"
-		  (error-message-string e))))
+  (error "Error on loading global-minor-mode-init: %s"
+	 (error-message-string e)))
 
 (condition-case e
     (load "custom-functions")
-  (error (message "error on loading custom-functions: %s"
-		  (error-message-string e))))
+  (error "Error on loading custom-functions: %s"
+	 (error-message-string e)))
 
 (condition-case e
     (load "package-init")
-  (error (message "error on loading package-init: %s"
-		  (error-message-string e))))
+  (error "Error on loading package-init: %s"
+	 (error-message-string e)))
 
 (condition-case e
     (load "keybindings")
-  (error (message "error on loading keybindings: %s"
-		  (error-message-string e))))
+  (error "Error on loading keybindings: %s"
+	 (error-message-string e)))
 
 (condition-case e
     (load "custom")
-  (error (message "error on loading custom: %s"
-		  (error-message-string e))))
+  (error "Error on loading custom: %s"
+	 (error-message-string e)))
+
+(condition-case e
+    (when (file-exists-p (concat user-emacs-directory "/" "local"))
+      (message "Found a local initialisation file")
+      (load "local"))
+  (error "Error on loading local: %s"
+	 (error-message-string e)))
