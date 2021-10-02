@@ -1339,10 +1339,74 @@ _C_: customize profiler options
   :config
   (global-aggressive-indent-mode 1))
 
+(use-package ts)
+
+(use-package yaml)
+
 (use-package calfw
-  :bind (("C-M-c" . cfw:open-calendar-buffer)
-         :map cfw:calendar-mode-map
-         ("k" . kill-current-buffer)))
+  :after (ts yaml)
+  :demand t
+  :bind (:map cfw:calendar-mode-map
+              ("k" . kill-current-buffer))
+  :config
+  (defun lw-ts-from-cfw (cfw-date)
+    (multiple-value-call #'make-ts (-interleave '(:month :day :year) cfw-date)))
+  (defun lw-cfw-from-ts (ts-date)
+    (cfw:date (ts-month ts-date) (ts-day ts-date) (ts-Y ts-date)))
+  (defun lw-periodicity-fn (modulo residues)
+    (defun periodicity-data-fn (b e)
+      (let* ((start (lw-ts-from-cfw b))
+             (end (lw-ts-from-cfw e))
+             (day-diff (floor (ts-diff start end) (* 60 60 24))))
+        (cl-loop for day from -30 to (+ day-diff 30)
+                 for date-ts = (ts-inc 'day day start)
+                 for date-cfw = (make-cfw:event :title "mdc"
+                                                :start-date (lw-cfw-from-ts date-ts))
+                 when (member
+                       (% (floor (ts-unix date-ts) (* 60 60 24)) modulo)
+                       residues)
+                 collect date-cfw)))))
 
 (use-package calfw-ical
-  :after calfw)
+  :after (calfw f dash)
+  :demand t
+  :config
+  (defun lw-calfw ()
+    (interactive)
+    (cfw:open-calendar-buffer
+     :contents-sources
+     (--> (yaml-parse-string
+           (f-read (concat user-emacs-directory "/calfw/sources.yaml"))
+           :object-type 'alist)
+       (alist-get 'sources it)
+       (-map (lambda (source)
+               (-let* (((name-sym . body) source)
+                       (name (symbol-name name-sym))
+                       (type (alist-get 'type body))
+                       (color (alist-get 'color body)))
+                 (cond ((string= type "ical")
+                        (cfw:ical-create-source
+                         name
+                         (alist-get 'url body)
+                         color))
+                       ((string= type "cycle")
+                        (make-cfw:source
+                         :name name
+                         :data (lw-periodicity-fn
+                                (->> (alist-get 'periodicity body)
+                                  (alist-get 'modulo))
+                                (--> (alist-get 'periodicity body)
+                                  (alist-get 'residues it)
+                                  (append it nil)))
+                         :color color))
+                       (t (error "%s is not a known type" type)))))
+             it))
+     ;; (list 
+     ;;  (make-cfw:source
+     ;;   :name "mdc" :data 'lw-cal-mdc :color "yellow")
+     ;;  (cfw:ical-create-source
+     ;;   "uni"
+     ;;   "https://my.manchester.ac.uk/Timetable/ical/bsBuz5qX1BUVnRYZ6cO51IqThj28DPYPaec3.ics"
+     ;;   "purple"))
+     ))
+  (define-key global-map (kbd "C-M-c") 'lw-calfw))
