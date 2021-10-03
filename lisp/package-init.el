@@ -567,7 +567,7 @@
   ;; :load-path "~/projects/jdoc-jumper"
   :commands jdoc-jumper-jump-from-point)
 
-;; https://github.com/politza/pdf-tools/blob/master/README.org
+;; https://github.com/vedang/pdf-tools
 (use-package pdf-tools
   :config
   (pdf-loader-install)
@@ -576,10 +576,6 @@
   (define-key pdf-view-mode-map (kbd "C-.") 'pdf-view-last-page)
   (define-key pdf-view-mode-map (kbd "C--") 'pdf-view-shrink)
   (define-key pdf-view-mode-map (kbd "C-=") 'pdf-view-enlarge)
-  (set-face-attribute 'pdf-isearch-lazy nil
-                      :inherit 'lazy-highlight
-                      :foreground "black"
-                      :background "grey")
   (set-face-attribute 'pdf-isearch-match nil
                       :inherit 'isearch
                       :foreground "white"
@@ -971,12 +967,15 @@
   :if (and (eq system-type 'gnu/linux) (getenv "DBUS_SESSION_BUS_ADDRESS"))
   :load-path "~/.emacs.d/site-lisp/emacs-application-framework" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
   :custom
-  (eaf-find-alternate-file-in-dired t)
+  ;;See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+  (eaf-browser-continue-where-left-off t)
+  (eaf-browser-enable-adblocker t)
+  (browse-url-browser-function 'eaf-open-browser)
   :config
-  (setq eaf-python-command (concat user-emacs-directory "eaf/venv/bin/python3"))
   (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
   (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key take_photo "p" eaf-camera-keybinding))
+  (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+  (eaf-find-alternate-file-in-dired t))
 
 (use-package openapi-yaml-mode
   :after eaf
