@@ -22,7 +22,7 @@
   (when (< emacs-major-version 24)
     ;; For important compatibility libraries like cl-lib
     (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
-(add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)  ; Get most recent versions of org mode
+(add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
 
 (package-initialize)
 
@@ -74,7 +74,6 @@
 ;; https://orgmode.org/
 (use-package org
   :after dash
-  :ensure org-plus-contrib
   :bind (:map org-mode-map
               ("C-," . beginning-of-buffer)
               ("M-n" . outline-next-heading)
@@ -117,27 +116,10 @@
     (interactive)
     (let (python-mode-hook)
       (python-mode)))
-  (add-to-list 'org-src-lang-modes '("python" . python-no-elpy))
-  ;; End hack
+  (add-to-list 'org-src-lang-modes '("python" . python-no-elpy)))
 
-  ;; Based on http://snarvaez.poweredbygnulinux.com/notes/org-mode-publishing-adding-disqus-code.html
-  (setq site-domain "laurencewarne.github.io")
-  (setq site-baseurl "/wiki/")
-  (setq disqus-shortname "laurencewarne-github-io")
-  (setq disqus-page-embed "https://laurencewarne-github-io.disqus.com/embed.js")
-  (defun my-final-filter (output backend info)
-    (let* ((file-path (plist-get info :input-file))
-           (base-dir (f-expand "~/org"))
-           (url (f-swap-ext (concat site-domain "/wiki/"
-                                    (f-relative file-path base-dir))
-                            "html")))
-      (-->
-          output
-        (replace-regexp-in-string "{{page_url}}" url it)
-        (replace-regexp-in-string "{{page_indentifier}}" file-path it)
-        (replace-regexp-in-string "{{page_embed}}" disqus-page-embed it))))
-  (setq org-export-filter-final-output-functions '(my-final-filter))
-  :pin org)
+(use-package org-contrib
+  :after org)
 
 ;; https://github.com/Alexander-Miller/pfuture
 (use-package pfuture)
