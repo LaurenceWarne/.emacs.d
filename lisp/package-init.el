@@ -995,8 +995,6 @@
 
 ;; https://github.com/Silex/docker.el
 (use-package docker
-  :ensure nil
-  :quelpa (docker :fetcher github :repo "Silex/docker.el" :upgrade t)
   :bind (("C-c d" . docker)
          :map docker-container-mode-map
          ("q" . kill-current-buffer)
