@@ -567,20 +567,6 @@
   ;; :load-path "~/projects/jdoc-jumper"
   :commands jdoc-jumper-jump-from-point)
 
-;; https://github.com/vedang/pdf-tools
-(use-package pdf-tools
-  :config
-  (pdf-loader-install)
-  (define-key pdf-view-mode-map (kbd "C-s") 'isearch-forward)
-  (define-key pdf-view-mode-map (kbd "C-,") 'pdf-view-first-page)
-  (define-key pdf-view-mode-map (kbd "C-.") 'pdf-view-last-page)
-  (define-key pdf-view-mode-map (kbd "C--") 'pdf-view-shrink)
-  (define-key pdf-view-mode-map (kbd "C-=") 'pdf-view-enlarge)
-  (set-face-attribute 'pdf-isearch-match nil
-                      :inherit 'isearch
-                      :foreground "white"
-                      :background "black"))
-
 ;; https://github.com/anwyn/slime-company
 (use-package slime-company
   :after company
@@ -955,27 +941,30 @@
   :disabled
   :after company graphviz-dot-mode)
 
-;; https://github.com/dalanicolai/pdf-continuous-scroll-mode.el
-(use-package pdf-continuous-scroll-mode
-  :ensure nil
-  :quelpa (pdf-continuous-scroll-mode :fetcher github :repo "dalanicolai/pdf-continuous-scroll-mode.el")
-  :hook (pdf-view-mode . pdf-continuous-scroll-mode))
-
 ;; https://github.com/manateelazycat/emacs-application-framework#dependency-list
 ;; Note extra installation steps are required, see above link
 (use-package eaf
+  :demand t
   :if (and (eq system-type 'gnu/linux) (getenv "DBUS_SESSION_BUS_ADDRESS"))
-  :load-path "~/.emacs.d/site-lisp/emacs-application-framework" ; Set to "/usr/share/emacs/site-lisp/eaf" if installed from AUR
+  :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
   :custom
   ;;See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
   (eaf-browser-continue-where-left-off t)
-  (eaf-browser-enable-adblocker t)
-  (browse-url-browser-function 'eaf-open-browser)
+  (eaf-browser-enable-adblocker t))
+
+;; https://github.com/emacs-eaf/eaf-pdf-viewer
+;; "pip3 install PyMuPDF --user" appears to make this work
+(use-package eaf-pdf-viewer
+  :after eaf
+  :load-path "~/.emacs.d/site-lisp/eaf-pdf-viewer"
   :config
+  (setq eaf-pdf-dark-mode nil)
+  (setq eaf-pdf-show-progress-on-page nil)
   (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
   (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key take_photo "p" eaf-camera-keybinding)
-  (eaf-find-alternate-file-in-dired t))
+  (eaf-bind-key scroll_up_page "n" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key scroll_down_page "p" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key kill-this-buffer "k" eaf-pdf-viewer-keybinding))
 
 (use-package openapi-yaml-mode
   :after eaf
