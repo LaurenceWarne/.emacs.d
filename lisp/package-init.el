@@ -102,7 +102,7 @@
       "~/org/feeds.org"
       "Weekly Org Entries"))
    org-confirm-babel-evaluate nil)
-  (add-to-list 'org-file-apps '("pdf" . emacs))
+  (add-to-list 'org-file-apps '("pdf" . (lambda (f _) (eaf-open f "pdf-viewer"))))
   (set-face-attribute 'org-headline-done nil :strike-through t)
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -955,7 +955,7 @@
 ;; https://github.com/emacs-eaf/eaf-pdf-viewer
 ;; "pip3 install PyMuPDF --user" appears to make this work
 (use-package eaf-pdf-viewer
-  :after eaf
+  :demand t
   :load-path "~/.emacs.d/site-lisp/eaf-pdf-viewer"
   :config
   (setq eaf-pdf-dark-mode nil)
