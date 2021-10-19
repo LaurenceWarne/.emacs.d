@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: beta-reduct
+# key: reduct
+# --
+\overset{\beta}{\twoheadrightarrow} 

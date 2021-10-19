@@ -158,6 +158,8 @@
 
 (use-package yasnippet
   :defer t
+  ;; Allows for nested expansion
+  :bind ("C-<tab>" . yas-expand)
   :init
   (autoload 'yasnippet "yasnippet" nil t)
   :config
@@ -224,7 +226,7 @@
 (use-package projectile
   :ensure nil
   :quelpa (projectile :fetcher github :repo "bbatsov/projectile" :upgrade t)
-  ;:load-path "~/projects/projectile"
+                                        ;:load-path "~/projects/projectile"
   :demand t
   :bind (("M-p" . projectile-switch-project)
          ("C-c C-c" . projectile-test-project)
@@ -1235,8 +1237,8 @@ _C_: customize profiler options
      .-\"-.        _m_: Bookmark 
     /|6 6|\\       _g_: Go to a place
    {/(-0-)\\}      _b_: Previous place
-    -/ ᷍ \\-       _f_: Next place      
-   (/ /᷍\\ \\)-'    _l_: List dogeared places
+    -/ ᷍ \\-      _f_: Next place      
+   (/ /᷍\\ \\)-'   _l_: List dogeared places
     \"\"' '\"\"       _D_: Open Sidebar"
     ("m" dogears-remember :color blue)
     ("g" dogears-go)

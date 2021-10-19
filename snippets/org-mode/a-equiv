@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: a-equiv
+# key: aeq
+# --
+\sim_{\alpha} $0
