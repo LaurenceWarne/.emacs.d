@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: iff
+# key: iff
+# --
+
+\Leftrightarrow $0

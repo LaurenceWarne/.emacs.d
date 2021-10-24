@@ -966,6 +966,9 @@
   (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
   (eaf-bind-key scroll_up_page "n" eaf-pdf-viewer-keybinding)
   (eaf-bind-key scroll_down_page "p" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key scroll_to_begin "C-," eaf-pdf-viewer-keybinding)
+  (eaf-bind-key scroll_to_end "C-." eaf-pdf-viewer-keybinding)
+  (eaf-bind-key jump_to_page "M-g M-g" eaf-pdf-viewer-keybinding)
   (eaf-bind-key kill-this-buffer "k" eaf-pdf-viewer-keybinding))
 
 (use-package openapi-yaml-mode
