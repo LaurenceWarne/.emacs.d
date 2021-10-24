@@ -1379,3 +1379,6 @@ _C_: customize profiler options
      ;;   "purple"))
      ))
   (define-key global-map (kbd "C-M-c") 'lw-calfw))
+
+(use-package adoc-mode
+  :mode "\\.adoc\\'")
