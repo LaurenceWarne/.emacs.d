@@ -1382,3 +1382,7 @@ _C_: customize profiler options
 
 (use-package adoc-mode
   :mode "\\.adoc\\'")
+
+(use-package eros
+  :config
+  (eros-mode 1))
