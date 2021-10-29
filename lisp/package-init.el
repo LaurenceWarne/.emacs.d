@@ -191,6 +191,7 @@
               ("M-f" . sp-forward-sexp)
               ("M-b" . sp-backward-sexp)
               ("M-s" . sp-down-sexp)
+              ("C-M-s" . (lambda () (interactive) (sp-down-sexp -1)))
               ("M-t" . sp-transpose-sexp)
               ("C-M-e" . sp-end-of-sexp)
               ("C-M-a" . sp-beginning-of-sexp)
