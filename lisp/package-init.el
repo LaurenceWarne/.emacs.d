@@ -1241,8 +1241,8 @@ _C_: customize profiler options
      .-\"-.        _m_: Bookmark 
     /|6 6|\\       _g_: Go to a place
    {/(-0-)\\}      _b_: Previous place
-    -/ ᷍ \\-      _f_: Next place      
-   (/ /᷍\\ \\)-'   _l_: List dogeared places
+    -/ - \\-      _f_: Next place      
+   (/ /-\\ \\)-'   _l_: List dogeared places
     \"\"' '\"\"       _D_: Open Sidebar"
     ("m" dogears-remember :color blue)
     ("g" dogears-go)
@@ -1296,9 +1296,7 @@ _C_: customize profiler options
    99))
 
 (use-package haskell-mode
-  :hook (haskell-mode . interactive-haskell-mode)
-  :bind (:map haskell-mode-map
-              ("C-c C-c" . haskell-process-cabal-build)))
+  :hook (haskell-mode . interactive-haskell-mode))
 
 (use-package lsp-haskell
   :after haskell-mode

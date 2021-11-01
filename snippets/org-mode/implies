@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: implies
+# key: implies
+# --
+
+\Rightarrow $0
