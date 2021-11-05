@@ -936,6 +936,7 @@
           (".*Org-Babel.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ("*eshell*" :select t :custom lw-shackle-get-window-cur)
           ("*cfw:details*" :select t :custom lw-shackle-get-window-cur)
+          ("*HS-Error*" :select t :custom lw-shackle-get-window-cur)
           ;;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ))
   (shackle-mode 1))
@@ -1259,6 +1260,8 @@ _C_: customize profiler options
   (epe-pipeline-user-face ((t :foreground "aquamarine"
                               :weight bold)))
   (epe-pipeline-host-face ((t :foreground "lawn green")))
+  :hook (eshell-mode . (lambda () (setq lw-unix-line-discard-bol-fn
+                                        #'eshell-bol)))
   :config
   (setq eshell-prompt-function #'epe-theme-pipeline
         epe-pipeline-show-time nil)
@@ -1296,7 +1299,11 @@ _C_: customize profiler options
    99))
 
 (use-package haskell-mode
-  :hook (haskell-mode . interactive-haskell-mode))
+  :hook ((haskell-mode . interactive-haskell-mode)
+         (haskell-interactive-mode .
+                                   (lambda ()
+                                     (setq lw-unix-line-discard-bol-fn
+                                           #'haskell-interactive-mode-bol)))))
 
 (use-package lsp-haskell
   :after haskell-mode

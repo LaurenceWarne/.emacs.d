@@ -33,12 +33,12 @@
       (forward-line)
       (insert contents-of-line))))
 
+(defvar-local lw-unix-line-discard-bol-fn #'back-to-indentation)
+
 (defun lw-unix-line-discard()
   "Operates like ctrl-u on a unix terminal."
   (interactive)
-  (if (eq major-mode 'eshell-mode)
-      (eshell-bol)
-    (back-to-indentation))
+  (funcall lw-unix-line-discard-bol-fn)
   (kill-line))
 
 (defun lw-newline-and-indent-ignoring-current-line()
