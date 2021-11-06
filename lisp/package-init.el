@@ -449,8 +449,15 @@
   :bind ("M-RET" . company-complete)
   :config
   ;; We usually want make sure we have appropriate backends before enabling
+  ;; lsp also appears to handle enabling company for its enabled modes
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
-  (add-hook 'ielm-mode-hook 'company-mode))
+  (add-hook 'ielm-mode-hook 'company-mode)
+  ;; See https://github.com/company-mode/company-mode/blob/master/NEWS.md
+  (dolist (map (list company-active-map company-search-map))
+    (define-key map (kbd "C-n") nil)
+    (define-key map (kbd "C-p") nil)
+    (define-key map (kbd "M-n") #'company-select-next)
+    (define-key map (kbd "M-p") #'company-select-previous)))
 
 (use-package flycheck
   ;; Don't use :hook here as that defers loading until flycheck is called
