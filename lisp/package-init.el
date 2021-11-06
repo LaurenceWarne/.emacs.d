@@ -135,16 +135,6 @@
   :config
   (bind-key "M-o" 'ace-window))
 
-;; https://github.com/jorgenschaefer/elpy
-(use-package elpy
-  :bind (:map python-mode-map
-              ("C-x C-e" . #'elpy-shell-send-statement))
-  ;; Enable Elpy in all future Python buffers.
-  :init (elpy-enable)
-  :config (setq elpy-rpc-python-command "python3")
-  ;; Fix python does not support readline warning
-  (setq python-shell-completion-native-enable nil))
-
 (use-package avy
   ;; This does two things: first, it creates an autoload for the avy-goto-char commands and defers loading of avy until you actually use it. Second, it binds the key C-: to that command.
   :bind
@@ -455,7 +445,8 @@
          ("C-h w" . helm-descbinds)))
 
 (use-package company
-  :bind ("M-RET" . company-capf)
+  :demand t
+  :bind ("M-RET" . company-complete)
   :config
   ;; We usually want make sure we have appropriate backends before enabling
   (add-hook 'emacs-lisp-mode-hook 'company-mode)
@@ -490,7 +481,6 @@
   :after yasnippet)
 
 (use-package lsp-mode
-  :after scala-mode
   :hook
   (java-mode . lsp-deferred)
   (scala-mode . lsp-deferred)
@@ -526,6 +516,14 @@
   :after lsp-mode helm
   :config
   (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
+
+(use-package lsp-python-ms
+  :init
+  (setq lsp-python-ms-auto-install-server t)
+  (setq lsp-python-ms-python-executable (executable-find "python3"))
+  :hook (python-mode . (lambda ()
+                         (require 'lsp-python-ms)
+                         (lsp-deferred))))
 
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode))
@@ -580,11 +578,8 @@
 
 (use-package slime
   :config
-  ;; Set your lisp system and, optionally, some contribs
   (setq inferior-lisp-program "/usr/local/bin/sbcl"
-        slime-contribs '(slime-fancy))
-  (define-key slime-repl-mode-map (kbd "M-,") 'slime-describe-symbol)
-  (define-key slime-repl-mode-map (kbd "C-c C-d C-d") 'slime-pop-find-definition-stack))
+        slime-contribs '(slime-fancy)))
 
 (use-package steam
   ;; :load-path "~/projects/steam.el"
