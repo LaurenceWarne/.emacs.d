@@ -1394,3 +1394,5 @@ _C_: customize profiler options
 (use-package eros
   :config
   (eros-mode 1))
+
+(use-package eldev)
