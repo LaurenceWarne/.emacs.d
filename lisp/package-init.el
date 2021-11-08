@@ -936,7 +936,7 @@
         '((compilation-mode :select nil :custom lw-shackle-get-window)
           ("magit: .*" :regexp t :select t :custom lw-shackle-get-window-cur)
           (".*Org-Babel.*" :regexp t :select t :custom lw-shackle-get-window-cur)
-          ("*eshell*" :select t :custom lw-shackle-get-window-cur)
+          ("^\*eshell.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ("*cfw:details*" :select t :custom lw-shackle-get-window-cur)
           ("*HS-Error*" :select t :custom lw-shackle-get-window-cur)
           ;;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
@@ -1273,7 +1273,7 @@ _C_: customize profiler options
     (let ((inhibit-read-only t)
           (line (buffer-substring-no-properties
                  (progn (eshell-bol) (point))
-	             (progn (end-of-line) (point)))))
+	         (progn (end-of-line) (point)))))
       (erase-buffer)
       (eshell-send-input)
       (insert line)))
@@ -1288,7 +1288,7 @@ _C_: customize profiler options
     "Call `projectile-run-eshell' if within a project, else `eshell'."
     (interactive)
     ;; Don't need :after projectile
-    (if (bound-and-true-p projectile-project-root)
+    (if (and (fboundp #'projectile-project-root) (projectile-project-root))
         (projectile-run-eshell)
       (eshell)))
   (define-key global-map (kbd "C-M-t") #'lw-maybe-projectile-eshell)
