@@ -225,6 +225,7 @@
   :config
   (projectile-mode 1)
   (setq projectile-create-missing-test-files t
+        projectile-project-search-path '("~/projects")
         projectile-other-file-alist
         (append projectile-other-file-alist
                 '(("md"    . ("el" "java" "py" "scala" "yml" "yaml" "ini" "gradle"))
@@ -973,7 +974,8 @@
   (eaf-bind-key scroll_to_begin "C-," eaf-pdf-viewer-keybinding)
   (eaf-bind-key scroll_to_end "C-." eaf-pdf-viewer-keybinding)
   (eaf-bind-key jump_to_page "M-g M-g" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key kill-this-buffer "k" eaf-pdf-viewer-keybinding))
+  (eaf-bind-key kill-this-buffer "k" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key nil "M-u" eaf-pdf-viewer-keybinding))
 
 (use-package openapi-yaml-mode
   :after eaf

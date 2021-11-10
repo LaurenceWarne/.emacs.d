@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: isomorphic
+# key: iso
+# --
+
+\cong $0
