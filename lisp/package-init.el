@@ -390,6 +390,10 @@
 
 (use-package helm-ag
   :after helm
+  :quelpa (helm-ag
+           :fetcher github
+           :repo "laurencewarne/helm-ag"
+           :branch "skip-read-only-in-helm-ag-edit")
   :config
   (defun lw-helm-do-ag-current-directory ()
     (interactive)
