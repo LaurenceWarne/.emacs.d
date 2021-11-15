@@ -410,7 +410,7 @@
 
 (use-package helm-projectile
   ;; Don't add helm-ag to after because its loading is deferred
-  :after (helm projectile)
+  :after (helm projectile org)
   :init
   (require 'markdown-mode)
   :bind (:map python-mode-map
@@ -1315,12 +1315,11 @@ _C_: customize profiler options
 
 (use-package lsp-haskell
   :after haskell-mode
-  :hook ((haskell-mode . lsp)
-         (haskell-literate-mode . lsp)))
+  :hook ((haskell-mode . lsp-deferred)
+         (haskell-literate-mode . lsp-deferred)))
 
 (use-package aggressive-indent
-  :config
-  (global-aggressive-indent-mode 1))
+  :hook (lisp-mode . aggressive-indent-mode))
 
 (use-package ts)
 
