@@ -2,4 +2,4 @@
 # name: mathbb
 # key: bb
 # --
-\mathbb{$1}
+\mathbb{$1} $0

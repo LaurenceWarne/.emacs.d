@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: eta-reduct
+# key: ereduct
+# --
+\overset{\eta}{\rightarrow} 
