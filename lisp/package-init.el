@@ -1138,12 +1138,8 @@
   (company-auctex-init))
 
 ;; https://github.com/magit/git-modes
-(use-package gitignore-mode
+(use-package git-modes
   :mode ("/.dockerignore\\'" . gitignore-mode))
-
-(use-package gitconfig-mode)
-
-(use-package gitattributes-mode)
 
 ;; https://github.com/abo-abo/hydra
 (use-package hydra
