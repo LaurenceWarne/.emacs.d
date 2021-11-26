@@ -108,6 +108,7 @@
    'org-babel-load-languages
    '((python . t)
      (shell . t)
+     (dot . t)
      (emacs-lisp . t)))
   ;; Horrfic hack to disable highlight-indent-mode in python snippets
   ;; which are exported to html using org export.
@@ -1080,7 +1081,20 @@
          ("x" . finito-delete-data-for-book-at-point))
   :config
   (finito-download-server-if-not-exists
-   (lambda () (finito-start-server-if-not-already))))
+   (lambda () (finito-start-server-if-not-already)))
+  ;; Gives coloured output to finito process buffer
+  ;; See: https://stackoverflow.com/questions/44348443/ansi-coloring-in-emacs-start-process-output-buffer
+  (add-hook
+   'buffer-list-update-hook
+   (lambda ()
+     (when-let ((buf (get-buffer "finito"))
+                (proc (get-process "finito")))
+       (with-current-buffer buf
+         (unless (bound-and-true-p finito-coloured)
+           (ansi-color-for-comint-mode-on)
+           (comint-mode)
+           (set-process-filter proc 'comint-output-filter)
+           (setq-local finito-coloured t)))))))
 
 ;; https://github.com/davazp/graphql-mode
 (use-package graphql-mode)
@@ -1397,3 +1411,6 @@ _C_: customize profiler options
   (eros-mode 1))
 
 (use-package eldev)
+
+;; https://github.com/Lindydancer/font-lock-studio
+(use-package font-lock-studio)
