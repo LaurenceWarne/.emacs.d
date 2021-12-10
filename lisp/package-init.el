@@ -216,9 +216,7 @@
 
 ;; https://github.com/bbatsov/projectile
 (use-package projectile
-  :ensure nil
-  :quelpa (projectile :fetcher github :repo "bbatsov/projectile" :upgrade t)
-                                        ;:load-path "~/projects/projectile"
+  ;;:load-path "~/projects/projectile"
   :demand t
   :bind (("M-p" . projectile-switch-project)
          ("C-c C-c" . projectile-test-project)
@@ -227,6 +225,8 @@
   (projectile-mode 1)
   (setq projectile-create-missing-test-files t
         projectile-project-search-path '("~/projects")
+        ;; https://github.com/bbatsov/projectile/issues/1517
+        projectile-per-project-compilation-buffer t
         projectile-other-file-alist
         (append projectile-other-file-alist
                 '(("md"    . ("el" "java" "py" "scala" "yml" "yaml" "ini" "gradle"))
@@ -435,20 +435,25 @@
   (helm-projectile-on)
   (setq projectile-completion-system 'helm)
   ;; Here because :config in projectile is kinda... full
-  (defun lw-switch-to-last-buffer()
-    "Switch to buffer returned by (other-buffer)."
+  (defun lw-switch-to-last-buffer ()
+    "Switch to buffer an appropriate 'other buffer'."
     (interactive)
     (if (projectile-project-type)
-        (switch-to-buffer (cadr (projectile-project-buffers)))
-      ;; Check here if line is empty
+        (let ((buf (cl-find-if
+                    (lambda (p) (and (not (compilation-buffer-p p))
+                                     (not (member p (mapcar #'window-buffer
+                                                            (window-list))))))
+                    (projectile-project-buffers))))
+          (switch-to-buffer buf))
       (switch-to-buffer nil)))
   (global-set-key (kbd "M-j") 'lw-switch-to-last-buffer))
 
 (use-package helm-descbinds
   :after helm
-  :defer t
   :bind (("C-h b" . helm-descbinds)
-         ("C-h w" . helm-descbinds)))
+         ("C-h w" . helm-descbinds))
+  :config
+  (setq helm-descbinds-window-style 'split-window))
 
 (use-package company
   :demand t
