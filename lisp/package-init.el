@@ -237,9 +237,9 @@
                   ("el"    . ("el" "md" "org"))
                   ("py"    . ("py" "md" "ini" "yml" "yaml"))
                   ("java"  . ("java" "md" "gradle" "yml" "yaml"))
-                  ("scala" . ("scala" "sc" "md" "gradle" "yml" "yaml" "jenkinsfile" "org" "tf"))
-                  ("sc"    . ("scala" "sc" "md" "gradle" "yml" "yaml" "conf"))
-                  ("sbt"   . ("scala" "sbt" "md" "gradle" "yml" "yaml" "conf"))
+                  ("scala" . ("scala" "sc" "md" "gradle" "yml" "yaml" "jenkinsfile" "org" "tf" "gql"))
+                  ("sc"    . ("scala" "sc" "md" "gradle" "yml" "yaml" "jenkinsfile" "org" "tf" "gql"))
+                  ("sbt"   . ("scala" "sc" "md" "gradle" "yml" "yaml" "jenkinsfile" "org" "tf" "gql"))
                   ("org"   . ("org" "scala" "md"))
                   ("gql"   . ("org" "scala" "md" "sc"))))
         lw-sbt-related-files
@@ -492,8 +492,9 @@
   :config
   (setq speed-type-default-lang "English"))
 
-(use-package goto-last-change
-  :bind ("C-'" . goto-last-change))
+(use-package goto-chg
+  :bind (("C-'" . goto-last-change)
+         ("C-M-'" . goto-last-change-reverse)))
 
 (use-package java-snippets
   :after yasnippet)
