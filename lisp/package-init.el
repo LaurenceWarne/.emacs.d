@@ -310,9 +310,14 @@
             "." (f-no-ext (f-filename file-name)) "'"))
   (defun lw-mill-test-file-fn (file-name)
     (interactive)
-    (concat "mill __.testOnly '"
-            (lw-jvm-get-file-package (f-dirname file-name))
-            "." (f-no-ext (f-filename file-name)) "'"))
+    (let* ((rel (f-relative file-name (projectile-project-root)))
+           (mill-module
+            (s-join "." (--take-while (not (string= it "src"))
+                                      (f-split (f-no-ext rel))))))
+      (format "mill %s.testOnly '%s.%s'"
+              mill-module
+              (lw-jvm-get-file-package (f-dirname file-name))
+              (f-no-ext (f-filename file-name)))))
   (defun lw-sbt-command ()
     (if (locate-file "sbtn" exec-path) "sbtn" "sbt"))
   (defalias 'lw-sbt-compile-cmd (lambda () (concat (lw-sbt-command) " compile")))
