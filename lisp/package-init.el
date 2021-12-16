@@ -52,6 +52,20 @@
      :url "https://github.com/quelpa/quelpa-use-package.git"))
   (require 'quelpa-use-package))
 
+;; https://github.com/magnars/dash.el
+(use-package dash
+  :demand t
+  :config
+  (global-dash-fontify-mode))
+
+;; https://github.com/rejeep/f.el
+(use-package f
+  :demand t)
+
+;; https://github.com/magnars/s.el
+(use-package s
+  :demand t)
+
 (use-package exec-path-from-shell
   :config
   (when (memq window-system '(mac ns))
@@ -124,13 +138,6 @@
 
 ;; https://github.com/Alexander-Miller/pfuture
 (use-package pfuture)
-
-;; https://github.com/magnars/dash.el
-(use-package dash
-  :config
-  (global-dash-fontify-mode))
-
-(use-package f)
 
 (use-package ace-window
   :config
@@ -1417,6 +1424,7 @@ _C_: customize profiler options
 (use-package adoc-mode
   :mode "\\.adoc\\'")
 
+;; https://github.com/xiongtx/eros
 (use-package eros
   :config
   (eros-mode 1))
