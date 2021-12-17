@@ -517,6 +517,7 @@
   (scala-mode . lsp-deferred)
   (lsp-mode . lsp-lens-mode)
   (scala-mode . (lambda () (add-hook 'before-save-hook 'lsp-format-buffer nil t)))
+  :bind ("C-M-<return>" . lsp-execute-code-action)
   :config
   (setq lsp-keep-workspace-alive nil
         lsp-enable-file-watchers nil
