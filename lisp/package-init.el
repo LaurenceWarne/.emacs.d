@@ -644,13 +644,6 @@
    lorem-ipsum-insert-paragraphs
    lorem-ipsum-insert-list))
 
-;; https://github.com/alphapapa/org-rifle
-(use-package helm-org-rifle
-  :after helm
-  :config
-  (require 'org)
-  (define-key org-mode-map (kbd "M-r") #'helm-org-rifle-org-directory))
-
 ;; https://github.com/Wilfred/helpful
 (use-package helpful
   :bind (("C-h f" . helpful-callable)
@@ -1057,18 +1050,17 @@
   (add-to-list
    'docker-image-run-custom-args
    `(".*url-to-pdf.*"
-     ("-d" "--name url2pdf" "-p 80:80" . ,docker-run-default-args))))
+     ("-d" "--name url2pdf" "-p 80:80" . ,docker-run-default-args)))
+  (add-to-list
+   'docker-image-run-custom-args
+   `(".*jaegertracing.*"
+     ("-d"
+      "--name jaeger" "-e COLLECTOR_ZIPKIN_HOST_PORT=:9411" "-p 80:80 -p 5775:5775/udp -p 6831:6831/udp -p 6832:6832/udp -p 5778:5778 -p 16686:16686 -p 14268:14268 -p 14250:14250 -p 9411:9411" . ,docker-run-default-args))))
 
 ;; https://github.com/jcs-elpa/goto-line-preview
 (use-package goto-line-preview
   :config
   (global-set-key [remap goto-line] 'goto-line-preview))
-
-;; https://github.com/jcs-elpa/company-fuzzy
-(use-package company-fuzzy
-  :disabled  ; Too slow!
-  :config
-  (global-company-fuzzy-mode 1))
 
 ;; https://github.com/jcs-elpa/docstr
 (use-package docstr
