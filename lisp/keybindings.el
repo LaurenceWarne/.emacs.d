@@ -35,6 +35,7 @@
 (global-set-key (kbd "C-c k") 'lw-delete-compilation-window)
 (global-set-key (kbd "C-M-f") 'forward-word)
 (global-set-key (kbd "C-M-b") 'backward-word)
+(global-set-key (kbd "C-o") 'lw-open-line)
 ;; (global-set-key (kbd "C-x w") 'buffer-file-name)
 
 ;;; Local keybindings

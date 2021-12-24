@@ -139,3 +139,11 @@
             (delete-window window)
             (kill-buffer buf)))
         (window-list)))
+
+(defun lw-open-line (n)
+  "Open line then indent it."
+  (interactive "*p")
+  (open-line n)
+  (save-excursion
+    (forward-line 1)
+    (indent-for-tab-command)))

@@ -249,12 +249,6 @@
                   ("sbt"   . ("scala" "sc" "md" "gradle" "yml" "yaml" "jenkinsfile" "org" "tf" "gql"))
                   ("org"   . ("org" "scala" "md"))
                   ("gql"   . ("org" "scala" "md" "sc"))))
-        lw-sbt-related-files
-        (list
-         (projectile-related-files-fn-test-with-suffix "scala" "Test")
-         (projectile-related-files-fn-test-with-suffix "scala" "Tests")
-         (projectile-related-files-fn-test-with-suffix "scala" "Suite")
-         (projectile-related-files-fn-test-with-suffix "scala" "Spec"))
         lw-eldev-related-files
         (list
          (projectile-related-files-fn-test-with-suffix "el" "-test")
@@ -336,31 +330,52 @@
    'sbt
    :compile #'lw-sbt-compile-cmd
    :test  #'lw-sbt-test-cmd
-   ;; Only for projectile-create-missing-test-files
-   :test-suffix "Test"
    :run #'lw-sbt-run-cmd
-   :src-dir (dir-swap "test" "main")
-   :test-dir (dir-swap "main" "test")
-   :related-files-fn lw-sbt-related-files
    :test-file-fn #'lw-sbt-test-file-fn)
   (projectile-update-project-type
    'mill
-   :src-dir (dir-swap "test/src" "src")
-   :test-dir (dir-swap "src" "test/src")
+   :src-dir "src"
+   :test-dir "test/src"
    :test-file-fn #'lw-mill-test-file-fn)
   (projectile-update-project-type
    'maven
-   :src-dir (dir-swap "test" "main")
-   :test-dir (dir-swap "main" "test"))
+   :src-dir "main"
+   :test-dir "test")
   (projectile-update-project-type
    'gradlew
-   :test-suffix
-   "Test"
-   :src-dir (dir-swap "test" "main")
-   :test-dir (dir-swap "main" "test"))
+   :test-suffix "Test"
+   :src-dir "main"
+   :test-dir "test")
   (projectile-update-project-type
    'emacs-eldev
-   :related-files-fn lw-eldev-related-files))
+   :related-files-fn lw-eldev-related-files)
+  (defun my-get-python-test-dir (impl-file-path)
+    "Return the corresponding test file directory for IMPL-FILE-PATH"
+    (let* ((rel-path (f-relative impl-file-path (projectile-project-root)))
+           (src-dir (car (f-split rel-path))))
+      (cond ((f-exists-p (f-join (projectile-project-root) "test"))
+             (projectile-complementary-dir impl-file-path src-dir "test"))
+            ((f-exists-p (f-join (projectile-project-root) "tests"))
+             (projectile-complementary-dir impl-file-path src-dir "tests"))
+            (t (error "Could not locate a test file for %s!" impl-file-path)))))
+
+  (defun my-get-python-impl-dir (test-file-path)
+    "Return the corresponding impl file directory for TEST-FILE-PATH"
+    (if-let* ((root (projectile-project-root))
+              (rel-path (f-relative test-file-path root))
+              (src-dir-guesses `(,(f-base root) ,(downcase (f-base root)) "src"))
+              (src-dir (cl-find-if (lambda (d) (f-exists-p (f-join root d)))
+                                   src-dir-guesses)))
+        (projectile-complementary-dir test-file-path "tests?" src-dir)
+      (error "Could not locate a impl file for %s!" test-file-path)))
+  (projectile-update-project-type
+   'python-pkg
+   :src-dir #'my-get-python-impl-dir
+   :test-dir #'my-get-python-test-dir)
+  (projectile-update-project-type
+   'python-tox
+   :src-dir #'my-get-python-impl-dir
+   :test-dir #'my-get-python-test-dir))
 
 ;; http://tuhdo.github.io/helm-intro.html
 (use-package helm
@@ -1099,7 +1114,7 @@
   :demand t
   ;;:ensure nil
   ;;:quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t)
-  ;;:load-path "~/projects/finito.el"
+  :load-path "~/projects/finito.el"
   :bind (("C-c b" . finito)
          :map finito-collection-view-mode-map
          ("x" . finito-delete-data-for-book-at-point))
