@@ -566,10 +566,13 @@
   :config
   (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
 
+;; https://www.mattduck.com/lsp-python-getting-started.html
 (use-package lsp-python-ms
   :init
   (setq lsp-python-ms-auto-install-server t)
   (setq lsp-python-ms-python-executable (executable-find "python3"))
+  :bind (:map lsp-signature-mode-map
+              ("M-n" . nil))
   :hook (python-mode . (lambda ()
                          (require 'lsp-python-ms)
                          (lsp-deferred))))
