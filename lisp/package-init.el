@@ -459,7 +459,8 @@
               ("C-j" . #'helm-projectile)
               ("M-q" . #'helm-projectile-ag)
               :map org-mode-map
-              ("C-j" . #'helm-projectile))
+              ("C-j" . #'helm-projectile)
+              ("M-q" . #'helm-projectile-ag))
   :config
   (helm-projectile-on)
   (setq projectile-completion-system 'helm)
@@ -1148,7 +1149,11 @@
            (setq-local finito-coloured t)))))))
 
 ;; https://github.com/davazp/graphql-mode
-(use-package graphql-mode)
+(use-package graphql-mode
+  :after projectile
+  :bind (:map graphql-mode-map
+              ("C-j" . #'helm-projectile)
+              ("M-q" . #'helm-projectile-ag)))
 
 ;; https://github.com/vermiculus/graphql.el
 (use-package graphql)
