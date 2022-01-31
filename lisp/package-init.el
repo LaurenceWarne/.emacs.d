@@ -1146,7 +1146,8 @@
            (ansi-color-for-comint-mode-on)
            (comint-mode)
            (set-process-filter proc 'comint-output-filter)
-           (setq-local finito-coloured t)))))))
+           (setq-local finito-coloured t))))))
+  (setq transient-display-buffer-action '(display-buffer-below-selected)))
 
 ;; https://github.com/davazp/graphql-mode
 (use-package graphql-mode
