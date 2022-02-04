@@ -1006,12 +1006,16 @@
   :disabled
   :after company graphviz-dot-mode)
 
+(defvar lw-eaf-location "~/.emacs.d/site-lisp/emacs-application-framework")
+
 ;; https://github.com/manateelazycat/emacs-application-framework#dependency-list
 ;; Note extra installation steps are required, see above link
 (use-package eaf
   :demand t
-  :if (and (eq system-type 'gnu/linux) (getenv "DBUS_SESSION_BUS_ADDRESS"))
-  :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
+  :if (and (eq system-type 'gnu/linux)
+           (getenv "DBUS_SESSION_BUS_ADDRESS")
+           (f-exists-p lw-eaf-location))
+  :load-path lw-eaf-location
   :custom
   ;;See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
   (eaf-browser-continue-where-left-off t)
@@ -1021,6 +1025,9 @@
 ;; "pip3 install PyMuPDF --user" appears to make this work
 (use-package eaf-pdf-viewer
   :demand t
+  :if (and (eq system-type 'gnu/linux)
+           (getenv "DBUS_SESSION_BUS_ADDRESS")
+           (f-exists-p lw-eaf-location))
   :load-path "~/.emacs.d/site-lisp/eaf-pdf-viewer"
   :config
   (setq eaf-pdf-dark-mode nil)
@@ -1386,7 +1393,8 @@ _C_: customize profiler options
          (haskell-literate-mode . lsp-deferred)))
 
 (use-package aggressive-indent
-  :hook (lisp-mode . aggressive-indent-mode))
+  :hook ((emacs-lisp-mode . aggressive-indent-mode)
+         (nxml-mode . aggressive-indent-mode)))
 
 (use-package ts)
 
@@ -1472,3 +1480,14 @@ _C_: customize profiler options
 
 ;; https://github.com/Lindydancer/font-lock-studio
 (use-package font-lock-studio)
+
+(use-package prefab
+  :load-path "~/projects/prefab.el"
+  :bind ("C-c c" . prefab)
+  :config
+  (setq prefab-debug t))
+
+;; https://melpa.org/#/ascii-table
+;; Press 'b' for binary, 'o' for octal, 'd' for decimal and 'x' for hexadecimal.
+(use-package ascii-table
+  :commands ascii-table)
