@@ -74,6 +74,30 @@
     ;; create a shell buffer named BUFFER-NAME in directory MISC
     (ielm)))
 
+(defun lw-python-shell-send-buffer (&optional send-main msg)
+  (interactive (list current-prefix-arg t))
+  (condition-case nil
+      (python-shell-send-buffer send-main msg)
+    (error (run-python)
+           (python-shell-send-buffer send-main msg))))
+
+(defun python-shell-send-current-statement ()
+  (interactive)
+  (let ((beg (python-nav-beginning-of-statement))
+        (end (python-nav-end-of-statement)))
+    (python-shell-send-string (buffer-substring beg end)))
+  (python-nav-forward-statement))
+
+(defun lw-python-shell-send-region-or-line ()
+  (interactive)
+  (cond ((region-active-p)
+         (setq deactivate-mark t)
+         (python-shell-send-region (region-beginning) (region-end)))
+        (t (python-shell-send-current-statement))))
+
+(define-key python-mode-map (kbd "C-c C-c") 'lw-python-shell-send-buffer)
+(define-key python-mode-map (kbd "<C-return>") 'lw-python-shell-send-region-or-line)
+
 ;; Save python buffers
 (add-hook 'inferior-python-mode-hook
 	  (lambda () (setq-local desktop-save-buffer #'lw-save-python-buffer)))
@@ -136,12 +160,5 @@ If the next line is joined to the current line, kill the extra indent whitespace
   (interactive
    (if mark-active (list (region-beginning) (region-end))
      (message "Single line killed")
-     (list (line-beginning-position)
-	   (line-beginning-position 2)))))
-
-(defadvice kill-region (before slick-cut activate compile)
-  "When called interactively with no active region, kill a single line instead."
-  (interactive
-   (if mark-active (list (region-beginning) (region-end))
      (list (line-beginning-position)
 	   (line-beginning-position 2)))))

@@ -223,7 +223,7 @@
 
 ;; https://github.com/bbatsov/projectile
 (use-package projectile
-  ;;:load-path "~/projects/projectile"
+  :load-path "~/projects/projectile"
   :demand t
   :bind (("M-p" . projectile-switch-project)
          ("C-c C-c" . projectile-test-project)
@@ -252,10 +252,7 @@
         lw-eldev-related-files
         (list
          (projectile-related-files-fn-test-with-suffix "el" "-test")
-         (projectile-related-files-fn-test-with-prefix "el" "test-"))
-        ;; Since bloop takes priority over sbt (.bloop file)
-        projectile-project-types
-        (--remove (eq (car it) 'bloop) projectile-project-types))
+         (projectile-related-files-fn-test-with-prefix "el" "test-")))
   (defun lw-projectile-run-test-file ()
     "Run a the test file in the current buffer, as opposed to all tests."
     (interactive)
@@ -267,22 +264,44 @@
           (projectile-toggle-between-implementation-and-test)
           (funcall test-file-fn)))
       (funcall test-file-fn)))
-  (cl-defun lw-projectile-update-project-type-override (old-fn project-type &key marker-files project-file compilation-dir configure compile install package test run test-suffix test-prefix src-dir test-dir related-files-fn test-file-fn)
-    (funcall old-fn project-type
-             :marker-files marker-files
-             :project-file project-file
-             :compilation-dir compilation-dir
-             :configure configure
-             :compile compile
-             :install install
-             :package package
-             :test test
-             :run run
-             :test-suffix test-suffix
-             :test-prefix test-prefix
-             :src-dir src-dir
-             :test-dir test-dir
-             :related-files-fn related-files-fn)
+  (cl-defun lw-projectile-update-project-type-override
+      (old-fn
+       project-type
+       &key precedence
+       (marker-files nil marker-files-specified)
+       (project-file nil project-file-specified)
+       (compilation-dir nil compilation-dir-specified)
+       (configure nil configure-specified)
+       (compile nil compile-specified)
+       (install nil install-specified)
+       (package nil package-specified)
+       (test nil test-specified)
+       (run nil run-specified)
+       (test-suffix nil test-suffix-specified)
+       (test-prefix nil test-prefix-specified)
+       (src-dir nil src-dir-specified)
+       (test-dir nil test-dir-specified)
+       (related-files-fn nil related-files-fn-specified)
+       (test-file-fn nil test-file-fn-specified))
+    (apply old-fn
+           (append (list project-type)
+                   (when marker-files-specified `(:marker-files ,marker-files))
+                   (when project-file-specified `(:project-file ,project-file))
+                   (when compilation-dir-specified
+                     `(:compilation-dir ,compilation-dir))
+                   (when configure-specified `(:configure ,configure))
+                   (when compile-specified `(:compile ,compile))
+                   (when install-specified `(:install ,install))
+                   (when package-specified `(:package ,package))
+                   (when test-specified `(:test ,test))
+                   (when run-specified `(:run ,run))
+                   (when test-suffix-specified `(:test-suffix ,test-suffix))
+                   (when test-prefix-specified `(:test-prefix ,test-prefix))
+                   (when src-dir-specified `(:src-dir ,src-dir))
+                   (when test-dir-specified `(:test-dir ,test-dir))
+                   (when related-files-fn-specified
+                     `(:related-files-fn ,related-files-fn))
+                   `(:precedence ,precedence)))
     (setq projectile-project-types
           (--map-when (and test-file-fn (eq (car it) project-type))
                       (append it (list 'test-file-fn test-file-fn))
@@ -331,12 +350,14 @@
    :compile #'lw-sbt-compile-cmd
    :test  #'lw-sbt-test-cmd
    :run #'lw-sbt-run-cmd
-   :test-file-fn #'lw-sbt-test-file-fn)
+   :test-file-fn #'lw-sbt-test-file-fn
+   :precedence 'high)
   (projectile-update-project-type
    'mill
    :src-dir "src"
    :test-dir "test/src"
-   :test-file-fn #'lw-mill-test-file-fn)
+   :test-file-fn #'lw-mill-test-file-fn
+   :precedence 'high)
   (projectile-update-project-type
    'maven
    :src-dir "main"
@@ -1491,3 +1512,9 @@ _C_: customize profiler options
 ;; Press 'b' for binary, 'o' for octal, 'd' for decimal and 'x' for hexadecimal.
 (use-package ascii-table
   :commands ascii-table)
+
+;; https://github.com/purcell/whole-line-or-region
+(use-package whole-line-or-region
+  :diminish whole-line-or-region-mode
+  :config
+  (whole-line-or-region-global-mode))
