@@ -1358,13 +1358,16 @@ _C_: customize profiler options
 
 (use-package eshell-prompt-extras
   :demand t
+  :bind (:map eshell-mode-map
+              ("C-M-r" . helm-eshell-history))
   :custom-face
   (epe-pipeline-delimiter-face ((t :foreground "light green")))
   (epe-pipeline-user-face ((t :foreground "aquamarine"
                               :weight bold)))
   (epe-pipeline-host-face ((t :foreground "lawn green")))
-  :hook (eshell-mode . (lambda () (setq lw-unix-line-discard-bol-fn
-                                        #'eshell-bol)))
+  :hook ((eshell-mode . (lambda () (setq lw-unix-line-discard-bol-fn
+                                         #'eshell-bol)))
+         (eshell-mode . smartparens-mode))
   :config
   (setq eshell-prompt-function #'epe-theme-pipeline
         epe-pipeline-show-time nil)
