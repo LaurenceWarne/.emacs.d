@@ -233,21 +233,28 @@
         projectile-project-search-path '("~/projects")
         ;; https://github.com/bbatsov/projectile/issues/1517
         projectile-per-project-compilation-buffer t
+        lw-all-ext
+        '("yml" "yaml" "ini" "md" "xml" "jenkinsfile" "gql" "tf" "org" "conf" "gradle")
+        lw-code-ext
+        '("el" "py" "java" "hs" "scala" "sc" "sbt" "sh")
         projectile-other-file-alist
         (append projectile-other-file-alist
-                '(("md"    . ("el" "java" "py" "scala" "yml" "yaml" "ini" "gradle"))
-                  ("ini"   . ("el" "java" "py" "scala" "yml" "yaml" "md" "gradle"))
-                  ("yml"   . ("el" "java" "py" "scala" "ini" "md" "gradle" "yml" "yaml"))
-                  ("yaml"  . ("el" "java" "py" "scala" "ini" "md" "gradle" "yml" "yaml"))
-                  ("conf"  . ("el" "java" "py" "scala" "ini" "md" "gradle" "yml" "yaml"))
-                  ("el"    . ("el" "md" "org"))
-                  ("py"    . ("py" "md" "ini" "yml" "yaml"))
-                  ("java"  . ("java" "md" "gradle" "yml" "yaml"))
-                  ("scala" . ("scala" "sc" "md" "gradle" "yml" "yaml" "jenkinsfile" "org" "tf" "gql"))
-                  ("sc"    . ("scala" "sc" "md" "gradle" "yml" "yaml" "jenkinsfile" "org" "tf" "gql"))
-                  ("sbt"   . ("scala" "sc" "md" "gradle" "yml" "yaml" "jenkinsfile" "org" "tf" "gql"))
-                  ("org"   . ("org" "scala" "md"))
-                  ("gql"   . ("org" "scala" "md" "sc"))))
+                `(("md"   . ,(append lw-all-ext lw-code-ext))
+                  ("ini"   . ,(append lw-all-ext lw-code-ext))
+                  ("yml"   . ,(append lw-all-ext lw-code-ext))
+                  ("yaml"  . ,(append lw-all-ext lw-code-ext))
+                  ("conf"  . ,(append lw-all-ext lw-code-ext))
+                  ("el"    . ,(append lw-all-ext '("el" "md" "org")))
+                  ("py"    . ,(append lw-all-ext '("py" "toml")))
+                  ("toml"  . ,(append lw-all-ext '("py" "toml")))
+                  ("java"  . ,(append lw-all-ext '("java" "gradle")))
+                  ("scala" . ,(append lw-all-ext '("scala" "sc" "sbt")))
+                  ("sc"    . ,(append lw-all-ext '("scala" "sc" "sbt")))
+                  ("sbt"   . ,(append lw-all-ext '("scala" "sc" "sbt")))
+                  ("hs"    . ,(append lw-all-ext '("hs" "cabal")))
+                  ("cabal" . ,(append lw-all-ext '("hs" "cabal")))
+                  ("org"   . ,(append lw-all-ext lw-code-ext))
+                  ("gql"   . ,(append lw-all-ext lw-code-ext))))
         lw-eldev-related-files
         (list
          (projectile-related-files-fn-test-with-suffix "el" "-test")
@@ -1405,12 +1412,16 @@ _C_: customize profiler options
 
 (use-package haskell-mode
   :bind (:map haskell-mode-map
-              ("C-c C-c" . nil))
+              ("C-c C-c" . nil)
+              ("C-j" . helm-projectile))
   :hook ((haskell-mode . interactive-haskell-mode)
          (haskell-interactive-mode .
                                    (lambda ()
                                      (setq lw-unix-line-discard-bol-fn
-                                           #'haskell-interactive-mode-bol)))))
+                                           #'haskell-interactive-mode-bol))))
+  :config
+  ;; TODO why is there an error if we define this in :bind instead?
+  (define-key interactive-haskell-mode-map (kbd "C-c C-c") nil))
 
 (use-package lsp-haskell
   :after haskell-mode
