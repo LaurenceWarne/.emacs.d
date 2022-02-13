@@ -223,7 +223,6 @@
 
 ;; https://github.com/bbatsov/projectile
 (use-package projectile
-  :load-path "~/projects/projectile"
   :demand t
   :bind (("M-p" . projectile-switch-project)
          ("C-c C-c" . projectile-test-project)
@@ -1405,6 +1404,8 @@ _C_: customize profiler options
    99))
 
 (use-package haskell-mode
+  :bind (:map haskell-mode-map
+              ("C-c C-c" . nil))
   :hook ((haskell-mode . interactive-haskell-mode)
          (haskell-interactive-mode .
                                    (lambda ()
@@ -1505,11 +1506,14 @@ _C_: customize profiler options
 ;; https://github.com/Lindydancer/font-lock-studio
 (use-package font-lock-studio)
 
+;; https://github.com/LaurenceWarne/prefab.el
 (use-package prefab
   :load-path "~/projects/prefab.el"
   :bind ("C-c c" . prefab)
   :config
-  (setq prefab-debug t))
+  (setq prefab-cookiecutter-python-executable
+        "~/.local/pipx/venvs/cookiecutter/bin/python3"
+        prefab-debug t))
 
 ;; https://melpa.org/#/ascii-table
 ;; Press 'b' for binary, 'o' for octal, 'd' for decimal and 'x' for hexadecimal.
