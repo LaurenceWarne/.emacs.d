@@ -527,7 +527,12 @@
     (define-key map (kbd "M-n") #'company-select-next)
     (define-key map (kbd "M-p") #'company-select-previous)))
 
+;; https://www.flycheck.org/en/latest/index.html
+;; https://www.flycheck.org/en/latest/user/flycheck-versus-flymake.html
 (use-package flycheck
+  :bind (:map flycheck-mode-map
+              ("C-c e" . flycheck-next-error)
+              ("C-c l" . flycheck-list-errors))
   ;; Don't use :hook here as that defers loading until flycheck is called
   :config (add-hook 'emacs-lisp-mode-hook 'flycheck-mode))
 
@@ -1025,6 +1030,7 @@
           ("^\*eshell.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ("*cfw:details*" :select t :custom lw-shackle-get-window-cur)
           ("*HS-Error*" :select t :custom lw-shackle-get-window-cur)
+          ("*Flycheck errors*" :select t :custom lw-shackle-get-window-cur)
           ;;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ))
   (shackle-mode 1))
