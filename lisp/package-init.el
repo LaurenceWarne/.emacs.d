@@ -100,6 +100,14 @@
               ("C-'" . nil)
               ("C-M-t" . nil))
   :config
+  (require 'ox-latex)
+  (add-to-list 'org-latex-packages-alist '("" "minted"))
+  (setq org-latex-listings 'minted) 
+
+  (setq org-latex-pdf-process
+        '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+          "pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
   (setq
    ;; Shortcut for org commands when on headlines
    org-use-speed-commands t
@@ -1031,6 +1039,7 @@
           ("*cfw:details*" :select t :custom lw-shackle-get-window-cur)
           ("*HS-Error*" :select t :custom lw-shackle-get-window-cur)
           ("*Flycheck errors*" :select t :custom lw-shackle-get-window-cur)
+          ("*Org Select*" :select t :custom lw-shackle-get-window-cur)
           ;;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ))
   (shackle-mode 1))
@@ -1342,32 +1351,6 @@ _C_: customize profiler options
     ("4" profiler-find-profile-other-window)
     ("5" profiler-find-profile-other-frame)))
 
-;; https://github.com/alphapapa/dogears.el
-(use-package dogears
-  :after hydra
-  :config
-  (setq dogears-idle nil
-        dogears-within-function #'dogears--within)
-  (dogears-mode)
-  (defhydra hydra-dogears
-    (:color red :hint nil)
-    "
-^^Dogears
-^-^------------------------------------------------------
-     .-\"-.        _m_: Bookmark 
-    /|6 6|\\       _g_: Go to a place
-   {/(-0-)\\}      _b_: Previous place
-    -/ - \\-      _f_: Next place      
-   (/ /-\\ \\)-'   _l_: List dogeared places
-    \"\"' '\"\"       _D_: Open Sidebar"
-    ("m" dogears-remember :color blue)
-    ("g" dogears-go)
-    ("b" dogears-back)
-    ("f" dogears-forward)
-    ("l" dogears-list)
-    ("D" dogears-sidebar))
-  (define-key global-map (kbd "M-g d") #'hydra-dogears/body))
-
 (use-package eshell-prompt-extras
   :demand t
   :bind (:map eshell-mode-map
@@ -1426,6 +1409,7 @@ _C_: customize profiler options
                                      (setq lw-unix-line-discard-bol-fn
                                            #'haskell-interactive-mode-bol))))
   :config
+  (require 'haskell-interactive-mode)
   ;; TODO why is there an error if we define this in :bind instead?
   (define-key interactive-haskell-mode-map (kbd "C-c C-c") nil))
 
@@ -1441,74 +1425,6 @@ _C_: customize profiler options
 (use-package ts)
 
 (use-package yaml)
-
-(use-package calfw
-  :after (ts yaml)
-  :demand t
-  :bind (:map cfw:calendar-mode-map
-              ("k" . kill-current-buffer))
-  :config
-  (defun lw-ts-from-cfw (cfw-date)
-    (multiple-value-call #'make-ts (-interleave '(:month :day :year) cfw-date)))
-  (defun lw-cfw-from-ts (ts-date)
-    (cfw:date (ts-month ts-date) (ts-day ts-date) (ts-Y ts-date)))
-  (defun lw-periodicity-fn (modulo residues)
-    (defun periodicity-data-fn (b e)
-      (let* ((start (lw-ts-from-cfw b))
-             (end (lw-ts-from-cfw e))
-             (day-diff (floor (ts-diff start end) (* 60 60 24))))
-        (cl-loop for day from -30 to (+ day-diff 30)
-                 for date-ts = (ts-inc 'day day start)
-                 for date-cfw = (make-cfw:event :title "mdc"
-                                                :start-date (lw-cfw-from-ts date-ts))
-                 when (member
-                       (% (floor (ts-unix date-ts) (* 60 60 24)) modulo)
-                       residues)
-                 collect date-cfw)))))
-
-(use-package calfw-ical
-  :after (calfw f dash)
-  :demand t
-  :config
-  (defun lw-calfw ()
-    (interactive)
-    (cfw:open-calendar-buffer
-     :contents-sources
-     (--> (yaml-parse-string
-           (f-read (concat user-emacs-directory "/calfw/sources.yaml"))
-           :object-type 'alist)
-       (alist-get 'sources it)
-       (-map (lambda (source)
-               (-let* (((name-sym . body) source)
-                       (name (symbol-name name-sym))
-                       (type (alist-get 'type body))
-                       (color (alist-get 'color body)))
-                 (cond ((string= type "ical")
-                        (cfw:ical-create-source
-                         name
-                         (alist-get 'url body)
-                         color))
-                       ((string= type "cycle")
-                        (make-cfw:source
-                         :name name
-                         :data (lw-periodicity-fn
-                                (->> (alist-get 'periodicity body)
-                                  (alist-get 'modulo))
-                                (--> (alist-get 'periodicity body)
-                                  (alist-get 'residues it)
-                                  (append it nil)))
-                         :color color))
-                       (t (error "%s is not a known type" type)))))
-             it))
-     ;; (list 
-     ;;  (make-cfw:source
-     ;;   :name "mdc" :data 'lw-cal-mdc :color "yellow")
-     ;;  (cfw:ical-create-source
-     ;;   "uni"
-     ;;   "https://my.manchester.ac.uk/Timetable/ical/bsBuz5qX1BUVnRYZ6cO51IqThj28DPYPaec3.ics"
-     ;;   "purple"))
-     ))
-  (define-key global-map (kbd "C-M-c") 'lw-calfw))
 
 (use-package adoc-mode
   :mode "\\.adoc\\'")

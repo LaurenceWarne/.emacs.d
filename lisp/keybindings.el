@@ -40,6 +40,10 @@
 
 ;;; Local keybindings
 
+(add-hook 'c-mode-hook
+          (lambda ()
+	    (local-set-key (kbd "C-c C-c") nil)))
+
 (add-hook 'read-only-mode-hook
           (lambda ()
             (let ((map (current-local-map)))
