@@ -479,23 +479,11 @@
   :init
   (require 'markdown-mode)
   :bind (:map python-mode-map
-              ("C-j" . #'helm-projectile)
-              ("M-q" . #'helm-projectile-ag)
               ("M-k" . #'projectile-toggle-between-implementation-and-test)
               :map java-mode-map
-              ("C-j" . #'helm-projectile)
-              ("M-q" . #'helm-projectile-ag)
               ("M-k" . #'projectile-toggle-between-implementation-and-test)
               :map emacs-lisp-mode-map
-              ("C-j" . #'helm-projectile)
-              ("M-q" . #'helm-projectile-ag)
-              ("M-k" . #'projectile-toggle-between-implementation-and-test)
-              :map markdown-mode-map
-              ("C-j" . #'helm-projectile)
-              ("M-q" . #'helm-projectile-ag)
-              :map org-mode-map
-              ("C-j" . #'helm-projectile)
-              ("M-q" . #'helm-projectile-ag))
+              ("M-k" . #'projectile-toggle-between-implementation-and-test))
   :config
   (helm-projectile-on)
   (setq projectile-completion-system 'helm)
@@ -511,6 +499,16 @@
                     (projectile-project-buffers))))
           (switch-to-buffer buf))
       (switch-to-buffer nil)))
+  (defun lw-projectile-if-in-project (f1 f2)
+    (lambda (&rest args)
+      (interactive)
+      (if (projectile-project-p)
+          (apply f1 args)
+        (apply f2 args))))
+  (define-key projectile-mode-map (kbd "C-j")
+    (lw-projectile-if-in-project #'helm-projectile #'helm-mini))
+  (define-key projectile-mode-map (kbd "M-q")
+    (lw-projectile-if-in-project #'helm-projectile-ag #'helm-ag))
   (global-set-key (kbd "M-j") 'lw-switch-to-last-buffer))
 
 (use-package helm-descbinds
@@ -1040,6 +1038,7 @@
           ("*HS-Error*" :select t :custom lw-shackle-get-window-cur)
           ("*Flycheck errors*" :select t :custom lw-shackle-get-window-cur)
           ("*Org Select*" :select t :custom lw-shackle-get-window-cur)
+          ("*ASCII*" :select t :custom lw-shackle-get-window-cur)
           ;;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ))
   (shackle-mode 1))
@@ -1399,24 +1398,29 @@ _C_: customize profiler options
      (define-key eshell-mode-map (kbd "C-d") #'lw-eshell-delete-char-or-exit))
    99))
 
-(use-package haskell-mode
-  :bind (:map haskell-mode-map
-              ("C-c C-c" . nil)
-              ("C-j" . helm-projectile))
-  :hook ((haskell-mode . interactive-haskell-mode)
-         (haskell-interactive-mode .
-                                   (lambda ()
-                                     (setq lw-unix-line-discard-bol-fn
-                                           #'haskell-interactive-mode-bol))))
+;; https://gitlab.com/tseenshe/haskell-tng.el
+(use-package haskell-tng-mode
+  :ensure nil
+  :quelpa (haskell-tng-mode :fetcher gitlab :repo "tseenshe/haskell-tng.el")
+  :mode ((rx ".hs" eos) . haskell-tng-mode)
+  :bind
+  (:map
+   haskell-tng-mode-map
+   ;;("RET" . haskell-tng-newline)
+   ("C-c c" . haskell-tng-compile)
+   ("C-c e" . next-error))
   :config
-  (require 'haskell-interactive-mode)
-  ;; TODO why is there an error if we define this in :bind instead?
-  (define-key interactive-haskell-mode-map (kbd "C-c C-c") nil))
+  (require 'haskell-tng-hsinspect)
+  (require 'haskell-tng-extra)
+  (require 'haskell-tng-extra-hideshow)
+  (require 'haskell-tng-extra-company)
+  (require 'haskell-tng-extra-projectile)
+  (require 'haskell-tng-extra-smartparens)
+  (require 'haskell-tng-extra-yasnippet))
 
+;; https://github.com/emacs-lsp/lsp-haskell
 (use-package lsp-haskell
-  :after haskell-mode
-  :hook ((haskell-mode . lsp-deferred)
-         (haskell-literate-mode . lsp-deferred)))
+  :hook (haskell-tng-mode . lsp-deferred))
 
 (use-package aggressive-indent
   :hook ((emacs-lisp-mode . aggressive-indent-mode)
@@ -1458,3 +1462,8 @@ _C_: customize profiler options
   :diminish whole-line-or-region-mode
   :config
   (whole-line-or-region-global-mode))
+
+;; https://github.com/bling/fzf.el
+(use-package fzf
+  :bind ("C-M-f" . (lambda () (interactive) (fzf-find-file (getenv "HOME")))))
+
