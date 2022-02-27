@@ -1039,6 +1039,7 @@
           ("*Flycheck errors*" :select t :custom lw-shackle-get-window-cur)
           ("*Org Select*" :select t :custom lw-shackle-get-window-cur)
           ("*ASCII*" :select t :custom lw-shackle-get-window-cur)
+          ("*Org Links*" :select t :custom lw-shackle-get-window-cur)
           ;;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ))
   (shackle-mode 1))
@@ -1125,9 +1126,6 @@
          :map docker-volume-mode-map
          ("q" . kill-current-buffer)
          ("k" . kill-current-buffer)
-         :map docker-machine-mode-map
-         ("q" . kill-current-buffer)
-         ("k" . kill-current-buffer)
          :map tablist-mode-map
          ("k" . nil)
          :map tablist-minor-mode-map
@@ -1143,8 +1141,9 @@
   (add-to-list
    'docker-image-run-custom-args
    `(".*jaegertracing.*"
-     ("-d"
-      "--name jaeger" "-e COLLECTOR_ZIPKIN_HOST_PORT=:9411" "-p 80:80 -p 5775:5775/udp -p 6831:6831/udp -p 6832:6832/udp -p 5778:5778 -p 16686:16686 -p 14268:14268 -p 14250:14250 -p 9411:9411" . ,docker-run-default-args))))
+     ;; For the Jaeger UI open:
+     ;; http://localhost:16686/
+     ("-d" "--name jaeger" "-e COLLECTOR_ZIPKIN_HOST_PORT=:9411" "-p 80:80 -p 5775:5775/udp -p 6831:6831/udp -p 6832:6832/udp -p 5778:5778 -p 16686:16686 -p 14268:14268 -p 14250:14250 -p 9411:9411" . ,docker-run-default-args))))
 
 ;; https://github.com/jcs-elpa/goto-line-preview
 (use-package goto-line-preview
@@ -1445,7 +1444,6 @@ _C_: customize profiler options
 
 ;; https://github.com/LaurenceWarne/prefab.el
 (use-package prefab
-  :load-path "~/projects/prefab.el"
   :bind ("C-c c" . prefab)
   :config
   (setq prefab-cookiecutter-python-executable
