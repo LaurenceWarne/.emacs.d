@@ -144,6 +144,9 @@
 (use-package org-contrib
   :after org)
 
+;; https://github.com/magit/transient
+(use-package transient)
+
 ;; https://github.com/Alexander-Miller/pfuture
 (use-package pfuture)
 
@@ -536,11 +539,40 @@
 ;; https://www.flycheck.org/en/latest/index.html
 ;; https://www.flycheck.org/en/latest/user/flycheck-versus-flymake.html
 (use-package flycheck
+  :demand t
   :bind (:map flycheck-mode-map
               ("C-c e" . flycheck-next-error)
               ("C-c l" . flycheck-list-errors))
   ;; Don't use :hook here as that defers loading until flycheck is called
-  :config (add-hook 'emacs-lisp-mode-hook 'flycheck-mode))
+  :config
+  (add-hook 'emacs-lisp-mode-hook 'flycheck-mode)
+  (when (executable-find "cfn-lint")
+    (define-derived-mode cfn-json-mode js-mode
+      "CFN-JSON"
+      "Simple mode to edit CloudFormation template in JSON format."
+      (setq js-indent-level 2))
+    (add-to-list 'magic-mode-alist
+                 '("\\({\n *\\)? *[\"']AWSTemplateFormatVersion" . cfn-json-mode))
+    ;; Set up cfn-lint integration if flycheck is installed
+    ;; Get flycheck here https://www.flycheck.org/
+    (flycheck-define-checker cfn-lint
+      "AWS CloudFormation linter using cfn-lint.
+
+Install cfn-lint first: pip install cfn-lint
+
+See `https://github.com/aws-cloudformation/cfn-python-lint'."
+
+      :command ("cfn-lint" "-f" "parseable" source)
+      :error-patterns
+      ((warning line-start (file-name) ":" line ":" column
+                ":" (one-or-more digit) ":" (one-or-more digit) ":"
+                (id "W" (one-or-more digit)) ":" (message) line-end)
+       (error line-start (file-name) ":" line ":" column
+              ":" (one-or-more digit) ":" (one-or-more digit) ":"
+              (id "E" (one-or-more digit)) ":" (message) line-end))
+      :modes (cfn-json-mode cfn-yaml-mode))
+    (add-to-list 'flycheck-checkers 'cfn-lint)
+    (add-hook 'cfn-json-mode-hook 'flycheck-mode)))
 
 (use-package hydra)
 
@@ -906,7 +938,14 @@
            org-publish-project-alist))))
 
 ;; https://github.com/yoshiki/yaml-mode
-(use-package yaml-mode)
+(use-package yaml-mode
+  :config
+  (define-derived-mode cfn-yaml-mode yaml-mode
+    "CFN-YAML"
+    "Simple mode to edit CloudFormation template in YAML format.")
+  (add-to-list 'magic-mode-alist
+               '("\\(---\n\\)?AWSTemplateFormatVersion:" . cfn-yaml-mode))
+  (add-hook 'cfn-yaml-mode-hook 'flycheck-mode))
 
 ;; https://github.com/lewang/command-log-mode
 (use-package command-log-mode)
@@ -1131,19 +1170,20 @@
          :map tablist-minor-mode-map
          ("k" . nil))
   :config
+  (setq docker-show-messages nil)
   (add-to-list
    'docker-image-run-custom-args
-   `("^postgres" ("-e POSTGRES_PASSWORD=postgres" . ,docker-run-default-args)))
+   `("^postgres" ("-e POSTGRES_PASSWORD=postgres" . ,docker-image-run-default-args)))
   (add-to-list
    'docker-image-run-custom-args
    `(".*url-to-pdf.*"
-     ("-d" "--name url2pdf" "-p 80:80" . ,docker-run-default-args)))
+     ("-d" "--name url2pdf" "-p 80:80" . ,docker-image-run-default-args)))
   (add-to-list
    'docker-image-run-custom-args
    `(".*jaegertracing.*"
      ;; For the Jaeger UI open:
      ;; http://localhost:16686/
-     ("-d" "--name jaeger" "-e COLLECTOR_ZIPKIN_HOST_PORT=:9411" "-p 80:80 -p 5775:5775/udp -p 6831:6831/udp -p 6832:6832/udp -p 5778:5778 -p 16686:16686 -p 14268:14268 -p 14250:14250 -p 9411:9411" . ,docker-run-default-args))))
+     ("-d" "--name jaeger" "-e COLLECTOR_ZIPKIN_HOST_PORT=:9411" "-p 80:80 -p 5775:5775/udp -p 6831:6831/udp -p 6832:6832/udp -p 5778:5778 -p 16686:16686 -p 14268:14268 -p 14250:14250 -p 9411:9411" . ,docker-image-run-default-args))))
 
 ;; https://github.com/jcs-elpa/goto-line-preview
 (use-package goto-line-preview
@@ -1165,9 +1205,6 @@
 ;; We install this package to get the correct indentation for `describe' and
 ;; `it' blocks when writing tests.
 (use-package buttercup)
-
-;; https://gitlab.com/pidu/git-timemachine
-(use-package git-timemachine)
 
 ;; https://github.com/LaurenceWarne/finito.el
 (use-package finito
@@ -1405,7 +1442,7 @@ _C_: customize profiler options
   :bind
   (:map
    haskell-tng-mode-map
-   ;;("RET" . haskell-tng-newline)
+   ("RET" . haskell-tng-newline)
    ("C-c c" . haskell-tng-compile)
    ("C-c e" . next-error))
   :config
@@ -1464,4 +1501,3 @@ _C_: customize profiler options
 ;; https://github.com/bling/fzf.el
 (use-package fzf
   :bind ("C-M-f" . (lambda () (interactive) (fzf-find-file (getenv "HOME")))))
-
