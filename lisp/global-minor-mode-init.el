@@ -14,6 +14,7 @@
 (desktop-save-mode 1)      ; Save and automatically load previous emacs session on start up
 (savehist-mode 1)          ; Save any variables added to `savehist-additional-variables'
 (column-number-mode 1)
+(global-auto-revert-mode 1)
 (when (eq system-type 'gnu/linux)
   (set-face-attribute 'default nil
                       :height 100
