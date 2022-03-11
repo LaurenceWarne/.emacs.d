@@ -131,7 +131,8 @@
    '((python . t)
      (shell . t)
      (dot . t)
-     (emacs-lisp . t)))
+     (emacs-lisp . t)
+     (haskell . t)))
   ;; Horrfic hack to disable highlight-indent-mode in python snippets
   ;; which are exported to html using org export.
   ;; See the defintion of `org-html-fontify-code' for why this works
@@ -1075,7 +1076,6 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
           ("^\*eshell.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ("*cfw:details*" :select t :custom lw-shackle-get-window-cur)
           ("*HS-Error*" :select t :custom lw-shackle-get-window-cur)
-          ("*Flycheck errors*" :select t :custom lw-shackle-get-window-cur)
           ("*Org Select*" :select t :custom lw-shackle-get-window-cur)
           ("*ASCII*" :select t :custom lw-shackle-get-window-cur)
           ("*Org Links*" :select t :custom lw-shackle-get-window-cur)
@@ -1211,7 +1211,7 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
   :demand t
   ;;:ensure nil
   ;;:quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t)
-  :load-path "~/projects/finito.el"
+  ;;:load-path "~/projects/finito.el"
   :bind (("C-c b" . finito)
          :map finito-collection-view-mode-map
          ("x" . finito-delete-data-for-book-at-point))
@@ -1500,4 +1500,5 @@ _C_: customize profiler options
 
 ;; https://github.com/bling/fzf.el
 (use-package fzf
+  :demand t
   :bind ("C-M-f" . (lambda () (interactive) (fzf-find-file (getenv "HOME")))))
