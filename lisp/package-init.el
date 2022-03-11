@@ -140,7 +140,8 @@
     (interactive)
     (let (python-mode-hook)
       (python-mode)))
-  (add-to-list 'org-src-lang-modes '("python" . python-no-elpy)))
+  (add-to-list 'org-src-lang-modes '("python" . python-no-elpy))
+  (add-to-list 'org-src-lang-modes '("haskell" . haskell-tng)))
 
 (use-package org-contrib
   :after org)
@@ -1452,7 +1453,8 @@ _C_: customize profiler options
   (require 'haskell-tng-extra-company)
   (require 'haskell-tng-extra-projectile)
   (require 'haskell-tng-extra-smartparens)
-  (require 'haskell-tng-extra-yasnippet))
+  ;;(require 'haskell-tng-extra-yasnippet)
+  )
 
 ;; https://github.com/emacs-lsp/lsp-haskell
 (use-package lsp-haskell
