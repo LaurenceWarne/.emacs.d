@@ -147,3 +147,13 @@
   (save-excursion
     (forward-line 1)
     (indent-for-tab-command)))
+
+(defun lw-popup-messages ()
+  "Popup the messages buffer below the current."
+  (interactive)
+  (select-window (split-window-below))
+  (switch-to-buffer "*Messages*")
+  (let ((map (current-local-map)))
+    (use-local-map (copy-keymap map))
+    (local-set-key (kbd "q") 'delete-window)
+    (local-set-key (kbd "k") 'delete-window)))

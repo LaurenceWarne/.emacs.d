@@ -1301,7 +1301,7 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
 (use-package hydra
   :bind (("C-c f" . hydra-flycheck/body)
          ("C-c p" . hydra-profiler/body)
-         ("C-c m" . hydra-macro/body))
+         ("C-c a" . hydra-macro/body))
   :config
   (defhydra hydra-macro (:hint nil :color pink :pre 
                                (when defining-kbd-macro
