@@ -124,7 +124,6 @@
       "~/org/feeds.org"
       "Weekly Org Entries"))
    org-confirm-babel-evaluate nil)
-  (add-to-list 'org-file-apps '("pdf" . (lambda (f _) (eaf-open f "pdf-viewer"))))
   (set-face-attribute 'org-headline-done nil :strike-through t)
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -273,7 +272,7 @@
          (projectile-related-files-fn-test-with-suffix "el" "-test")
          (projectile-related-files-fn-test-with-prefix "el" "test-")))
   (defun lw-projectile-run-test-file ()
-    "Run a the test file in the current buffer, as opposed to all tests."
+    "Run a test file in the current buffer, as opposed to all tests."
     (interactive)
     (when-let ((test-file-fn
                 (projectile-project-type-attribute
@@ -301,7 +300,8 @@
        (src-dir nil src-dir-specified)
        (test-dir nil test-dir-specified)
        (related-files-fn nil related-files-fn-specified)
-       (test-file-fn nil test-file-fn-specified))
+       (test-file-fn nil test-file-fn-specified)
+       (repl-fn nil repl-fn-specified))
     (apply old-fn
            (append (list project-type)
                    (when marker-files-specified `(:marker-files ,marker-files))
@@ -322,8 +322,13 @@
                      `(:related-files-fn ,related-files-fn))
                    `(:precedence ,precedence)))
     (setq projectile-project-types
-          (--map-when (and test-file-fn (eq (car it) project-type))
-                      (append it (list 'test-file-fn test-file-fn))
+          (--map-when (eq (car it) project-type)
+                      (cons project-type
+                            (projectile--combine-plists
+                             (cdr it)
+                             (append (when test-file-fn
+                                       (list 'test-file-fn test-file-fn))
+                                     (when repl-fn (list 'repl-fn repl-fn)))))
                       projectile-project-types)))
   (advice-add 'projectile-update-project-type
               :around
@@ -341,7 +346,16 @@
                                    :show-prompt 0
                                    :prompt-prefix "Test command: "
                                    :save-buffers t)))
+  (defun lw-projectile-repl ()
+    (interactive)
+    (if-let* ((p-type (projectile-project-type))
+              (repl-fn (projectile-project-type-attribute p-type 'repl-fn))
+              (current-file (buffer-file-name)))
+        (funcall repl-fn current-file)
+      (message "No repl strategy found for project type '%s'" p-type)))
+  
   (define-key projectile-mode-map (kbd "C-c C-f") #'lw-projectile-test-file)
+  (define-key projectile-mode-map (kbd "C-c C-i") #'lw-projectile-repl)
   (defun lw-sbt-test-file-fn (file-name)
     (interactive)
     (concat (lw-sbt-command) " 'testOnly "
@@ -357,6 +371,30 @@
               mill-module
               (lw-jvm-get-file-package (f-dirname file-name))
               (f-no-ext (f-filename file-name)))))
+
+  (defun lw-send-to-current-eshell (command)
+    ;; There's got to be a better way...
+    (lw-maybe-projectile-eshell)
+    (insert command)
+    (eshell-send-input)
+    (lw-eshell-clear-buffer))
+
+  (defun lw-mill-repl (file-name)
+    (interactive)
+    (let* ((rel (f-relative file-name (projectile-project-root)))
+           (mill-module
+            (s-join "." (--take-while (not (string= it "src"))
+                                      (f-split (f-no-ext rel))))))
+      (lw-send-to-current-eshell (format "mill -i %s.repl" mill-module))))
+
+  (defun lw-haskell-repl (file-name)
+    (interactive)
+    (let* ((rel (f-relative file-name (projectile-project-root)))
+           (mill-module
+            (s-join "." (--take-while (not (string= it "src"))
+                                      (f-split (f-no-ext rel))))))
+      (lw-send-to-current-eshell "stack ghci")))
+  
   (defun lw-sbt-command ()
     (if (locate-file "sbtn" exec-path) "sbtn" "sbt"))
   (defalias 'lw-sbt-compile-cmd (lambda () (concat (lw-sbt-command) " compile")))
@@ -376,6 +414,7 @@
    :src-dir "src"
    :test-dir "test/src"
    :test-file-fn #'lw-mill-test-file-fn
+   :repl-fn #'lw-mill-repl
    :precedence 'high)
   (projectile-update-project-type
    'maven
@@ -386,6 +425,9 @@
    :test-suffix "Test"
    :src-dir "main"
    :test-dir "test")
+  (projectile-update-project-type
+   'haskell-stack
+   :repl-fn #'lw-haskell-repl)
   (projectile-update-project-type
    'emacs-eldev
    :related-files-fn lw-eldev-related-files)
@@ -1122,7 +1164,8 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
   (eaf-bind-key scroll_to_end "C-." eaf-pdf-viewer-keybinding)
   (eaf-bind-key jump_to_page "M-g M-g" eaf-pdf-viewer-keybinding)
   (eaf-bind-key kill-this-buffer "k" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key nil "M-u" eaf-pdf-viewer-keybinding))
+  (eaf-bind-key nil "M-u" eaf-pdf-viewer-keybinding)
+  (add-to-list 'org-file-apps '("pdf" . (lambda (f _) (eaf-open f "pdf-viewer")))))
 
 (use-package openapi-yaml-mode
   :after eaf
@@ -1504,3 +1547,21 @@ _C_: customize profiler options
 (use-package fzf
   :demand t
   :bind ("C-M-f" . (lambda () (interactive) (fzf-find-file (getenv "HOME")))))
+
+(use-package saws
+  :if (f-exists-p "~/projects/saws.el")
+  :load-path "~/projects/saws.el"
+  :config
+  (define-key cfn-yaml-mode-map (kbd "C-c C-c") #'saws-deploy))
+
+;; https://github.com/casouri/undo-hl
+(use-package undo-hl
+  :ensure nil
+  :quelpa (undo-hl :fetcher github :repo "casouri/undo-hl")
+  :hook ((text-mode . undo-hl-mode)
+         (prog-mode . undo-hl-mode)))
+
+;; https://github.com/emacsorphanage/undohist
+(use-package undohist
+  :config
+  (undohist-initialize))
