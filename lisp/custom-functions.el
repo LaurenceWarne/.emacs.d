@@ -156,4 +156,5 @@
   (let ((map (current-local-map)))
     (use-local-map (copy-keymap map))
     (local-set-key (kbd "q") 'delete-window)
-    (local-set-key (kbd "k") 'delete-window)))
+    (local-set-key (kbd "k") 'delete-window)
+    (local-set-key (kbd "C-d") 'delete-window)))

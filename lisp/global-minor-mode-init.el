@@ -53,6 +53,7 @@
 
 (require 'python)
 (setq python-shell-interpreter "/usr/bin/python3")
+(add-hook 'python-mode-hook #'electric-pair-local-mode)
 
 (defun eclipse-indent-setup ()
   (c-set-offset 'arglist-intro '+)

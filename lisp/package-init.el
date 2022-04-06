@@ -191,7 +191,8 @@
       (forward-line)
       (insert contents)
       (indent-according-to-mode)))
-  :hook (helpful-mode . smartparens-mode)
+  :hook ((helpful-mode . smartparens-mode)
+         (messages-buffer-mode . smartparens-mode))
   :bind (:map smartparens-mode-map
               ("C-0" . sp-forward-slurp-sexp)
               ("C-9" . sp-forward-barf-sexp)
@@ -236,6 +237,7 @@
 ;; https://github.com/bbatsov/projectile
 (use-package projectile
   :demand t
+  :load-path "~/projects/projectile"
   :bind (("M-p" . projectile-switch-project)
          ("C-c C-c" . projectile-test-project)
          ("C-c C-r" . projectile-run-project))
@@ -411,8 +413,8 @@
    :precedence 'high)
   (projectile-update-project-type
    'mill
-   :src-dir "src"
-   :test-dir "test/src"
+   :src-dir "src/"
+   :test-dir "test/src/"
    :test-file-fn #'lw-mill-test-file-fn
    :repl-fn #'lw-mill-repl
    :precedence 'high)
@@ -657,7 +659,15 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
         lsp-headerline-breadcrumb-enable nil)
   (when-let* ((go-dir (concat (getenv "HOME") "/go/bin/sqls"))
               ((f-exists? go-dir)))
-    (setq lsp-sqls-server go-dir)))
+    (setq lsp-sqls-server go-dir))
+
+  (add-to-list 'lsp-language-id-configuration
+               '(cfn-yaml-mode . "cloudformation"))
+  (when-let ((exe (executable-find "cfn-lsp-extra")))
+    (lsp-register-client
+     (make-lsp-client :new-connection (lsp-stdio-connection exe)
+                      :activation-fn (lsp-activate-on "cloudformation")
+                      :server-id 'cfn-lsp-extra))))
 
 (use-package lsp-ui
   :after lsp-mode
@@ -688,9 +698,10 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
   (setq lsp-python-ms-python-executable (executable-find "python3"))
   :bind (:map lsp-signature-mode-map
               ("M-n" . nil))
-  :hook (python-mode . (lambda ()
-                         (require 'lsp-python-ms)
-                         (lsp-deferred))))
+  :hook (hack-local-variables . (lambda ()
+		                  (when (derived-mode-p 'python-mode)
+		                    (require 'lsp-python-ms)
+		                    (lsp-deferred)))))
 
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode))
@@ -1048,9 +1059,6 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
   (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
   (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t))))
-
-;; https://github.com/wbolster/emacs-python-black
-(use-package python-black)
 
 ;; https://github.com/justbur/emacs-which-key
 (use-package which-key
@@ -1565,3 +1573,9 @@ _C_: customize profiler options
 (use-package undohist
   :config
   (undohist-initialize))
+
+;; https://github.com/pythonic-emacs/blacken/blob/master/blacken.el
+(use-package blacken
+  :after python
+  :custom (blacken-only-if-project-is-blackened t)
+  :hook (python-mode . blacken-mode))
