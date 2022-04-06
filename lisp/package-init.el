@@ -1130,6 +1130,7 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
           ("*Org Select*" :select t :custom lw-shackle-get-window-cur)
           ("*ASCII*" :select t :custom lw-shackle-get-window-cur)
           ("*Org Links*" :select t :custom lw-shackle-get-window-cur)
+          ("*pytest*.*" :regexp t :custom lw-shackle-get-window-cur)
           ;;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ))
   (shackle-mode 1))
@@ -1579,3 +1580,10 @@ _C_: customize profiler options
   :after python
   :custom (blacken-only-if-project-is-blackened t)
   :hook (python-mode . blacken-mode))
+
+;; https://github.com/wbolster/emacs-python-pytest
+(use-package python-pytest
+  :config
+  (projectile-update-project-type
+   'python-poetry
+   :test #'python-pytest-dispatch))

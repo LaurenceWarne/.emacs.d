@@ -80,8 +80,10 @@
   (interactive (list current-prefix-arg t))
   (condition-case nil
       (python-shell-send-buffer send-main msg)
-    (error (run-python)
-           (python-shell-send-buffer send-main msg))))
+    (error
+     (save-current-buffer
+       (run-python))
+     (python-shell-send-buffer send-main msg))))
 
 (defun python-shell-send-current-statement ()
   (interactive)
