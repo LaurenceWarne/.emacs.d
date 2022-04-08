@@ -447,11 +447,14 @@
     "Return the corresponding impl file directory for TEST-FILE-PATH"
     (if-let* ((root (projectile-project-root))
               (rel-path (f-relative test-file-path root))
-              (src-dir-guesses `(,(f-base root) ,(downcase (f-base root)) "src"))
+              (src-dir-guesses
+               `(,(f-base root) ,(s-replace "-" "_" (f-base root))
+                 ,(downcase (f-base root)) "src"))
               (src-dir (cl-find-if (lambda (d) (f-exists-p (f-join root d)))
                                    src-dir-guesses)))
         (projectile-complementary-dir test-file-path "tests?" src-dir)
       (error "Could not locate a impl file for %s!" test-file-path)))
+  
   (projectile-update-project-type
    'python-pkg
    :src-dir #'my-get-python-impl-dir
@@ -701,7 +704,16 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
   :hook (hack-local-variables . (lambda ()
 		                  (when (derived-mode-p 'python-mode)
 		                    (require 'lsp-python-ms)
-		                    (lsp-deferred)))))
+		                    (lsp-deferred))))
+  :config
+  (defun lw-python-send-or-projectile (&optional send-main msg)
+    "Send/create shell or run tests for project."
+    (interactive)
+    (let ((type (projectile-project-type)))
+      (if (or (eq type 'python-tox) (eq type 'python-poetry))
+          (call-interactively #'projectile-test-project)
+        (lw-python-shell-send-buffer send-main msg))))
+  (define-key python-mode-map (kbd "C-c C-c") 'lw-python-send-or-projectile))
 
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode))
@@ -1243,17 +1255,6 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
   :config
   (global-set-key [remap goto-line] 'goto-line-preview))
 
-;; https://github.com/jcs-elpa/docstr
-(use-package docstr
-  :quelpa (docstr :fetcher github :repo "laurencewarne/docstr" :upgrade t)
-  :after scala-mode
-  :hook
-  (scala-mode . docstr-mode)
-  (java-mode . docstr-mode)
-  (python-mode . docstr-mode)
-  :config
-  (setq docstr-key-support t))
-
 ;; https://github.com/jorgenschaefer/emacs-buttercup
 ;; We install this package to get the correct indentation for `describe' and
 ;; `it' blocks when writing tests.
@@ -1570,10 +1571,10 @@ _C_: customize profiler options
   :hook ((text-mode . undo-hl-mode)
          (prog-mode . undo-hl-mode)))
 
-;; https://github.com/emacsorphanage/undohist
 (use-package undohist
   :config
-  (undohist-initialize))
+  (undohist-initialize)
+  (setq undohist-ignored-files (list (rx (* anychar) "EDITMSG"))))
 
 ;; https://github.com/pythonic-emacs/blacken/blob/master/blacken.el
 (use-package blacken
@@ -1586,4 +1587,9 @@ _C_: customize profiler options
   :config
   (projectile-update-project-type
    'python-poetry
-   :test #'python-pytest-dispatch))
+   :src-dir #'my-get-python-impl-dir
+   :test-dir #'my-get-python-test-dir
+   :test "nox"))
+
+;; https://github.com/wyuenho/emacs-python-isort/blob/main/python-isort.el
+(use-package python-isort)

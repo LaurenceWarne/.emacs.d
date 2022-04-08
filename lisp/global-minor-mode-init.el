@@ -99,7 +99,6 @@
          (python-shell-send-region (region-beginning) (region-end)))
         (t (python-shell-send-current-statement))))
 
-(define-key python-mode-map (kbd "C-c C-c") 'lw-python-shell-send-buffer)
 (define-key python-mode-map (kbd "<C-return>") 'lw-python-shell-send-region-or-line)
 
 ;; Save python buffers
