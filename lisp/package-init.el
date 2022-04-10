@@ -248,7 +248,7 @@
         ;; https://github.com/bbatsov/projectile/issues/1517
         projectile-per-project-compilation-buffer t
         lw-all-ext
-        '("yml" "yaml" "ini" "md" "xml" "jenkinsfile" "gql" "tf" "org" "conf" "gradle")
+        '("yml" "yaml" "ini" "md" "xml" "jenkinsfile" "gql" "tf" "org" "conf" "gradle" "toml")
         lw-code-ext
         '("el" "py" "java" "hs" "scala" "sc" "sbt" "sh")
         projectile-other-file-alist
@@ -818,6 +818,7 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
     (magit-branch-checkout "-" start-point))
   (transient-append-suffix 'magit-branch "w"
     '("-" "last branch" lw-magit-checkout-last))
+
   (define-advice magit-push-current-to-upstream (:before (args) query-yes-or-no)
     "Prompt for confirmation before permitting a push to upstream/master."
     (when-let ((branch (magit-get-current-branch))
@@ -1571,11 +1572,6 @@ _C_: customize profiler options
   :hook ((text-mode . undo-hl-mode)
          (prog-mode . undo-hl-mode)))
 
-(use-package undohist
-  :config
-  (undohist-initialize)
-  (setq undohist-ignored-files (list (rx (* anychar) "EDITMSG"))))
-
 ;; https://github.com/pythonic-emacs/blacken/blob/master/blacken.el
 (use-package blacken
   :after python
@@ -1585,11 +1581,15 @@ _C_: customize profiler options
 ;; https://github.com/wbolster/emacs-python-pytest
 (use-package python-pytest
   :config
-  (projectile-update-project-type
-   'python-poetry
-   :src-dir #'my-get-python-impl-dir
-   :test-dir #'my-get-python-test-dir
-   :test "nox"))
+  (let ((python-version
+         (string-trim-right
+          (shell-command-to-string
+           "python3 -c 'import sys;print(f\"{sys.version_info.major}.{sys.version_info.minor}\")'"))))
+    (projectile-update-project-type
+     'python-poetry
+     :src-dir #'my-get-python-impl-dir
+     :test-dir #'my-get-python-test-dir
+     :test (format "nox --session tests-%s" python-version))))
 
 ;; https://github.com/wyuenho/emacs-python-isort/blob/main/python-isort.el
 (use-package python-isort)
