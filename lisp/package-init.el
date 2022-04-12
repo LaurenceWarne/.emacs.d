@@ -835,10 +835,14 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
 (use-package zoom-window
   :bind ("M-i" . zoom-window-zoom))
 
+;; https://github.com/domtronn/all-the-icons.el
+;; Note after installing this you need to run M-x all-the-icons-install-fonts
+(use-package all-the-icons)
+
 ;; https://github.com/sebastiencs/company-box
 ;; Need to M-x install-all-the-icons
 (use-package company-box
-  :after company
+  :after (company all-the-icons)
   :hook (company-mode . company-box-mode)
   :config
   (setq company-box-icons-alist 'company-box-icons-all-the-icons))
@@ -897,10 +901,6 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
 
 ;; https://github.com/hniksic/emacs-htmlize
 (use-package htmlize)
-
-;; https://github.com/domtronn/all-the-icons.el
-;; Note after installing this you need to run M-x all-the-icons-install-fonts
-(use-package all-the-icons)
 
 ;; https://github.com/jtbm37/all-the-icons-dired
 (use-package all-the-icons-dired
@@ -1061,6 +1061,7 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
 ;; https://plantuml.com/class-diagram
 (use-package plantuml-mode
   :after org
+  :mode "\\.plantuml\\'"
   :config
   (require 'org)
   (require 'ob-plantuml)
@@ -1069,7 +1070,6 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
   (unless (file-exists-p plantuml-jar-path)
     (plantuml-download-jar))
   (plantuml-set-exec-mode "jar")
-  (add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
   (add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
   (org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t))))
 
