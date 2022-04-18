@@ -162,6 +162,7 @@
   ("C-;" . avy-goto-char-timer)
   ("C-#" . avy-copy-region)
   ("M-#" . avy-copy-line)
+  ("C-M-#" . avy-move-region)
   :config
   (setq avy-keys-alist
         `((avy-goto-char-2 . (?a ?s ?d ?f ?j ?k ?l)))))
@@ -232,7 +233,17 @@
                                  (point))))
       (if (string-match-p "^\s+$" string-before-point)
           (kill-backward-chars (1+ (length string-before-point)))
-        (sp-backward-kill-word arg)))))
+        (sp-backward-kill-word arg))))
+
+  ;; electric-pair-mode would do this for us but it doesn't play nicely with
+  ;; smartparens
+  ;; https://www.reddit.com/r/emacs/comments/f6vnya/how_to_add_a_newline_between_parentheses_brackets/
+
+  (sp-with-modes
+      '(python-mode scala-mode)
+    (sp-local-pair "(" nil :post-handlers '(:add ("||\n[i]" "RET")))
+    (sp-local-pair "[" nil :post-handlers '(:add ("||\n[i]" "RET")))
+    (sp-local-pair "{" nil :post-handlers '(:add ("||\n[i]" "RET")))))
 
 ;; https://github.com/bbatsov/projectile
 (use-package projectile
@@ -1554,11 +1565,6 @@ _C_: customize profiler options
   :config
   (whole-line-or-region-global-mode))
 
-;; https://github.com/bling/fzf.el
-(use-package fzf
-  :demand t
-  :bind ("C-M-f" . (lambda () (interactive) (fzf-find-file (getenv "HOME")))))
-
 (use-package saws
   :if (f-exists-p "~/projects/saws.el")
   :load-path "~/projects/saws.el"
@@ -1589,7 +1595,7 @@ _C_: customize profiler options
      'python-poetry
      :src-dir #'my-get-python-impl-dir
      :test-dir #'my-get-python-test-dir
-     :test (format "nox --session tests-%s" python-version))))
+     :test (format "nox -R --session tests-%s" python-version))))
 
 ;; https://github.com/wyuenho/emacs-python-isort/blob/main/python-isort.el
 (use-package python-isort)
