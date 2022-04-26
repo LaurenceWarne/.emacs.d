@@ -248,10 +248,12 @@
 ;; https://github.com/bbatsov/projectile
 (use-package projectile
   :demand t
-  :load-path "~/projects/projectile"
+  :init (require 'conf-mode)
   :bind (("M-p" . projectile-switch-project)
          ("C-c C-c" . projectile-test-project)
-         ("C-c C-r" . projectile-run-project))
+         ("C-c C-r" . projectile-run-project)
+         :map conf-mode-map
+         ("C-c C-c"))
   :config
   (projectile-mode 1)
   (setq projectile-create-missing-test-files t
@@ -284,17 +286,7 @@
         (list
          (projectile-related-files-fn-test-with-suffix "el" "-test")
          (projectile-related-files-fn-test-with-prefix "el" "test-")))
-  (defun lw-projectile-run-test-file ()
-    "Run a test file in the current buffer, as opposed to all tests."
-    (interactive)
-    (when-let ((test-file-fn
-                (projectile-project-type-attribute
-                 (projectile-project-type) 'test-file-fn)))
-      (unless (projectile-test-file-p (buffer-file-name))
-        (save-current-buffer
-          (projectile-toggle-between-implementation-and-test)
-          (funcall test-file-fn)))
-      (funcall test-file-fn)))
+  
   (cl-defun lw-projectile-update-project-type-override
       (old-fn
        project-type
@@ -492,6 +484,7 @@
          ("C-." . helm-end-of-buffer)
          ("C-k" . helm-buffer-run-kill-buffers)
          ("M-D" . helm-delete-minibuffer-contents)
+         ("M-e" . helm-select-action)
          :map helm-occur-map
          ("C-s" . helm-next-line)
          ("C-r" . helm-previous-line)
@@ -500,7 +493,8 @@
          :map lisp-interaction-mode-map
          ("C-j" . helm-mini)
          :map comint-mode-map
-         ("C-M-r" . helm-comint-input-ring))
+         ("C-M-r" . helm-comint-input-ring)
+         ("M-e" . helm-select-action))
   :config
   (helm-mode 1)
   ;; Makes helm-boring-file-regexp-list act as a .gitignore
@@ -677,11 +671,16 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
 
   (add-to-list 'lsp-language-id-configuration
                '(cfn-yaml-mode . "cloudformation"))
+  (add-to-list 'lsp-language-id-configuration
+               '(cfn-json-mode . "cloudformation"))
   (when-let ((exe (executable-find "cfn-lsp-extra")))
     (lsp-register-client
      (make-lsp-client :new-connection (lsp-stdio-connection exe)
                       :activation-fn (lsp-activate-on "cloudformation")
-                      :server-id 'cfn-lsp-extra))))
+                      :server-id 'cfn-lsp-extra)))
+
+  (add-hook 'cfn-yaml-mode-hook #'lsp)
+  (add-hook 'cfn-json-mode-hook #'lsp))
 
 (use-package lsp-ui
   :after lsp-mode
@@ -1019,6 +1018,15 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
 ;; https://github.com/yoshiki/yaml-mode
 (use-package yaml-mode
   :config
+
+  (define-derived-mode cfn-json-mode js-mode
+    "CFN-JSON"
+    "Simple mode to edit CloudFormation template in JSON format."
+    (setq js-indent-level 2))
+
+  (add-to-list 'magic-mode-alist
+               '("\\({\n *\\)? *[\"']AWSTemplateFormatVersion" . cfn-json-mode))
+
   (define-derived-mode cfn-yaml-mode yaml-mode
     "CFN-YAML"
     "Simple mode to edit CloudFormation template in YAML format.")
