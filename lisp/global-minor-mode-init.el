@@ -37,6 +37,9 @@
 (setq compilation-scroll-output t)
 (setq confirm-kill-processes nil)      ; Don't ask for exit confirmation when there are subprocesses
 (setq browse-url-browser-function 'browse-url-firefox)
+;; https://emacs-lsp.github.io/lsp-mode/page/performance/
+(setq gc-cons-threshold 100000000)
+(setq read-process-output-max (* 1024 1024)) ;; 1MB
 
 (require 'holidays)
 (setq calendar-holidays holiday-christian-holidays)
