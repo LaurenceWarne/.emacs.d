@@ -156,6 +156,7 @@
   (bind-key "M-o" 'ace-window))
 
 ;; https://github.com/abo-abo/avy
+;; https://karthinks.com/software/avy-can-do-anything/
 (use-package avy
   ;; This does two things: first, it creates an autoload for the avy-goto-char commands and defers loading of avy until you actually use it. Second, it binds the key C-: to that command.
   :bind
@@ -1603,11 +1604,21 @@ _C_: customize profiler options
          (string-trim-right
           (shell-command-to-string
            "python3 -c 'import sys;print(f\"{sys.version_info.major}.{sys.version_info.minor}\")'"))))
+
+    (defun lw-pytest-test-file-fn (file-name)
+      (interactive)
+      (let* ((rel (f-relative file-name (projectile-project-root)))
+             (test-str (projectile-project-type-attribute
+                        (projectile-project-type)
+                        'test-command)))
+        (format "%s -- %s" test-str rel)))
+
     (projectile-update-project-type
      'python-poetry
      :src-dir #'my-get-python-impl-dir
      :test-dir #'my-get-python-test-dir
-     :test (format "nox -R --session tests-%s" python-version))))
+     :test (format "nox -R --session tests-%s" python-version)
+     :test-file-fn #'lw-pytest-test-file-fn)))
 
 ;; https://github.com/wyuenho/emacs-python-isort/blob/main/python-isort.el
 (use-package python-isort)
