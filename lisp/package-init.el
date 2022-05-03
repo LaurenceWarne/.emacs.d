@@ -155,6 +155,7 @@
   :config
   (bind-key "M-o" 'ace-window))
 
+;; https://github.com/abo-abo/avy
 (use-package avy
   ;; This does two things: first, it creates an autoload for the avy-goto-char commands and defers loading of avy until you actually use it. Second, it binds the key C-: to that command.
   :bind
@@ -164,8 +165,10 @@
   ("M-#" . avy-copy-line)
   ("C-M-#" . avy-move-region)
   :config
-  (setq avy-keys-alist
-        `((avy-goto-char-2 . (?a ?s ?d ?f ?j ?k ?l)))))
+  (setq avy-keys '(?a ?s ?d ?f ?j ?k ?l)
+        avy-keys-alist
+        `((avy-goto-char-2 . (?a ?s ?d ?f ?j ?k ?l))
+          (avy-goto-char-timer . (?a ?s ?d ?f ?j ?k ?l)))))
 
 (use-package yasnippet
   :defer t
@@ -248,6 +251,7 @@
 ;; https://github.com/bbatsov/projectile
 (use-package projectile
   :demand t
+  :load-path "~/projects/projectile"
   :init (require 'conf-mode)
   :bind (("M-p" . projectile-switch-project)
          ("C-c C-c" . projectile-test-project)
@@ -675,7 +679,7 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
                '(cfn-json-mode . "cloudformation"))
   (when-let ((exe (executable-find "cfn-lsp-extra")))
     (lsp-register-client
-     (make-lsp-client :new-connection (lsp-stdio-connection exe)
+     (make-lsp-client :new-connection (lsp-stdio-connection `(,exe "-v"))
                       :activation-fn (lsp-activate-on "cloudformation")
                       :server-id 'cfn-lsp-extra)))
 
