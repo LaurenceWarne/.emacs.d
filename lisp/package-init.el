@@ -1620,5 +1620,5 @@ _C_: customize profiler options
      :test (format "nox -R --session tests-%s" python-version)
      :test-file-fn #'lw-pytest-test-file-fn)))
 
-;; https://github.com/wyuenho/emacs-python-isort/blob/main/python-isort.el
+;; https://github.com/wyuenho/emacs-python-isort
 (use-package python-isort)
