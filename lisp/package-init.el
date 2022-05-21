@@ -256,8 +256,7 @@
   :demand t
   :load-path "~/projects/projectile"
   :init (require 'conf-mode)
-  :bind (("M-p" . projectile-switch-project)
-         ("C-c C-c" . projectile-test-project)
+  :bind (("C-c C-c" . projectile-test-project)
          ("C-c C-r" . projectile-run-project)
          :map conf-mode-map
          ("C-c C-c"))
@@ -569,10 +568,21 @@
       (if (projectile-project-p)
           (apply f1 args)
         (apply f2 args))))
+
+  (defun lw-switch-project ()
+    (interactive)
+    (let* ((projects (projectile-relevant-known-projects))
+           (project (f-expand (completing-read "Switch to project: " projects)))
+           (windows (window-list))
+           (all-files (projectile-project-buffers project)))
+      (--each (-zip windows all-files)
+        (set-window-buffer (car it) (cdr it)))))
+
   (define-key projectile-mode-map (kbd "C-j")
     (lw-projectile-if-in-project #'helm-projectile #'helm-mini))
   (define-key projectile-mode-map (kbd "M-q")
     (lw-projectile-if-in-project #'helm-projectile-ag #'helm-ag))
+  (global-set-key (kbd "M-p") #'lw-switch-project)
   (global-set-key (kbd "M-j") 'lw-switch-to-last-buffer))
 
 (use-package helm-descbinds
