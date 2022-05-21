@@ -118,6 +118,8 @@
    org-startup-indented t
    ;; Default of 2 is super annoying with `org-src-tab-acts-natively'
    org-edit-src-content-indentation 0
+   org-hide-emphasis-markers t
+   org-ellipsis "…"
    org-feed-alist
    '(("Org"
       "https://blog.tecosaur.com/tmio/rss.xml"
@@ -1622,3 +1624,10 @@ _C_: customize profiler options
 
 ;; https://github.com/wyuenho/emacs-python-isort
 (use-package python-isort)
+
+
+;; https://github.com/minad/org-modern
+(use-package org-modern
+  :after org
+  :hook ((org-mode . org-modern-mode)
+         (org-agenda-finalize . org-modern-agenda)))
