@@ -254,7 +254,7 @@
 ;; https://github.com/bbatsov/projectile
 (use-package projectile
   :demand t
-  :load-path "~/projects/projectile"
+  ;;:load-path "~/projects/projectile"
   :init (require 'conf-mode)
   :bind (("C-c C-c" . projectile-test-project)
          ("C-c C-r" . projectile-run-project)
@@ -475,7 +475,6 @@
 
 ;; http://tuhdo.github.io/helm-intro.html
 (use-package helm
-  :after org
   :demand t
   :init
   (require 'org)
@@ -574,7 +573,15 @@
     (let* ((projects (projectile-relevant-known-projects))
            (project (f-expand (completing-read "Switch to project: " projects)))
            (windows (window-list))
-           (all-files (projectile-project-buffers project)))
+           (opened-files (projectile-project-buffers project))
+           (all-files (if (> (length windows) (length opened-files))
+                          (append
+                           opened-files
+                           (--> (projectile-project-files project)
+                             (-take (- (length windows)(length opened-files)) it)
+                             (-map (-partial #'f-join project) it)
+                             (-map #'find-file-noselect it)))
+                        opened-files)))
       (--each (-zip windows all-files)
         (set-window-buffer (car it) (cdr it)))))
 
