@@ -226,6 +226,7 @@
   (add-hook 'slime-repl-mode-hook #'smartparens-strict-mode)
   (add-hook 'ielm-mode-hook #'smartparens-strict-mode)
   (add-hook 'minibuffer-inactive-mode-hook #'smartparens-mode)
+  (add-hook 'minibuffer-mode-hook #'smartparens-mode)
   (smartparens-global-mode 1)
 
   (defun lw-backword-kill-word-dwim (arg)
