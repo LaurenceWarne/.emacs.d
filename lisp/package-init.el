@@ -18,7 +18,7 @@
   ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
   (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
   
-  ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
+  (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
   (when (< emacs-major-version 24)
     ;; For important compatibility libraries like cl-lib
     (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
@@ -68,7 +68,7 @@
 
 (use-package exec-path-from-shell
   :config
-  (when (memq window-system '(mac ns))
+  (when (memq window-system '(x mac ns))
     (exec-path-from-shell-initialize)))
 
 (use-package doom-themes
@@ -708,6 +708,7 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
   (add-hook 'cfn-json-mode-hook #'lsp))
 
 (use-package lsp-ui
+  :pin melpa-stable
   :after lsp-mode
   :config
   (setq lsp-ui-sideline-enable t
@@ -1642,7 +1643,6 @@ _C_: customize profiler options
 
 ;; https://github.com/wyuenho/emacs-python-isort
 (use-package python-isort)
-
 
 ;; https://github.com/minad/org-modern
 (use-package org-modern
