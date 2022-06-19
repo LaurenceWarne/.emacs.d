@@ -154,8 +154,9 @@
 (use-package pfuture)
 
 (use-package ace-window
-  :config
-  (bind-key "M-o" 'ace-window))
+  :bind (("M-o" . ace-window)
+         :map html-mode-map
+         ("M-o" . nil)))
 
 ;; https://github.com/abo-abo/avy
 ;; https://karthinks.com/software/avy-can-do-anything/

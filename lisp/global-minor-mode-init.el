@@ -81,12 +81,17 @@
 
 (defun lw-python-shell-send-buffer (&optional send-main msg)
   (interactive (list current-prefix-arg t))
-  (condition-case nil
-      (python-shell-send-buffer send-main msg)
-    (error
-     (save-current-buffer
-       (run-python))
-     (python-shell-send-buffer send-main msg))))
+  (unless (python-shell-get-process)
+    (run-python)
+    ;; Next one here caught me out for hours
+    (sleep-for 0 100))
+  (python-shell-send-buffer)
+  (let ((buf (python-shell-get-buffer)))
+    (if-let ((window (get-buffer-window buf)))
+        (select-window window)
+      (other-window 1)
+      (switch-to-buffer buf)))
+  (end-of-buffer))
 
 (defun python-shell-send-current-statement ()
   (interactive)
