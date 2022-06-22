@@ -1554,7 +1554,23 @@ _C_: customize profiler options
   (require 'haskell-tng-extra-projectile)
   (require 'haskell-tng-extra-smartparens)
   ;;(require 'haskell-tng-extra-yasnippet)
-  )
+
+  (defun lw-haskell-send-or-projectile (&optional send-main msg)
+    "Send/create shell or run tests for project."
+    (interactive)
+    (let ((type (projectile-project-type)))
+      (if (or (eq type 'haskell-stack) (eq type 'haskell-cabal))
+          (call-interactively #'projectile-test-project)
+        (let ((file-name (buffer-file-name)))
+          (if-let ((buf (get-buffer "*ghci*")))
+              (progn (comint-send-string (get-buffer-process buf)
+                                         (format ":l \"%s\"" file-name))
+                     (other-window 1)
+                     (switch-to-buffer buf)
+                     (comint-send-input))
+            (other-window 1)
+            (comint-run "ghci" (list file-name)))))))
+  (define-key haskell-tng-mode-map (kbd "C-c C-c") 'lw-haskell-send-or-projectile))
 
 ;; https://github.com/emacs-lsp/lsp-haskell
 (use-package lsp-haskell
@@ -1650,3 +1666,4 @@ _C_: customize profiler options
   :after org
   :hook ((org-mode . org-modern-mode)
          (org-agenda-finalize . org-modern-agenda)))
+
