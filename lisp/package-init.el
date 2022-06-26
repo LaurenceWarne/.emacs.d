@@ -743,11 +743,12 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
 		                    (require 'lsp-python-ms)
 		                    (lsp-deferred))))
   :config
+  (defvar-local lw-python-no-shell nil)
   (defun lw-python-send-or-projectile (&optional send-main msg)
     "Send/create shell or run tests for project."
     (interactive)
     (let ((type (projectile-project-type)))
-      (if (or (eq type 'python-tox) (eq type 'python-poetry))
+      (if (or (eq type 'python-tox) (eq type 'python-poetry) lw-python-no-shell)
           (call-interactively #'projectile-test-project)
         (lw-python-shell-send-buffer send-main msg))))
   (define-key python-mode-map (kbd "C-c C-c") 'lw-python-send-or-projectile))
@@ -1519,11 +1520,15 @@ _C_: customize profiler options
         (delete-char 1 killflag)
       (end-of-buffer
        (kill-buffer-and-window))))
-  (defun lw-maybe-projectile-eshell ()
-    "Call `projectile-run-eshell' if within a project, else `eshell'."
-    (interactive)
+  (defun lw-maybe-projectile-eshell (arg)
+    "Call `projectile-run-eshell' if within a project, else `eshell'.
+
+If a prefix argument is present, run `eshell' without checking if the current
+directory is part of a projectile project."
+    (interactive "P")
     ;; Don't need :after projectile
-    (if (and (fboundp #'projectile-project-root) (projectile-project-root))
+    (if (and (fboundp #'projectile-project-root) (projectile-project-root)
+             (or (not (numberp (car-safe arg))) (/= (car-safe arg) 4)))
         (projectile-run-eshell)
       (eshell)))
   (define-key global-map (kbd "C-M-t") #'lw-maybe-projectile-eshell)
@@ -1570,6 +1575,19 @@ _C_: customize profiler options
                      (comint-send-input))
             (other-window 1)
             (comint-run "ghci" (list file-name)))))))
+
+  (defun lw-haskell-bol-from-prev ()
+    (interactive)
+    (when (save-excursion
+            (forward-line -1)
+            (beginning-of-line)
+            (looking-at-p (rx eol)))
+      (beginning-of-line)
+      (kill-line)))
+
+  ;; (advice-add 'haskell-tng-newline
+  ;;             :after
+  ;;             #'lw-haskell-bol-from-prev)
   (define-key haskell-tng-mode-map (kbd "C-c C-c") 'lw-haskell-send-or-projectile))
 
 ;; https://github.com/emacs-lsp/lsp-haskell
@@ -1667,3 +1685,7 @@ _C_: customize profiler options
   :hook ((org-mode . org-modern-mode)
          (org-agenda-finalize . org-modern-agenda)))
 
+;; https://github.com/emacsmirror/undo-fu-session
+(use-package undo-fu-session
+  :config
+  (global-undo-fu-session-mode))
