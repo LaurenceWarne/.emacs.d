@@ -709,14 +709,13 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
   (add-hook 'cfn-json-mode-hook #'lsp))
 
 (use-package lsp-ui
-  :pin melpa-stable
-  :after lsp-mode
   :config
   (setq lsp-ui-sideline-enable t
         lsp-ui-sideline-show-symbol t
         lsp-ui-sideline-show-hover t
         lsp-ui-sideline-show-code-actions t
-        lsp-ui-sideline-update-mode 'point))
+        lsp-ui-sideline-update-mode 'point
+        lsp-ui-doc-show-with-cursor t))
 
 (use-package lsp-java
   :after lsp-mode
@@ -851,6 +850,8 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
   :bind(("C-x g" . magit)
         ("C-c g" . magit-file-dispatch))
   :config
+  (setq magit-clone-default-directory "~/projects")
+
   (defun lw-magit-checkout-last (&optional start-point)
     (interactive)
     (magit-branch-checkout "-" start-point))
