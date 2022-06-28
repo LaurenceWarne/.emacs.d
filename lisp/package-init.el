@@ -539,7 +539,8 @@
 
 (use-package helm-projectile
   ;; Don't add helm-ag to after because its loading is deferred
-  :after (helm projectile org)
+  :after (helm projectile)
+  :demand t
   :init
   (require 'markdown-mode)
   :bind (:map python-mode-map
@@ -592,7 +593,7 @@
   (define-key projectile-mode-map (kbd "M-q")
     (lw-projectile-if-in-project #'helm-projectile-ag #'helm-ag))
   (global-set-key (kbd "M-p") #'lw-switch-project)
-  (global-set-key (kbd "M-j") 'lw-switch-to-last-buffer))
+  (global-set-key (kbd "M-j") #'lw-switch-to-last-buffer))
 
 (use-package helm-descbinds
   :after helm
@@ -625,34 +626,7 @@
               ("C-c l" . flycheck-list-errors))
   ;; Don't use :hook here as that defers loading until flycheck is called
   :config
-  (add-hook 'emacs-lisp-mode-hook 'flycheck-mode)
-  (when (executable-find "cfn-lint")
-    (define-derived-mode cfn-json-mode js-mode
-      "CFN-JSON"
-      "Simple mode to edit CloudFormation template in JSON format."
-      (setq js-indent-level 2))
-    (add-to-list 'magic-mode-alist
-                 '("\\({\n *\\)? *[\"']AWSTemplateFormatVersion" . cfn-json-mode))
-    ;; Set up cfn-lint integration if flycheck is installed
-    ;; Get flycheck here https://www.flycheck.org/
-    (flycheck-define-checker cfn-lint
-      "AWS CloudFormation linter using cfn-lint.
-
-Install cfn-lint first: pip install cfn-lint
-
-See `https://github.com/aws-cloudformation/cfn-python-lint'."
-
-      :command ("cfn-lint" "-f" "parseable" source)
-      :error-patterns
-      ((warning line-start (file-name) ":" line ":" column
-                ":" (one-or-more digit) ":" (one-or-more digit) ":"
-                (id "W" (one-or-more digit)) ":" (message) line-end)
-       (error line-start (file-name) ":" line ":" column
-              ":" (one-or-more digit) ":" (one-or-more digit) ":"
-              (id "E" (one-or-more digit)) ":" (message) line-end))
-      :modes (cfn-json-mode cfn-yaml-mode))
-    (add-to-list 'flycheck-checkers 'cfn-lint)
-    (add-hook 'cfn-json-mode-hook 'flycheck-mode)))
+  (add-hook 'emacs-lisp-mode-hook 'flycheck-mode))
 
 (use-package hydra)
 
@@ -693,20 +667,7 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
         lsp-headerline-breadcrumb-enable nil)
   (when-let* ((go-dir (concat (getenv "HOME") "/go/bin/sqls"))
               ((f-exists? go-dir)))
-    (setq lsp-sqls-server go-dir))
-
-  (add-to-list 'lsp-language-id-configuration
-               '(cfn-yaml-mode . "cloudformation"))
-  (add-to-list 'lsp-language-id-configuration
-               '(cfn-json-mode . "cloudformation"))
-  (when-let ((exe (executable-find "cfn-lsp-extra")))
-    (lsp-register-client
-     (make-lsp-client :new-connection (lsp-stdio-connection `(,exe "-v"))
-                      :activation-fn (lsp-activate-on "cloudformation")
-                      :server-id 'cfn-lsp-extra)))
-
-  (add-hook 'cfn-yaml-mode-hook #'lsp)
-  (add-hook 'cfn-json-mode-hook #'lsp))
+    (setq lsp-sqls-server go-dir)))
 
 (use-package lsp-ui
   :config
@@ -1045,23 +1006,7 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
            org-publish-project-alist))))
 
 ;; https://github.com/yoshiki/yaml-mode
-(use-package yaml-mode
-  :config
-
-  (define-derived-mode cfn-json-mode js-mode
-    "CFN-JSON"
-    "Simple mode to edit CloudFormation template in JSON format."
-    (setq js-indent-level 2))
-
-  (add-to-list 'magic-mode-alist
-               '("\\({\n *\\)? *[\"']AWSTemplateFormatVersion" . cfn-json-mode))
-
-  (define-derived-mode cfn-yaml-mode yaml-mode
-    "CFN-YAML"
-    "Simple mode to edit CloudFormation template in YAML format.")
-  (add-to-list 'magic-mode-alist
-               '("\\(---\n\\)?AWSTemplateFormatVersion:" . cfn-yaml-mode))
-  (add-hook 'cfn-yaml-mode-hook 'flycheck-mode))
+(use-package yaml-mode)
 
 ;; https://github.com/lewang/command-log-mode
 (use-package command-log-mode)
@@ -1637,9 +1582,7 @@ directory is part of a projectile project."
 
 (use-package saws
   :if (f-exists-p "~/projects/saws.el")
-  :load-path "~/projects/saws.el"
-  :config
-  (define-key cfn-yaml-mode-map (kbd "C-c C-c") #'saws-deploy))
+  :load-path "~/projects/saws.el")
 
 ;; https://github.com/casouri/undo-hl
 (use-package undo-hl
@@ -1693,4 +1636,29 @@ directory is part of a projectile project."
 
 ;; https://github.com/mkcms/interactive-align
 (use-package ialign
-  :bind ("C-x l" . ialign))
+  :commands ialign
+  :bind (("C-x l" . ialign)
+         :map ialign-minibuffer-keymap
+         ("C--" . ialign-decrement-spacing)
+         ("C-=" . ialign-increment-spacing)
+         ("C-n" . ialign-increment-group)
+         ("C-p" . ialign-decrement-group))
+  :config
+  (setq ialign-initial-repeat t)
+  (defun lw-ialign (old-fn beg end &optional regexp group spacing repeat)
+    (interactive "r")
+    (let ((overriding-terminal-local-map ialign-minibuffer-keymap))
+      (funcall old-fn beg end regexp group spacing repeat)))
+  (advice-add 'ialign :around #'lw-ialign))
+
+;; https://github.com/LaurenceWarne/lsp-cfn.el
+(use-package lsp-cfn
+  :ensure nil
+  :demand t
+  :quelpa (lsp-cfn :fetcher github :repo "LaurenceWarne/lsp-cfn.el")
+  :hook ((lsp-cfn-yaml-mode . lsp-deferred)
+         (lsp-cfn-json-mode . lsp-deferred))
+  :config
+  (setq company-keywords-ignore-case t)
+  (setq lsp-cfn-verbose t)
+  (define-key lsp-cfn-yaml-mode-map (kbd "C-c C-c") #'saws-deploy))
