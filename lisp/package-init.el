@@ -543,11 +543,11 @@
   :init
   (require 'markdown-mode)
   :bind (:map python-mode-map
-              ("M-k" . #'projectile-toggle-between-implementation-and-test)
+              ("M-k" . projectile-toggle-between-implementation-and-test)
               :map java-mode-map
-              ("M-k" . #'projectile-toggle-between-implementation-and-test)
+              ("M-k" . projectile-toggle-between-implementation-and-test)
               :map emacs-lisp-mode-map
-              ("M-k" . #'projectile-toggle-between-implementation-and-test))
+              ("M-k" . projectile-toggle-between-implementation-and-test))
   :config
   (helm-projectile-on)
   (setq projectile-completion-system 'helm)
@@ -580,9 +580,9 @@
                           (append
                            opened-files
                            (--> (projectile-project-files project)
-                             (-take (- (length windows)(length opened-files)) it)
-                             (-map (-partial #'f-join project) it)
-                             (-map #'find-file-noselect it)))
+                                (-take (- (length windows)(length opened-files)) it)
+                                (-map (-partial #'f-join project) it)
+                                (-map #'find-file-noselect it)))
                         opened-files)))
       (--each (-zip windows all-files)
         (set-window-buffer (car it) (cdr it)))))
@@ -1340,8 +1340,8 @@ See `https://github.com/aws-cloudformation/cfn-python-lint'."
 (use-package graphql-mode
   :after projectile
   :bind (:map graphql-mode-map
-              ("C-j" . #'helm-projectile)
-              ("M-q" . #'helm-projectile-ag)))
+              ("C-j" . helm-projectile)
+              ("M-q" . helm-projectile-ag)))
 
 ;; https://github.com/vermiculus/graphql.el
 (use-package graphql)
@@ -1690,3 +1690,7 @@ directory is part of a projectile project."
 (use-package undo-fu-session
   :config
   (global-undo-fu-session-mode))
+
+;; https://github.com/mkcms/interactive-align
+(use-package ialign
+  :bind ("C-x l" . ialign))
