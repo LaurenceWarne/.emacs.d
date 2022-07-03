@@ -1448,6 +1448,7 @@ _C_: customize profiler options
          (eshell-mode . smartparens-mode))
   :config
   (setq eshell-prompt-function #'epe-theme-pipeline
+        eshell-hist-ignoredups 'erase
         epe-pipeline-show-time nil)
   (defun lw-eshell-clear-buffer ()
     "Clear eshell buffer."
@@ -1556,7 +1557,9 @@ directory is part of a projectile project."
   :config
   (eros-mode 1))
 
-(use-package eldev)
+(use-package eldev
+  :mode (("/Eldev\\'" . emacs-lisp-mode)
+         ("/Eldev-local\\'" . emacs-lisp-mode)))
 
 ;; https://github.com/Lindydancer/font-lock-studio
 (use-package font-lock-studio)
