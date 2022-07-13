@@ -816,6 +816,7 @@
   (defun lw-magit-checkout-last (&optional start-point)
     (interactive)
     (magit-branch-checkout "-" start-point))
+
   (transient-append-suffix 'magit-branch "w"
     '("-" "last branch" lw-magit-checkout-last))
 
@@ -1656,12 +1657,16 @@ directory is part of a projectile project."
 
 ;; https://github.com/LaurenceWarne/lsp-cfn.el
 (use-package lsp-cfn
-  :ensure nil
-  :demand t
-  :quelpa (lsp-cfn :fetcher github :repo "LaurenceWarne/lsp-cfn.el")
+  :magic (("\\({\n *\\)? *[\"']AWSTemplateFormatVersion" . lsp-cfn-json-mode)
+          ("\\({\n *\\)? *[\"']Transform[\"']: [\"']AWS::Serverless-2016-10-31" . lsp-cfn-json-mode)
+          ("\\(---\n\\)?AWSTemplateFormatVersion:" . lsp-cfn-yaml-mode)
+          ("\\(---\n\\)?Transform: AWS::Serverless-2016-10-31" . lsp-cfn-yaml-mode))
   :hook ((lsp-cfn-yaml-mode . lsp-deferred)
          (lsp-cfn-json-mode . lsp-deferred))
   :config
   (setq company-keywords-ignore-case t)
   (setq lsp-cfn-verbose t)
   (define-key lsp-cfn-yaml-mode-map (kbd "C-c C-c") #'saws-deploy))
+
+;; https://github.com/emacs-typescript/typescript.el
+(use-package typescript-mode)
