@@ -593,6 +593,7 @@
   (define-key projectile-mode-map (kbd "M-q")
     (lw-projectile-if-in-project #'helm-projectile-ag #'helm-ag))
   (global-set-key (kbd "M-p") #'lw-switch-project)
+  (define-key markdown-mode-map (kbd "M-p") #'lw-switch-project)
   (global-set-key (kbd "M-j") #'lw-switch-to-last-buffer))
 
 (use-package helm-descbinds
@@ -1286,6 +1287,7 @@
 (use-package graphql-mode
   :after projectile
   :bind (:map graphql-mode-map
+              ("C-c C-c" . nil)
               ("C-j" . helm-projectile)
               ("M-q" . helm-projectile-ag)))
 
@@ -1664,9 +1666,19 @@ directory is part of a projectile project."
   :hook ((lsp-cfn-yaml-mode . lsp-deferred)
          (lsp-cfn-json-mode . lsp-deferred))
   :config
-  (setq company-keywords-ignore-case t)
+  (setq completion-ignore-case t)
   (setq lsp-cfn-verbose t)
   (define-key lsp-cfn-yaml-mode-map (kbd "C-c C-c") #'saws-deploy))
 
 ;; https://github.com/emacs-typescript/typescript.el
 (use-package typescript-mode)
+
+;; https://github.com/yjwen/org-reveal/
+(use-package ox-reveal
+  :config
+  (setq org-reveal-root
+        (or (-some--> (-first #'f-exists-p '("~/repos/reveal.js/"
+                                             "~/projects/reveal.js/"))
+              (concat "file://" (f-expand it)))
+            org-reveal-root))
+  (setq org-reveal-title-slide "<h1>%t</h1><h2>%a</h2><p>%d<p>"))
