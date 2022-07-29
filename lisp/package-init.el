@@ -698,10 +698,12 @@
   (setq lsp-python-ms-auto-install-server t)
   (setq lsp-python-ms-python-executable (executable-find "python3"))
   :bind (:map lsp-signature-mode-map
-              ("M-n" . nil))
+              ("M-n" . nil)
+              ("M-p" . nil))
   :hook (hack-local-variables . (lambda ()
-		                  (when (derived-mode-p 'python-mode)
-		                    (require 'lsp-python-ms)
+		                  (when (and (not (eq major-mode 'sage-shell:sage-mode))
+                                             (derived-mode-p 'python-mode))
+                                    (require 'lsp-python-ms)
 		                    (lsp-deferred))))
   :config
   (defvar-local lw-python-no-shell nil)
@@ -1681,4 +1683,7 @@ directory is part of a projectile project."
                                              "~/projects/reveal.js/"))
               (concat "file://" (f-expand it)))
             org-reveal-root))
-  (setq org-reveal-title-slide "<h1>%t</h1><h2>%a</h2><p>%d<p>"))
+  (setq org-reveal-title-slide "<h2>%t</h2><h3>%a</h3><p>%d<p>"
+        org-reveal-klipse-css t
+        org-reveal-klipse-js t
+        org-reveal-klipsify-src t))
