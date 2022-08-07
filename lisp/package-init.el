@@ -124,7 +124,11 @@
    '(("Org"
       "https://blog.tecosaur.com/tmio/rss.xml"
       "~/org/feeds.org"
-      "Weekly Org Entries"))
+      "Weekly Org Entries")
+     ("SachaChua"
+      "https://sachachua.com/blog/feed/"
+      "~/org/feeds.org"
+      "Emacs News"))
    org-confirm-babel-evaluate nil)
   (set-face-attribute 'org-headline-done nil :strike-through t)
   (org-babel-do-load-languages
@@ -1268,8 +1272,7 @@
          :map finito-collection-view-mode-map
          ("x" . finito-delete-data-for-book-at-point))
   :config
-  (finito-download-server-if-not-exists
-   (lambda () (finito-start-server-if-not-already)))
+  (finito-download-server-if-not-exists #'finito-start-server-if-not-already)
   ;; Gives coloured output to finito process buffer
   ;; See: https://stackoverflow.com/questions/44348443/ansi-coloring-in-emacs-start-process-output-buffer
   (add-hook
@@ -1687,3 +1690,9 @@ directory is part of a projectile project."
         org-reveal-klipse-css t
         org-reveal-klipse-js t
         org-reveal-klipsify-src t))
+
+;; https://github.com/immerrr/lua-mode
+(use-package lua-mode)
+
+;; https://github.com/emacsorphanage/terraform-mode
+(use-package terraform-mode)

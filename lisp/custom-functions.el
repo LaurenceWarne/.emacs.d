@@ -1,4 +1,4 @@
-;;;; custom-functions.el -- useful interactive functions
+;;;; custom-functions.el -- useful interactive functions -*- lexical-binding: t -*-
 ;;; Commentary:
 
 ;; Interactive functions made by me! All are prefixed by lw- for namespacing
