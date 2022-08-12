@@ -643,13 +643,11 @@
               ("M-q" . #'helm-projectile-ag)
               ("M-k" . #'projectile-toggle-between-implementation-and-test)))
 
-;; https://github.com/parkouss/speed-type
+;; https://github.com/dakra/speed-type
 (use-package speed-type
-  :quelpa (speed-type :fetcher github :repo "laurencewarne/speed-type" :upgrade t)
-  :commands (speed-type-code-region speed-type-text speed-type-region speed-type-buffer)
-  ;; :load-path "~/projects/speed-type"
+  :commands (speed-type-text speed-type-region speed-type-buffer)
   :config
-  (setq speed-type-default-lang "English"))
+  (setq speed-type-default-lang 'English))
 
 (use-package goto-chg
   :bind (("C-'" . goto-last-change)
@@ -1555,6 +1553,8 @@ directory is part of a projectile project."
 
 (use-package ts)
 
+;; Note this is NOT yaml-mode, this package is just for yaml parsing
+;; https://github.com/zkry/yaml.el/
 (use-package yaml)
 
 (use-package adoc-mode
@@ -1696,3 +1696,6 @@ directory is part of a projectile project."
 
 ;; https://github.com/emacsorphanage/terraform-mode
 (use-package terraform-mode)
+
+;; https://github.com/larstvei/Try
+(use-package try)
