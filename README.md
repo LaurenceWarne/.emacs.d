@@ -22,4 +22,4 @@ Stuff which may also be useful:
 - [Composite Customisation Types](https://www.gnu.org/software/emacs/manual/html_node/elisp/Composite-Types.html)
 - [Documentation Tips](https://www.gnu.org/software/emacs/manual/html_node/elisp/Documentation-Tips.html)
 - [Emacs Docker Images](https://hub.docker.com/r/silex/emacs)
-
+- A [collection](https://github.com/LaurenceWarne/reddit-emacs-tips-n-tricks/blob/master/out.md) of popular Weekly Tips and Tricks comments from [r/emacs](https://www.reddit.com/r/emacs/)

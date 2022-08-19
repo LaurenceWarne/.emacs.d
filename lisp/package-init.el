@@ -273,7 +273,7 @@
         ;; https://github.com/bbatsov/projectile/issues/1517
         projectile-per-project-compilation-buffer t
         lw-all-ext
-        '("yml" "yaml" "ini" "md" "xml" "jenkinsfile" "gql" "tf" "org" "conf" "gradle" "toml")
+        '("yml" "yaml" "ini" "md" "xml" "jenkinsfile" "gql" "tf" "org" "conf" "gradle" "toml" "css")
         lw-code-ext
         '("el" "py" "java" "hs" "scala" "sc" "sbt" "sh")
         projectile-other-file-alist
@@ -1687,8 +1687,6 @@ directory is part of a projectile project."
               (concat "file://" (f-expand it)))
             org-reveal-root))
   (setq org-reveal-title-slide "<h2>%t</h2><h3>%a</h3><p>%d<p>"
-        org-reveal-klipse-css t
-        org-reveal-klipse-js t
         org-reveal-klipsify-src t))
 
 ;; https://github.com/immerrr/lua-mode
