@@ -633,8 +633,6 @@
   :config
   (add-hook 'emacs-lisp-mode-hook 'flycheck-mode))
 
-(use-package hydra)
-
 ;; Note groovy mode automatically adds itself to auto-mode-alist
 (use-package groovy-mode
   :after helm-projectile
@@ -652,9 +650,6 @@
 (use-package goto-chg
   :bind (("C-'" . goto-last-change)
          ("C-M-'" . goto-last-change-reverse)))
-
-(use-package java-snippets
-  :after yasnippet)
 
 (use-package lsp-mode
   :hook
@@ -744,13 +739,6 @@
   (eyebrowse-mode t)
   (setq eyebrowse-new-workspace t))
 
-;; https://github.com/Malabarba/camcorder.el
-(use-package camcorder
-  :commands camcorder-record
-  :bind (:map camcorder-mode-map
-              ("C-<f12>" . camcorder-stop)
-              ("C-M-k"   . camcorder-stop)))
-
 ;; https://github.com/purcell/package-lint
 (use-package package-lint)
 
@@ -776,7 +764,6 @@
 
 (use-package steam
   ;; :load-path "~/projects/steam.el"
-  :quelpa (steam :fetcher github :repo "laurencewarne/steam.el" :upgrade t)
   :config
   (setq steam-username "39422361280608732623190235"))
 
@@ -860,6 +847,7 @@
 
 (use-package magit-todos
   :after magit
+  :load-path "~/projects/magit-todos"
   :config
   (magit-todos-mode))
 
@@ -880,7 +868,7 @@
 
 ;; https://github.com/ardumont/org2jekyll
 (use-package org2jekyll
-  :quelpa (org2jekyll :fetcher github :repo "laurencewarne/org2jekyll" :upgrade t)
+  ;;:quelpa (org2jekyll :fetcher github :repo "laurencewarne/org2jekyll" :upgrade t)
   ;; :load-path "~/projects/org2jekyll"
   :config
   (setq org2jekyll-blog-author "Laurence Warne"
@@ -1033,8 +1021,7 @@
 
 ;; https://github.com/kjambunathan/fontmenu
 (use-package fontmenu
-  :quelpa (fontmenu :fetcher github :repo "laurencewarne/fontmenu" :upgrade t)
-  :load-path "~/projects/fontmenu")
+  :quelpa (fontmenu :fetcher github :repo "laurencewarne/fontmenu" :upgrade t))
 
 ;; https://github.com/mineo/yatemplate
 (use-package yatemplate
@@ -1143,6 +1130,8 @@
           ("*ASCII*" :select t :custom lw-shackle-get-window-cur)
           ("*Org Links*" :select t :custom lw-shackle-get-window-cur)
           ("*pytest*.*" :regexp t :custom lw-shackle-get-window-cur)
+          ("*pytest*.*" :regexp t :custom lw-shackle-get-window-cur)
+          ;;("* Merriam-Webster.*" :regexp t :custom lw-shackle-get-window-cur)
           ;;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ))
   (shackle-mode 1))
@@ -1211,9 +1200,6 @@
 
 ;; https://github.com/larstvei/ox-gfm
 (use-package ox-gfm)
-
-;; https://github.com/kiwanami/emacs-edbi
-(use-package edbi)
 
 ;; https://github.com/Silex/docker.el
 (use-package docker

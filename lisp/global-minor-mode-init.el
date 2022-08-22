@@ -151,8 +151,9 @@
     (ansi-color-apply-on-region
      compilation-filter-start (point))))
 
-(add-hook 'compilation-filter-hook
-          #'endless/colorize-compilation)
+(add-hook 'compilation-filter-hook #'endless/colorize-compilation)
+
+(add-hook 'after-save-hook 'executable-make-buffer-file-executable-if-script-p)
 
 ;;; Advice
 
