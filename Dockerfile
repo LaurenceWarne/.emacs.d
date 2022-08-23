@@ -1,4 +1,4 @@
-FROM silex/emacs:27.1
+FROM silex/emacs:28.1
 
 RUN apt update
 RUN apt install -y git

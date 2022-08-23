@@ -1683,3 +1683,6 @@ directory is part of a projectile project."
 
 ;; https://github.com/larstvei/Try
 (use-package try)
+
+;; https://github.com/agzam/mw-thesaurus.el
+(use-package mw-thesaurus)

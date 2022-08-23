@@ -39,8 +39,9 @@
 (setq browse-url-browser-function 'browse-url-firefox)
 ;; https://emacs-lsp.github.io/lsp-mode/page/performance/
 (setq gc-cons-threshold 100000000)
-(setq read-process-output-max (* 1024 1024)) ;; 1MB
+(setq read-process-output-max (* 1024 1024)) ; 1MB
 (setq kill-do-not-save-duplicates t)
+(setq history-delete-duplicates t)           ; Delete duplicate history elements
 
 (require 'holidays)
 (setq calendar-holidays holiday-christian-holidays)
@@ -166,11 +167,3 @@ If the next line is joined to the current line, kill the extra indent whitespace
     (save-excursion
       (forward-char 1)
       (just-one-space 1))))
-
-(defadvice kill-ring-save (before slick-copy activate compile)
-  "When called interactively with no active region, copy a single line instead."
-  (interactive
-   (if mark-active (list (region-beginning) (region-end))
-     (message "Single line killed")
-     (list (line-beginning-position)
-	   (line-beginning-position 2)))))
