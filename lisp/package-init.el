@@ -41,6 +41,7 @@
 
 ;; Install all packages if not already installed (use-package must still be called)
 (setq use-package-always-ensure t)
+(setq use-package-verbose t)
 
 ;; https://github.com/quelpa/quelpa
 (use-package quelpa
@@ -636,6 +637,7 @@
 ;; Note groovy mode automatically adds itself to auto-mode-alist
 (use-package groovy-mode
   :after helm-projectile
+  :mode "\\.groovy\\'"
   :bind (:map groovy-mode-map
               ("C-j" . #'helm-projectile)
               ("M-q" . #'helm-projectile-ag)
@@ -677,7 +679,6 @@
         lsp-ui-doc-show-with-cursor t))
 
 (use-package lsp-java
-  :after lsp-mode
   :config
   (setq lsp-java-format-comments-enabled nil
         lsp-java-format-on-type-enabled nil
@@ -685,7 +686,7 @@
   (setq tab-width 4))
 
 (use-package helm-lsp
-  :after lsp-mode helm
+  :after (lsp-mode helm)
   :config
   (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
 
@@ -740,7 +741,8 @@
   (setq eyebrowse-new-workspace t))
 
 ;; https://github.com/purcell/package-lint
-(use-package package-lint)
+(use-package package-lint
+  :commands package-lint-current-buffer)
 
 ;; https://github.com/LaurenceWarne/jdoc-jumper
 (use-package jdoc-jumper
@@ -749,21 +751,24 @@
   ;; :load-path "~/projects/jdoc-jumper"
   :commands jdoc-jumper-jump-from-point)
 
+;; https://github.com/slime/slime
+(use-package slime
+  :commands slime
+  :config
+  (setq inferior-lisp-program "/usr/local/bin/sbcl"
+        slime-contribs '(slime-fancy)))
+
 ;; https://github.com/anwyn/slime-company
 (use-package slime-company
-  :after company
+  :after (slime company)
   ;; We have to call this before slime is loaded:
   ;; https://github.com/anwyn/slime-company/issues/11
   :init
   (slime-setup '(slime-fancy slime-company)))
 
-(use-package slime
-  :config
-  (setq inferior-lisp-program "/usr/local/bin/sbcl"
-        slime-contribs '(slime-fancy)))
-
 (use-package steam
   ;; :load-path "~/projects/steam.el"
+  :commands (steam-get-games steam-launch)
   :config
   (setq steam-username "39422361280608732623190235"))
 
@@ -842,8 +847,7 @@
 
 ;; https://github.com/magnars/expand-region.el
 (use-package expand-region
-  :config
-  (global-set-key (kbd "M-'") 'er/expand-region))
+  :bind ("M-'" . er/expand-region))
 
 (use-package magit-todos
   :after magit
@@ -1066,7 +1070,7 @@
 
 ;; https://github.com/hvesalai/emacs-scala-mode
 (use-package scala-mode
-  :after f smartparens projectile
+  :after projectile
   :mode "\\.s\\(c\\|cala\\|bt\\)$"
   :bind (:map scala-mode-map
               ("C-j" . #'helm-projectile)
@@ -1098,6 +1102,7 @@
 
 ;; https://github.com/ppareit/graphviz-dot-mode
 (use-package graphviz-dot-mode
+  :mode "\\.dot\\'"
   :config
   (setq graphviz-dot-indent-width 4))
 
@@ -1238,6 +1243,7 @@
 
 ;; https://github.com/jcs-elpa/goto-line-preview
 (use-package goto-line-preview
+  :commands goto-line-preview
   :config
   (global-set-key [remap goto-line] 'goto-line-preview))
 
@@ -1275,6 +1281,7 @@
 ;; https://github.com/davazp/graphql-mode
 (use-package graphql-mode
   :after projectile
+  :defer t
   :bind (:map graphql-mode-map
               ("C-c C-c" . nil)
               ("C-j" . helm-projectile)
@@ -1320,10 +1327,12 @@
   :hook (markdown-mode . poly-markdown-mode))
 
 ;; https://github.com/mattiase/xr
-(use-package xr)
+(use-package xr
+  :defer t)
 
 ;; https://www.gnu.org/software/auctex/manual/auctex/index.html
 (use-package tex
+  :defer t
   :ensure auctex)
 
 (use-package company-auctex
@@ -1427,9 +1436,22 @@ _C_: customize profiler options
     ("5" profiler-find-profile-other-frame)))
 
 (use-package eshell-prompt-extras
-  :demand t
-  :bind (:map eshell-mode-map
-              ("C-M-r" . helm-eshell-history))
+  :init
+  (defun lw-maybe-projectile-eshell (arg)
+    "Call `projectile-run-eshell' if within a project, else `eshell'.
+
+If a prefix argument is present, run `eshell' without checking if the current
+directory is part of a projectile project."
+    (interactive "P")
+    (require 'eshell-prompt-extras)
+    ;; Don't need :after projectile
+    (if (and (fboundp #'projectile-project-root) (projectile-project-root)
+             (or (not (numberp (car-safe arg))) (/= (car-safe arg) 4)))
+        (projectile-run-eshell)
+      (eshell)))
+  :bind (("C-M-t" . lw-maybe-projectile-eshell)
+         :map eshell-mode-map
+         ("C-M-r" . helm-eshell-history))
   :custom-face
   (epe-pipeline-delimiter-face ((t :foreground "light green")))
   (epe-pipeline-user-face ((t :foreground "aquamarine"
@@ -1459,18 +1481,7 @@ _C_: customize profiler options
         (delete-char 1 killflag)
       (end-of-buffer
        (kill-buffer-and-window))))
-  (defun lw-maybe-projectile-eshell (arg)
-    "Call `projectile-run-eshell' if within a project, else `eshell'.
-
-If a prefix argument is present, run `eshell' without checking if the current
-directory is part of a projectile project."
-    (interactive "P")
-    ;; Don't need :after projectile
-    (if (and (fboundp #'projectile-project-root) (projectile-project-root)
-             (or (not (numberp (car-safe arg))) (/= (car-safe arg) 4)))
-        (projectile-run-eshell)
-      (eshell)))
-  (define-key global-map (kbd "C-M-t") #'lw-maybe-projectile-eshell)
+  
   ;; https://lists.gnu.org/r/bug-gnu-emacs/2019-06/msg01616.html
   (add-hook
    'eshell-mode-hook
@@ -1556,7 +1567,8 @@ directory is part of a projectile project."
          ("/Eldev-local\\'" . emacs-lisp-mode)))
 
 ;; https://github.com/Lindydancer/font-lock-studio
-(use-package font-lock-studio)
+(use-package font-lock-studio
+  :commands font-lock-studio)
 
 ;; https://github.com/LaurenceWarne/prefab.el
 (use-package prefab
@@ -1596,6 +1608,7 @@ directory is part of a projectile project."
 
 ;; https://github.com/wbolster/emacs-python-pytest
 (use-package python-pytest
+  :commands python-pytest-dispatch
   :config
   (let ((python-version
          (string-trim-right
@@ -1662,7 +1675,8 @@ directory is part of a projectile project."
   (define-key lsp-cfn-yaml-mode-map (kbd "C-c C-c") #'saws-deploy))
 
 ;; https://github.com/emacs-typescript/typescript.el
-(use-package typescript-mode)
+(use-package typescript-mode
+  :mode "\\.ts\\'")
 
 ;; https://github.com/yjwen/org-reveal/
 (use-package ox-reveal
@@ -1676,13 +1690,17 @@ directory is part of a projectile project."
         org-reveal-klipsify-src t))
 
 ;; https://github.com/immerrr/lua-mode
-(use-package lua-mode)
+(use-package lua-mode
+  :mode "\\.lua\\'")
 
 ;; https://github.com/emacsorphanage/terraform-mode
-(use-package terraform-mode)
+(use-package terraform-mode
+  :mode "\\.tf\\'")
 
 ;; https://github.com/larstvei/Try
-(use-package try)
+(use-package try
+  :commands try)
 
 ;; https://github.com/agzam/mw-thesaurus.el
-(use-package mw-thesaurus)
+(use-package mw-thesaurus
+  :commands (mw-thesaurus-lookup-dwim mw-thesaurus-lookup))
