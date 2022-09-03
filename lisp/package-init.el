@@ -43,8 +43,14 @@
 (setq use-package-always-ensure t)
 (setq use-package-verbose t)
 
+;; https://elpa.gnu.org/packages/delight.html
+(use-package delight)
+
 ;; https://github.com/quelpa/quelpa
 (use-package quelpa
+  :init
+  (setq quelpa-checkout-melpa-p nil
+        quelpa-update-melpa-p nil)  ;; What does quelpa use melpa for?
   :config
   ;; https://github.com/quelpa/quelpa-use-package
   (quelpa
@@ -181,6 +187,7 @@
 
 (use-package yasnippet
   :defer t
+  :delight (yas-global-mode yas-minor-mode)
   ;; Allows for nested expansion
   :bind ("C-<tab>" . yas-expand)
   :init
@@ -261,6 +268,7 @@
 ;; https://github.com/bbatsov/projectile
 (use-package projectile
   :demand t
+  :delight '(:eval (concat " P[" (projectile-project-type) "]"))
   ;;:load-path "~/projects/projectile"
   :init (require 'conf-mode)
   :bind (("C-c C-c" . projectile-test-project)
@@ -483,6 +491,7 @@
 ;; http://tuhdo.github.io/helm-intro.html
 (use-package helm
   :demand t
+  :delight helm-mode
   :init
   (require 'org)
   :bind (("M-y" . helm-show-kill-ring)
@@ -840,6 +849,7 @@
 ;; https://github.com/sebastiencs/company-box
 ;; Need to M-x install-all-the-icons
 (use-package company-box
+  :delight company-box-mode
   :after (company all-the-icons)
   :hook (company-mode . company-box-mode)
   :config
@@ -1014,6 +1024,7 @@
 
 ;; https://github.com/Fuco1/fontify-face
 (use-package fontify-face
+  :delight fontify-face-mode
   :hook (emacs-lisp-mode . fontify-face-mode))
 
 ;; https://github.com/cireu/elispfl
@@ -1065,6 +1076,7 @@
 
 ;; https://github.com/justbur/emacs-which-key
 (use-package which-key
+  :delight which-key-mode
   :config
   (which-key-mode))
 
@@ -1585,7 +1597,7 @@ directory is part of a projectile project."
 
 ;; https://github.com/purcell/whole-line-or-region
 (use-package whole-line-or-region
-  :diminish whole-line-or-region-mode
+  :delight (whole-line-or-region-mode whole-line-or-region-local-mode)
   :config
   (whole-line-or-region-global-mode))
 
@@ -1597,6 +1609,7 @@ directory is part of a projectile project."
 (use-package undo-hl
   :ensure nil
   :quelpa (undo-hl :fetcher github :repo "casouri/undo-hl")
+  :delight undo-hl-mode
   :hook ((text-mode . undo-hl-mode)
          (prog-mode . undo-hl-mode)))
 
