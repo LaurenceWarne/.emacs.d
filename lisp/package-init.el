@@ -187,7 +187,7 @@
 
 (use-package yasnippet
   :defer t
-  :delight (yas-global-mode yas-minor-mode)
+  :delight (yas-global-mode) (yas-minor-mode)
   ;; Allows for nested expansion
   :bind ("C-<tab>" . yas-expand)
   :init
@@ -268,7 +268,7 @@
 ;; https://github.com/bbatsov/projectile
 (use-package projectile
   :demand t
-  :delight '(:eval (concat " P[" (projectile-project-type) "]"))
+  :delight '(:eval (concat " P[" (symbol-name (projectile-project-type)) "]"))
   ;;:load-path "~/projects/projectile"
   :init (require 'conf-mode)
   :bind (("C-c C-c" . projectile-test-project)
@@ -619,6 +619,7 @@
 
 (use-package company
   :demand t
+  :delight company-mode
   :bind ("M-RET" . company-complete)
   :config
   ;; We usually want make sure we have appropriate backends before enabling
@@ -663,6 +664,7 @@
          ("C-M-'" . goto-last-change-reverse)))
 
 (use-package lsp-mode
+  :delight lsp-lens-mode
   :hook
   (java-mode . lsp-deferred)
   (scala-mode . lsp-deferred)
@@ -782,6 +784,7 @@
   (setq steam-username "39422361280608732623190235"))
 
 (use-package beacon
+  :delight beacon-mode
   :config
   (beacon-mode 1))
 
@@ -1597,7 +1600,7 @@ directory is part of a projectile project."
 
 ;; https://github.com/purcell/whole-line-or-region
 (use-package whole-line-or-region
-  :delight (whole-line-or-region-mode whole-line-or-region-local-mode)
+  :delight (whole-line-or-region-global-mode) (whole-line-or-region-local-mode)
   :config
   (whole-line-or-region-global-mode))
 
@@ -1616,6 +1619,7 @@ directory is part of a projectile project."
 ;; https://github.com/pythonic-emacs/blacken/blob/master/blacken.el
 (use-package blacken
   :after python
+  :delight blacken-mode
   :custom (blacken-only-if-project-is-blackened t)
   :hook (python-mode . blacken-mode))
 
