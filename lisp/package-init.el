@@ -525,11 +525,10 @@
   (add-to-list 'savehist-additional-variables 'helm-M-x-input-history))
 
 (use-package helm-flx
-  :after helm
   :config
   (helm-flx-mode +1)
   (setq helm-flx-for-helm-find-files t ; t by default
-        helm-flx-for-helm-locate t))   ; nil by default
+        helm-flx-for-helm-locate t))
 
 (use-package helm-ag
   :after helm
@@ -552,8 +551,6 @@
   (define-key dired-mode-map (kbd "M-q") #'lw-helm-do-ag-current-directory))
 
 (use-package helm-projectile
-  ;; Don't add helm-ag to after because its loading is deferred
-  :after (helm projectile)
   :demand t
   :init
   (require 'markdown-mode)
@@ -611,7 +608,6 @@
   (global-set-key (kbd "M-j") #'lw-switch-to-last-buffer))
 
 (use-package helm-descbinds
-  :after helm
   :bind (("C-h b" . helm-descbinds)
          ("C-h w" . helm-descbinds))
   :config
@@ -666,10 +662,7 @@
 (use-package lsp-mode
   :delight lsp-lens-mode
   :hook
-  (java-mode . lsp-deferred)
-  (scala-mode . lsp-deferred)
   (lsp-mode . lsp-lens-mode)
-  (scala-mode . (lambda () (add-hook 'before-save-hook 'lsp-format-buffer nil t)))
   :bind ("C-M-<return>" . lsp-execute-code-action)
   :config
   (setq lsp-keep-workspace-alive nil
@@ -690,6 +683,8 @@
         lsp-ui-doc-show-with-cursor t))
 
 (use-package lsp-java
+  :hook
+  (java-mode . lsp-deferred)
   :config
   (setq lsp-java-format-comments-enabled nil
         lsp-java-format-on-type-enabled nil
@@ -1019,11 +1014,22 @@
 ;; https://github.com/yoshiki/yaml-mode
 (use-package yaml-mode)
 
-;; https://github.com/lewang/command-log-mode
-(use-package command-log-mode)
+;; https://github.com/positron-solutions/command-log-mode
+(use-package command-log-mode
+  :quelpa (command-log-mode :fetcher github :repo "https://github.com/positron-solutions/command-log-mode")
+  :commands clm/toggle
+  :custom
+  (clm-window-text-scale 2 "Command log two steps higher text scale")
+  (clm-logging-shows-buffer t "Toggling will show the buffer.")
+  (clm-hiding-disables-logging t "Toggling visible buffer turns off logging.")
+  (clm-disabling-logging-kills-buffer t "The buffer will be new when displayed again.")
+  (clm-log-globally t "Auto-enable with global minor mode (including minibuffer)")
+  (clm-exceptions '(self-insert-command) "Be chatty.
+   Show everything besides self-insert-command"))
 
 ;; https://github.com/sagemath/sage-shell-mode
-(use-package sage-shell-mode)
+(use-package sage-shell-mode
+  :commands sage-shell:run-sage)
 
 ;; https://github.com/Fuco1/fontify-face
 (use-package fontify-face
