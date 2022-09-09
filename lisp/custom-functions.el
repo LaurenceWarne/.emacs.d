@@ -158,3 +158,14 @@
     (local-set-key (kbd "q") 'delete-window)
     (local-set-key (kbd "k") 'delete-window)
     (local-set-key (kbd "C-d") 'delete-window)))
+
+(defun lw-newline-smart-indent ()
+  (interactive)
+  (if (ignore-errors
+        (save-excursion (re-search-forward
+                         (rx (seq point (* blank) (any ?\] ?\) ?\] ?}))))))
+      (progn (newline-and-indent)
+             (newline-and-indent)
+             (forward-line -1)
+             (indent-according-to-mode))
+    (newline-and-indent)))

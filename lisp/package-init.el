@@ -199,6 +199,7 @@
 (use-package smartparens
   :demand t
   :init
+
   (defun lw-clone-line-lisp ()
     "Copy the current line to the next."
     (interactive)
@@ -211,6 +212,7 @@
       (forward-line)
       (insert contents)
       (indent-according-to-mode)))
+
   :hook ((helpful-mode . smartparens-mode)
          (messages-buffer-mode . smartparens-mode))
   :bind (:map smartparens-mode-map
@@ -253,17 +255,7 @@
                                  (point))))
       (if (string-match-p "^\s+$" string-before-point)
           (kill-backward-chars (1+ (length string-before-point)))
-        (sp-backward-kill-word arg))))
-
-  ;; electric-pair-mode would do this for us but it doesn't play nicely with
-  ;; smartparens
-  ;; https://www.reddit.com/r/emacs/comments/f6vnya/how_to_add_a_newline_between_parentheses_brackets/
-
-  (sp-with-modes
-      '(python-mode scala-mode)
-    (sp-local-pair "(" nil :post-handlers '(:add ("||\n[i]" "RET")))
-    (sp-local-pair "[" nil :post-handlers '(:add ("||\n[i]" "RET")))
-    (sp-local-pair "{" nil :post-handlers '(:add ("||\n[i]" "RET")))))
+        (sp-backward-kill-word arg)))))
 
 ;; https://github.com/bbatsov/projectile
 (use-package projectile
@@ -645,9 +637,9 @@
   :after helm-projectile
   :mode "\\.groovy\\'"
   :bind (:map groovy-mode-map
-              ("C-j" . #'helm-projectile)
-              ("M-q" . #'helm-projectile-ag)
-              ("M-k" . #'projectile-toggle-between-implementation-and-test)))
+              ("C-j" . helm-projectile)
+              ("M-q" . helm-projectile-ag)
+              ("M-k" . projectile-toggle-between-implementation-and-test)))
 
 ;; https://github.com/dakra/speed-type
 (use-package speed-type
@@ -1094,9 +1086,10 @@
   :after projectile
   :mode "\\.s\\(c\\|cala\\|bt\\)$"
   :bind (:map scala-mode-map
-              ("C-j" . #'helm-projectile)
-              ("M-q" . #'helm-projectile-ag)
-              ("M-k" . #'projectile-toggle-between-implementation-and-test))
+              ("C-j" . helm-projectile)
+              ("M-q" . helm-projectile-ag)
+              ("M-k" . projectile-toggle-between-implementation-and-test)
+              ("<return>" . lw-newline-smart-indent))
   :config
   ;; :shake-fist: https://github.com/sdkman/sdkman-cli/issues/568
   (let ((sdkman-dir "~/.sdkman/candidates/"))
@@ -1110,7 +1103,8 @@
 ;; https://scalameta.org/metals/docs/editors/emacs.html
 ;; Note this package requires installation of a binary (see above link)
 (use-package lsp-metals
-  :after lsp lsp-ui scala-mode
+  :hook ((scala-mode . lsp-deferred)
+         (scala-mode . (lambda () (add-hook 'before-save-hook 'lsp-format-buffer nil t))))
   :custom
   ;; Metals claims to support range formatting by default but it supports range
   ;; formatting of multiline strings only. You might want to disable it so that

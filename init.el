@@ -20,15 +20,14 @@
   (message "An Emacs version < 27 is in use, some things may not work!"))
 
 ;;; File loading
+(condition-case e
+    (load "custom-functions")
+  (error "Error on loading custom-functions: %s"
+	 (error-message-string e)))
 
 (condition-case e
     (load "global-minor-mode-init")
   (error "Error on loading global-minor-mode-init: %s"
-	 (error-message-string e)))
-
-(condition-case e
-    (load "custom-functions")
-  (error "Error on loading custom-functions: %s"
 	 (error-message-string e)))
 
 (condition-case e
@@ -47,7 +46,7 @@
 	 (error-message-string e)))
 
 (condition-case e
-    (when (file-exists-p (concat user-emacs-directory "/" "local"))
+    (when (file-exists-p (expand-file-name "local.el" lw-custom-init-files-directory))
       (message "Found a local initialisation file")
       (load "local"))
   (error "Error on loading local: %s"
