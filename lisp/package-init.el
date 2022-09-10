@@ -263,9 +263,10 @@
 
   (defun lw-sp-strict-backward-delete-char-unless-string (&optional arg)
     (interactive "P")
-    (if (/= (or (nth 8 (syntax-ppss)) (1- (point))) (1- (point)))
-        (delete-backward-char 1)
-      (sp-backward-delete-char arg)))
+    (cond (mark-active (sp-delete-region (region-beginning) (region-end)))
+          ((/= (or (nth 8 (syntax-ppss)) (1- (point))) (1- (point)))
+           (delete-backward-char 1))
+          (t (sp-backward-delete-char arg))))
 
   (defun lw-sp-strict-delete-char-unless-string (&optional arg)
     (interactive)
