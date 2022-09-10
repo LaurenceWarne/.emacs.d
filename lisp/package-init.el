@@ -136,7 +136,8 @@
       "https://sachachua.com/blog/feed/"
       "~/org/feeds.org"
       "Emacs News"))
-   org-confirm-babel-evaluate nil)
+   org-confirm-babel-evaluate nil
+   org-babel-python-command (-first #'executable-find '("python" "python3")))
   (set-face-attribute 'org-headline-done nil :strike-through t)
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -231,6 +232,9 @@
               ("<C-backspace>" . lw-backword-kill-word-dwim)
               :map smartparens-strict-mode-map
               ("M-l" . lw-clone-line-lisp)
+              ("C-d" . lw-sp-strict-delete-char-unless-string)
+              ("<backspace>" . lw-sp-strict-backward-delete-char-unless-string)
+              ("C-w" . lw-sp-strict-kill-region-unless-string)
               :map emacs-lisp-mode-map
               (";" . sp-comment))
   :config
@@ -245,7 +249,7 @@
   (smartparens-global-mode 1)
 
   (defun lw-backword-kill-word-dwim (arg)
-    "Just to what I mean `backword-kill-word'!"
+    "Just do what I mean `backword-kill-word'!"
     (interactive "p")
     (let* ((start-of-line-point (save-mark-and-excursion
                                   (move-beginning-of-line nil)
@@ -255,12 +259,34 @@
                                  (point))))
       (if (string-match-p "^\s+$" string-before-point)
           (kill-backward-chars (1+ (length string-before-point)))
-        (sp-backward-kill-word arg)))))
+        (sp-backward-kill-word arg))))
+
+  (defun lw-sp-strict-backward-delete-char-unless-string (&optional arg)
+    (interactive "P")
+    (if (/= (or (nth 8 (syntax-ppss)) (1- (point))) (1- (point)))
+        (delete-backward-char 1)
+      (sp-backward-delete-char arg)))
+
+  (defun lw-sp-strict-delete-char-unless-string (&optional arg)
+    (interactive)
+    (if (/= (or (when-let ((opening-quote (nth 8 (syntax-ppss))))
+                  (save-mark-and-excursion
+                    (goto-char opening-quote)
+                    (sp-forward-sexp)
+                    (point))) (1+ (point))) (1+ (point)))
+        (delete-char 1)
+      (sp-delete-char arg)))
+
+  (defun lw-sp-strict-kill-region-unless-string (beg end)
+    (interactive "r")
+    (if (nth 3 (syntax-ppss))
+        (kill-region beg end)
+      (sp-kill-region beg end))))
 
 ;; https://github.com/bbatsov/projectile
 (use-package projectile
   :demand t
-  :delight '(:eval (concat " P[" (symbol-name (projectile-project-type)) "]"))
+  :delight '(:eval (format " P[%s]" (projectile-project-type)))
   ;;:load-path "~/projects/projectile"
   :init (require 'conf-mode)
   :bind (("C-c C-c" . projectile-test-project)
