@@ -38,6 +38,7 @@
 ;;(global-set-key (kbd "C-o") 'lw-open-line)
 (global-set-key (kbd "C-c m") 'lw-popup-messages)
 (global-set-key (kbd "C-M-d") (lambda () (interactive) (dired default-directory)))
+(global-set-key (kbd "C-M-x") 'lw-repeat-complex-command)
 
 ;;; Local keybindings
 

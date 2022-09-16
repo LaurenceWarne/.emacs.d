@@ -169,3 +169,12 @@
              (forward-line -1)
              (indent-according-to-mode))
     (newline-and-indent)))
+
+(defun lw-repeat-complex-command (arg)
+  (interactive "p")
+  (cl-letf (((symbol-function 'read-from-minibuffer)
+             (lambda (&rest _)
+               (cl-find-if (lambda (c) (not (eq 'lw-repeat-complex-command (car c))))
+                           command-history))))
+    (repeat-complex-command arg)))
+

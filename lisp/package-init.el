@@ -1177,7 +1177,8 @@
           ("*ASCII*" :select t :custom lw-shackle-get-window-cur)
           ("*Org Links*" :select t :custom lw-shackle-get-window-cur)
           ("*pytest*.*" :regexp t :custom lw-shackle-get-window-cur)
-          ("*pytest*.*" :regexp t :custom lw-shackle-get-window-cur)
+          ;; doesn't work?!
+          (list-unicode-display-mode :select t :custom lw-shackle-get-window-cur)   
           ;;("* Merriam-Webster.*" :regexp t :custom lw-shackle-get-window-cur)
           ;;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ))
@@ -1748,3 +1749,7 @@ directory is part of a projectile project."
 ;; https://github.com/agzam/mw-thesaurus.el
 (use-package mw-thesaurus
   :commands (mw-thesaurus-lookup-dwim mw-thesaurus-lookup))
+
+;; https://github.com/purcell/list-unicode-display
+(use-package list-unicode-display
+  :commands list-unicode-display)
