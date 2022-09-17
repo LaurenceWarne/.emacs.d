@@ -678,6 +678,12 @@
   :bind (("C-'" . goto-last-change)
          ("C-M-'" . goto-last-change-reverse)))
 
+;; https://github.com/emacs-lsp/lsp-mode
+;; The following may be useful:
+;;   - `lsp-describe-session': Shows the server capabilities
+;;   - `lsp-doctor': Show lsp performance configuration (https://emacs-lsp.github.io/lsp-mode/page/performance/)
+;;   - (setq lsp-log-io t), `lsp-workspace-show-log': Shows all communication between
+;;     the server and client
 (use-package lsp-mode
   :delight lsp-lens-mode
   :hook
@@ -929,7 +935,6 @@
 
 ;; https://github.com/jtbm37/all-the-icons-dired
 (use-package all-the-icons-dired
-  :after all-the-icons
   :hook (dired-mode . all-the-icons-dired-mode))
 
 ;; https://github.com/Fuco1/dired-hacks
@@ -938,12 +943,16 @@
   :config
   (setq dired-filter-group-saved-groups
         '(("default"
+           ("Directories"
+            (directory))
            ("Git"
             (regexp . "^\\.git"))
            ("Python"
             (extension . "py"))
            ("Java"
             (extension . "java"))
+           ("Scala"
+            (extension "scala" "sc"))
            ("Lisp"
             (extension "el" "cl" "elc"))
            ("Org"
@@ -953,7 +962,7 @@
            ("LaTeX"
             (extension "tex" "bib"))
            ("HTML"
-            (extension "html"))
+            (extension . "html"))
            ("Archives"
             (extension "zip" "rar" "gz" "bz2" "tar"))
            ("Images"
@@ -967,6 +976,7 @@
 
 ;; https://github.com/Fuco1/dired-hacks#dired-rainbow
 (use-package dired-rainbow
+  :after dired
   :config
   (dired-rainbow-define-chmod directory "#6cb2eb" "d.*")
   (dired-rainbow-define html "#eb5286" ("css" "less" "sass" "scss" "htm" "html" "jhtm" "mht" "eml" "mustache" "xhtml"))
@@ -1323,8 +1333,7 @@
 
 ;; https://github.com/davazp/graphql-mode
 (use-package graphql-mode
-  :after projectile
-  :defer t
+  :mode "\\.(gql|graphql)\\'"
   :bind (:map graphql-mode-map
               ("C-c C-c" . nil)
               ("C-j" . helm-projectile)
