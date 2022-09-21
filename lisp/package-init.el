@@ -840,7 +840,8 @@
   :bind(("C-x g" . magit)
         ("C-c g" . magit-file-dispatch))
   :config
-  (setq magit-clone-default-directory "~/projects")
+  (setq magit-clone-default-directory "~/projects"
+        magit-no-confirm '(set-and-push stage-all-changes unstage-all-changes))
 
   (defun lw-magit-checkout-last (&optional start-point)
     (interactive)
