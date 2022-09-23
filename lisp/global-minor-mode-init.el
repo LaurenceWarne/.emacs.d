@@ -6,6 +6,7 @@
 
 ;;;; Code:
 
+(require 'cl-lib)
 
 ;;; Enable/disable modes
 (global-subword-mode 1)    ; Moves cursor inbetween camelCase words
@@ -170,3 +171,25 @@ If the next line is joined to the current line, kill the extra indent whitespace
     (save-excursion
       (forward-char 1)
       (just-one-space 1))))
+
+(add-hook
+ 'after-load-functions
+ (prog1
+   (defun lw-re-arrange-minor-mode-alist (&rest _)
+     (cl-loop with modes =
+              '(
+                ;; order in which you want the minor mode lighters to
+                ;; appear
+                projectile-mode
+                lsp-mode
+                flycheck-mode
+                smartparens-mode
+                ;; To get the current order of entries, and what to plug in
+                ;; here do `M-x pp-eval-expression RET (mapcar #'car minor-mode-alist)'
+                )
+              for mode in (nreverse modes)
+              for mode-line-entry = (assq mode minor-mode-alist)
+              when mode-line-entry do
+              (assq-delete-all mode minor-mode-alist)
+              (add-to-list 'minor-mode-alist mode-line-entry)))
+   (lw-re-arrange-minor-mode-alist)))
