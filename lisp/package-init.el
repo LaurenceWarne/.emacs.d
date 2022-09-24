@@ -246,6 +246,10 @@
   (add-hook 'ielm-mode-hook #'smartparens-strict-mode)
   (add-hook 'minibuffer-inactive-mode-hook #'smartparens-mode)
   (add-hook 'minibuffer-mode-hook #'smartparens-mode)
+  (add-hook 'emacs-startup-hook
+            (lambda () (when-let ((buf (get-buffer "*scratch*")))
+                         (with-current-buffer buf
+                           (smartparens-strict-mode -1)))))
   (smartparens-global-mode 1)
 
   (defun lw-backword-kill-word-dwim (arg)
