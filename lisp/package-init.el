@@ -199,8 +199,8 @@
 
 (use-package smartparens
   :demand t
-  :init
 
+  :init
   (defun lw-clone-line-lisp ()
     "Copy the current line to the next."
     (interactive)
@@ -407,9 +407,15 @@
   (define-key projectile-mode-map (kbd "C-c C-i") #'lw-projectile-repl)
   (defun lw-sbt-test-file-fn (file-name)
     (interactive)
-    (concat (lw-sbt-command) " 'testOnly "
-            (lw-jvm-get-file-package (f-dirname file-name))
-            "." (f-no-ext (f-filename file-name)) "'"))
+    (let* ((split (f-split (f-relative file-name (projectile-project-root))))
+           (module-guess (if (string= "src" (car split)) nil
+                           (car (last (car (-split-on "src" split))))))
+           (module-str (if module-guess (concat module-guess "/") "")))
+      (format "%s '%stestOnly %s.%s'"
+              (lw-sbt-command)
+              module-str
+              (lw-jvm-get-file-package (f-dirname file-name))
+              (f-no-ext (f-filename file-name)))))
   (defun lw-mill-test-file-fn (file-name)
     (interactive)
     (let* ((rel (f-relative file-name (projectile-project-root)))
@@ -897,6 +903,7 @@
   :ensure nil
   ;; :load-path "~/projects/mc-biome-viewer"
   :quelpa (mc-biome-viewer :fetcher github :repo "LaurenceWarne/mc-biome-viewer" :upgrade t)
+  :commands (mc-biome-viewer-view-save mc-biome-viewer-view-seed)
   ;; Example configuration
   :config
   (setq mc-biome-viewer-column-chunks-in-camera 48)  ; But fewer chunks will be faster
@@ -904,14 +911,15 @@
 
 ;; https://github.com/dgutov/diff-hl
 (use-package diff-hl
+  :demand t
+  :hook ((magit-pre-refresh-hook . diff-hl-magit-pre-refresh)
+         (magit-post-refresh-hook . diff-hl-magit-post-refresh)
+         (dired-mode . diff-hl-dired-mode))
   :config
-  (global-diff-hl-mode)
-  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
+  (global-diff-hl-mode))
 
 ;; https://github.com/ardumont/org2jekyll
 (use-package org2jekyll
-  ;;:quelpa (org2jekyll :fetcher github :repo "laurencewarne/org2jekyll" :upgrade t)
-  ;; :load-path "~/projects/org2jekyll"
   :config
   (setq org2jekyll-blog-author "Laurence Warne"
         org2jekyll-source-directory (expand-file-name "~/posts/")
