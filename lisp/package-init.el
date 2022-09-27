@@ -616,12 +616,20 @@
     (let* ((projects (projectile-relevant-known-projects))
            (project (f-expand (completing-read "Switch to project: " projects)))
            (windows (window-list))
-           (opened-files (projectile-project-buffers project))
+           (prog-file-p (lambda (f) (or (f-ext-p f "py") (f-ext-p f "scala")
+                                        (f-ext-p f "sc") (f-ext-p f "el"))))
+           (opened-files (-filter #'buffer-file-name
+                                  (projectile-project-buffers project)))
            (all-files (if (> (length windows) (length opened-files))
                           (append
                            opened-files
                            (--> (projectile-project-files project)
-                                (-take (- (length windows)(length opened-files)) it)
+                                (-flatten
+                                 (-separate
+                                  (lambda (f)
+                                    (or (f-ext-p f "py") (f-ext-p f "scala")
+                                        (f-ext-p f "sc") (f-ext-p f "el"))) it))
+                                (-take (- (length windows) (length opened-files)) it)
                                 (-map (-partial #'f-join project) it)
                                 (-map #'find-file-noselect it)))
                         opened-files)))
@@ -912,11 +920,11 @@
 ;; https://github.com/dgutov/diff-hl
 (use-package diff-hl
   :demand t
-  :hook ((magit-pre-refresh-hook . diff-hl-magit-pre-refresh)
-         (magit-post-refresh-hook . diff-hl-magit-post-refresh)
-         (dired-mode . diff-hl-dired-mode))
+  :hook (dired-mode . diff-hl-dired-mode)
   :config
-  (global-diff-hl-mode))
+  (global-diff-hl-mode)
+  (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
 ;; https://github.com/ardumont/org2jekyll
 (use-package org2jekyll
