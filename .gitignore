@@ -82,3 +82,4 @@ eaf/**
 /undohist/
 /eln-cache/
 /undo-fu-session/
+/forge-database.sqlite

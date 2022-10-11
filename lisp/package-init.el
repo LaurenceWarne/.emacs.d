@@ -33,10 +33,6 @@
   (package-install 'use-package)
   (eval-when-compile (require 'use-package)))
 
-;; lsp recommends we do this for some reason
-(require 'cc-mode)
-
-
 ;;; Use package declarations
 
 ;; Install all packages if not already installed (use-package must still be called)
@@ -408,7 +404,7 @@
   (defun lw-sbt-test-file-fn (file-name)
     (interactive)
     (let* ((split (f-split (f-relative file-name (projectile-project-root))))
-           (module-guess (if (string= "src" (car split)) nil
+           (module-guess (unless (string= "src" (car split))
                            (car (last (car (-split-on "src" split))))))
            (module-str (if module-guess (concat module-guess "/") "")))
       (format "%s '%stestOnly %s.%s'"
@@ -515,7 +511,27 @@
   (projectile-update-project-type
    'python-tox
    :src-dir #'my-get-python-impl-dir
-   :test-dir #'my-get-python-test-dir))
+   :test-dir #'my-get-python-test-dir)
+
+  (let ((python-version
+         (string-trim-right
+          (shell-command-to-string
+           "python3 -c 'import sys;print(f\"{sys.version_info.major}.{sys.version_info.minor}\")'"))))
+
+    (defun lw-pytest-test-file-fn (file-name)
+      (interactive)
+      (let* ((rel (f-relative file-name (projectile-project-root)))
+             (test-str (projectile-project-type-attribute
+                        (projectile-project-type)
+                        'test-command)))
+        (format "%s -- %s" test-str rel)))
+
+    (projectile-update-project-type
+     'python-poetry
+     :src-dir #'my-get-python-impl-dir
+     :test-dir #'my-get-python-test-dir
+     :test (format "nox -R --session tests-%s" python-version)
+     :test-file-fn #'lw-pytest-test-file-fn)))
 
 ;; http://tuhdo.github.io/helm-intro.html
 (use-package helm
@@ -583,6 +599,7 @@
   :demand t
   :init
   (require 'markdown-mode)
+  (require 'cc-mode)
   :bind (:map python-mode-map
               ("M-k" . projectile-toggle-between-implementation-and-test)
               :map java-mode-map
@@ -704,9 +721,10 @@
 ;;     the server and client
 (use-package lsp-mode
   :delight lsp-lens-mode
-  :hook
-  (lsp-mode . lsp-lens-mode)
-  :bind ("C-M-<return>" . lsp-execute-code-action)
+  :hook (lsp-mode . lsp-lens-mode)
+  :bind :bind (:map lsp-mode-map
+                    ("C-M-<return>" . lsp-execute-code-action)
+                    ("M-e" . lsp-avy-lens))
   :config
   (setq lsp-keep-workspace-alive nil
         lsp-enable-file-watchers nil
@@ -1168,6 +1186,20 @@
   ;; formatting of multiline strings only. You might want to disable it so that
   ;; emacs can use indentation provided by scala-mode.
   (lsp-metals-server-args '("-J-Dmetals.allow-multiline-string-formatting=off")))
+;; https://github.com/emacs-lsp/dap-mode
+(use-package dap-mode
+  :config
+  (defun lw-dap-go-to-output-buffer (&optional no-select)
+    "Go to output buffer."
+    (interactive)
+    (let* ((buf (dap--debug-session-output-buffer (dap--cur-session-or-die)))
+           (win (display-buffer-below-selected
+                 buf
+                 `((side . bottom) (slot . 5) (window-height . 0.50)))))
+      (with-current-buffer buf (compilation-mode 1))
+      (set-window-dedicated-p win t)
+      (unless no-select (select-window win))))
+  (advice-add 'dap-go-to-output-buffer :override #'lw-dap-go-to-output-buffer))
 
 ;; https://github.com/spotify/dockerfile-mode
 (use-package dockerfile-mode
@@ -1683,27 +1715,7 @@ directory is part of a projectile project."
 
 ;; https://github.com/wbolster/emacs-python-pytest
 (use-package python-pytest
-  :commands python-pytest-dispatch
-  :config
-  (let ((python-version
-         (string-trim-right
-          (shell-command-to-string
-           "python3 -c 'import sys;print(f\"{sys.version_info.major}.{sys.version_info.minor}\")'"))))
-
-    (defun lw-pytest-test-file-fn (file-name)
-      (interactive)
-      (let* ((rel (f-relative file-name (projectile-project-root)))
-             (test-str (projectile-project-type-attribute
-                        (projectile-project-type)
-                        'test-command)))
-        (format "%s -- %s" test-str rel)))
-
-    (projectile-update-project-type
-     'python-poetry
-     :src-dir #'my-get-python-impl-dir
-     :test-dir #'my-get-python-test-dir
-     :test (format "nox -R --session tests-%s" python-version)
-     :test-file-fn #'lw-pytest-test-file-fn)))
+  :commands python-pytest-dispatch)
 
 ;; https://github.com/wyuenho/emacs-python-isort
 (use-package python-isort)
