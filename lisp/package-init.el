@@ -722,9 +722,11 @@
 (use-package lsp-mode
   :delight lsp-lens-mode
   :hook (lsp-mode . lsp-lens-mode)
-  :bind :bind (:map lsp-mode-map
-                    ("C-M-<return>" . lsp-execute-code-action)
-                    ("M-e" . lsp-avy-lens))
+  :bind (:map lsp-mode-map
+              ("C-M-<return>" . lsp-execute-code-action)
+              ("M-e" . lsp-avy-lens)
+              :map lsp-browser-mode-map
+              ("k" . kill-current-buffer))
   :config
   (setq lsp-keep-workspace-alive nil
         lsp-enable-file-watchers nil
@@ -753,7 +755,6 @@
   (setq tab-width 4))
 
 (use-package helm-lsp
-  :after (lsp-mode helm)
   :config
   (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
 
