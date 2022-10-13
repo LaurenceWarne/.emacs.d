@@ -1726,6 +1726,16 @@ directory is part of a projectile project."
   ;; enabled right away. Note that this forces loading the package.
   (marginalia-mode))
 
+;; http://tuhdo.github.io/helm-intro.html
+(use-package helm
+  ;; I don't know a consult equivalent which does what helm-occur does,
+  ;; consult-line only searches lines and I want to highlight occurrences
+  ;; on the same line and also have the search string default to whats after
+  ;; point
+  :bind ("C-s" . helm-occur)
+  :config
+  (setq helm-split-window-in-side-p t))
+
 ;; https://github.com/minad/vertico
 (use-package vertico
   :demand t
@@ -1742,7 +1752,7 @@ directory is part of a projectile project."
 ;; https://github.com/minad/consult
 (use-package consult
   :bind (("C-j" . lw-consult-project-buffer)
-         ("C-s" . consult-line)
+         ;; ("C-s" . consult-line)
          ("M-q" . consult-ripgrep)
          ;; C-c bindings (mode-specific-map)
          ("C-c h" . consult-history)
@@ -1761,7 +1771,7 @@ directory is part of a projectile project."
          ;;("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
          ;;("C-M-#" . consult-register)
          ;; Other custom bindings
-         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+         ("M-y" . consult-yank-from-kill-ring)                ;; orig. yank-pop
          ("<help> a" . consult-apropos)            ;; orig. apropos-command
          ;; M-g bindings (goto-map)
          ("M-g e" . consult-compile-error)
