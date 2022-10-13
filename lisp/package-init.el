@@ -96,6 +96,7 @@
               ("M-n" . outline-next-heading)
               ("M-p" . outline-previous-heading)
               ("M-h" . (lambda () (interactive) (org-latex-preview '(16))))
+              ("C-j" . nil)
               ("M-q" . nil)
               ("C-)" . nil)
               ("C-)" . nil)
@@ -292,11 +293,13 @@
   :init (require 'conf-mode)
   :bind (("C-c C-c" . projectile-test-project)
          ("C-c C-r" . projectile-run-project)
+         ("M-k" . projectile-toggle-between-implementation-and-test)
          :map conf-mode-map
-         ("C-c C-c"))
+         ("C-c C-c" . nil))
   :config
   (projectile-mode 1)
   (setq projectile-create-missing-test-files t
+        projectile-auto-discover nil
         projectile-project-search-path '("~/projects")
         ;; https://github.com/bbatsov/projectile/issues/1517
         projectile-per-project-compilation-buffer t
@@ -326,6 +329,58 @@
         (list
          (projectile-related-files-fn-test-with-suffix "el" "-test")
          (projectile-related-files-fn-test-with-prefix "el" "test-")))
+
+  (defun lw-switch-to-last-buffer ()
+    "Switch to buffer an appropriate 'other buffer'."
+    (interactive)
+    (if (projectile-project-type)
+        (let ((buf (cl-find-if
+                    (lambda (p) (and (not (compilation-buffer-p p))
+                                     (not (member p (mapcar #'window-buffer
+                                                            (window-list))))))
+                    (projectile-project-buffers))))
+          (switch-to-buffer buf))
+      (switch-to-buffer nil)))
+  (defun lw-projectile-if-in-project (f1 f2)
+    (lambda (&rest args)
+      (interactive)
+      (if (projectile-project-p)
+          (funcall-interactively f1 args)
+        (funcall-interactively f2 args))))
+
+  (defun lw-switch-project ()
+    (interactive)
+    (let* ((projects (projectile-relevant-known-projects))
+           (project (f-expand (completing-read "Switch to project: " projects)))
+           (windows (window-list))
+           (prog-file-p (lambda (f) (or (f-ext-p f "py") (f-ext-p f "scala")
+                                        (f-ext-p f "sc") (f-ext-p f "el"))))
+           (opened-files (-filter #'buffer-file-name
+                                  (projectile-project-buffers project)))
+           (all-files (if (> (length windows) (length opened-files))
+                          (append
+                           opened-files
+                           (--> (projectile-project-files project)
+                                (-flatten
+                                 (-separate
+                                  (lambda (f)
+                                    (or (f-ext-p f "py") (f-ext-p f "scala")
+                                        (f-ext-p f "sc") (f-ext-p f "el"))) it))
+                                (-take (- (length windows) (length opened-files)) it)
+                                (-map (-partial #'f-join project) it)
+                                (-map #'find-file-noselect it)))
+                        opened-files)))
+      (--each (-zip windows all-files)
+        (set-window-buffer (car it) (cdr it)))))
+
+  ;; (define-key projectile-mode-map (kbd "C-j")
+  ;;   (lw-projectile-if-in-project #'helm-projectile #'helm-mini))
+  ;; (define-key projectile-mode-map (kbd "M-q")
+  ;;   (lw-projectile-if-in-project #'helm-projectile-ag #'helm-ag))
+  (global-set-key (kbd "M-p") #'lw-switch-project)
+  (require 'markdown-mode)
+  (define-key markdown-mode-map (kbd "M-p") #'lw-switch-project)
+  (global-set-key (kbd "M-j") #'lw-switch-to-last-buffer)
   
   (cl-defun lw-projectile-update-project-type-override
       (old-fn
@@ -533,140 +588,6 @@
      :test (format "nox -R --session tests-%s" python-version)
      :test-file-fn #'lw-pytest-test-file-fn)))
 
-;; http://tuhdo.github.io/helm-intro.html
-(use-package helm
-  :demand t
-  :delight helm-mode
-  :init
-  (require 'org)
-  :bind (("M-y" . helm-show-kill-ring)
-         ("C-x C-f" . helm-find-files)
-         ("C-j" . helm-mini)
-         ("C-x b" . helm-buffers-list)
-         ("M-x" . helm-M-x)
-         ("C-s" . helm-occur)
-         :map helm-map
-         ("C-," . helm-beginning-of-buffer)
-         ("C-." . helm-end-of-buffer)
-         ("C-k" . helm-buffer-run-kill-buffers)
-         ("M-D" . helm-delete-minibuffer-contents)
-         ("M-e" . helm-select-action)
-         :map helm-occur-map
-         ("C-s" . helm-next-line)
-         ("C-r" . helm-previous-line)
-         :map org-mode-map
-         ("C-j" . helm-mini)
-         :map lisp-interaction-mode-map
-         ("C-j" . helm-mini)
-         :map comint-mode-map
-         ("C-M-r" . helm-comint-input-ring)
-         ("M-e" . helm-select-action))
-  :config
-  (helm-mode 1)
-  ;; Makes helm-boring-file-regexp-list act as a .gitignore
-  (setq helm-ff-skip-boring-files t
-        helm-M-x-fuzzy-match t
-        helm-split-window-in-side-p t)
-  (add-to-list 'savehist-additional-variables 'helm-M-x-input-history))
-
-(use-package helm-flx
-  :config
-  (helm-flx-mode +1)
-  (setq helm-flx-for-helm-find-files t ; t by default
-        helm-flx-for-helm-locate t))
-
-(use-package helm-ag
-  :after helm
-  :quelpa (helm-ag
-           :fetcher github
-           :repo "laurencewarne/helm-ag"
-           :branch "skip-read-only-in-helm-ag-edit")
-  :config
-  (defun lw-helm-do-ag-current-directory ()
-    (interactive)
-    (let* ((ignored
-            (mapconcat
-             (lambda (i)
-               (concat "--ignore " i))
-             (append grep-find-ignored-files
-                     grep-find-ignored-directories
-                     (cadr (projectile-parse-dirconfig-file))) " "))
-           (helm-ag-base-command (concat helm-ag-base-command " " ignored)))
-      (helm-do-ag default-directory)))
-  (define-key dired-mode-map (kbd "M-q") #'lw-helm-do-ag-current-directory))
-
-(use-package helm-projectile
-  :demand t
-  :init
-  (require 'markdown-mode)
-  (require 'cc-mode)
-  :bind (:map python-mode-map
-              ("M-k" . projectile-toggle-between-implementation-and-test)
-              :map java-mode-map
-              ("M-k" . projectile-toggle-between-implementation-and-test)
-              :map emacs-lisp-mode-map
-              ("M-k" . projectile-toggle-between-implementation-and-test))
-  :config
-  (helm-projectile-on)
-  (setq projectile-completion-system 'helm)
-  ;; Here because :config in projectile is kinda... full
-  (defun lw-switch-to-last-buffer ()
-    "Switch to buffer an appropriate 'other buffer'."
-    (interactive)
-    (if (projectile-project-type)
-        (let ((buf (cl-find-if
-                    (lambda (p) (and (not (compilation-buffer-p p))
-                                     (not (member p (mapcar #'window-buffer
-                                                            (window-list))))))
-                    (projectile-project-buffers))))
-          (switch-to-buffer buf))
-      (switch-to-buffer nil)))
-  (defun lw-projectile-if-in-project (f1 f2)
-    (lambda (&rest args)
-      (interactive)
-      (if (projectile-project-p)
-          (apply f1 args)
-        (apply f2 args))))
-
-  (defun lw-switch-project ()
-    (interactive)
-    (let* ((projects (projectile-relevant-known-projects))
-           (project (f-expand (completing-read "Switch to project: " projects)))
-           (windows (window-list))
-           (prog-file-p (lambda (f) (or (f-ext-p f "py") (f-ext-p f "scala")
-                                        (f-ext-p f "sc") (f-ext-p f "el"))))
-           (opened-files (-filter #'buffer-file-name
-                                  (projectile-project-buffers project)))
-           (all-files (if (> (length windows) (length opened-files))
-                          (append
-                           opened-files
-                           (--> (projectile-project-files project)
-                                (-flatten
-                                 (-separate
-                                  (lambda (f)
-                                    (or (f-ext-p f "py") (f-ext-p f "scala")
-                                        (f-ext-p f "sc") (f-ext-p f "el"))) it))
-                                (-take (- (length windows) (length opened-files)) it)
-                                (-map (-partial #'f-join project) it)
-                                (-map #'find-file-noselect it)))
-                        opened-files)))
-      (--each (-zip windows all-files)
-        (set-window-buffer (car it) (cdr it)))))
-
-  (define-key projectile-mode-map (kbd "C-j")
-    (lw-projectile-if-in-project #'helm-projectile #'helm-mini))
-  (define-key projectile-mode-map (kbd "M-q")
-    (lw-projectile-if-in-project #'helm-projectile-ag #'helm-ag))
-  (global-set-key (kbd "M-p") #'lw-switch-project)
-  (define-key markdown-mode-map (kbd "M-p") #'lw-switch-project)
-  (global-set-key (kbd "M-j") #'lw-switch-to-last-buffer))
-
-(use-package helm-descbinds
-  :bind (("C-h b" . helm-descbinds)
-         ("C-h w" . helm-descbinds))
-  :config
-  (setq helm-descbinds-window-style 'split-window))
-
 (use-package company
   :demand t
   :delight company-mode
@@ -696,11 +617,8 @@
 
 ;; Note groovy mode automatically adds itself to auto-mode-alist
 (use-package groovy-mode
-  :after helm-projectile
   :mode "\\.groovy\\'"
   :bind (:map groovy-mode-map
-              ("C-j" . helm-projectile)
-              ("M-q" . helm-projectile-ag)
               ("M-k" . projectile-toggle-between-implementation-and-test)))
 
 ;; https://github.com/dakra/speed-type
@@ -753,10 +671,6 @@
         lsp-java-format-on-type-enabled nil
         lsp-java-save-actions-organize-imports t)
   (setq tab-width 4))
-
-(use-package helm-lsp
-  :config
-  (define-key lsp-mode-map [remap xref-find-apropos] #'helm-lsp-workspace-symbol))
 
 ;; https://www.mattduck.com/lsp-python-getting-started.html
 (use-package lsp-python-ms
@@ -870,7 +784,10 @@
 (use-package helpful
   :bind (("C-h f" . helpful-callable)
          ("C-h v" . helpful-variable)
-         ("C-h k" . helpful-key)))
+         ("C-h k" . helpful-key)
+         :map helpful-mode-map
+         ("n" . help-go-forward)
+         ("p" . help-go-back)))
 
 ;; https://magit.vc/
 (use-package magit
@@ -1163,8 +1080,6 @@
   :after projectile
   :mode "\\.s\\(c\\|cala\\|bt\\)$"
   :bind (:map scala-mode-map
-              ("C-j" . helm-projectile)
-              ("M-q" . helm-projectile-ag)
               ("M-k" . projectile-toggle-between-implementation-and-test)
               ("<return>" . lw-newline-smart-indent))
   :config
@@ -1389,9 +1304,7 @@
 (use-package graphql-mode
   :mode "\\.(gql|graphql)\\'"
   :bind (:map graphql-mode-map
-              ("C-c C-c" . nil)
-              ("C-j" . helm-projectile)
-              ("M-q" . helm-projectile-ag)))
+              ("C-c C-c" . nil)))
 
 ;; https://github.com/vermiculus/graphql.el
 (use-package graphql)
@@ -1555,9 +1468,7 @@ directory is part of a projectile project."
              (or (not (numberp (car-safe arg))) (/= (car-safe arg) 4)))
         (projectile-run-eshell)
       (eshell)))
-  :bind (("C-M-t" . lw-maybe-projectile-eshell)
-         :map eshell-mode-map
-         ("C-M-r" . helm-eshell-history))
+  :bind (("C-M-t" . lw-maybe-projectile-eshell))
   :custom-face
   (epe-pipeline-delimiter-face ((t :foreground "light green")))
   (epe-pipeline-user-face ((t :foreground "aquamarine"
@@ -1652,7 +1563,12 @@ directory is part of a projectile project."
 
 (use-package aggressive-indent
   :hook ((emacs-lisp-mode . aggressive-indent-mode)
-         (nxml-mode . aggressive-indent-mode)))
+         (nxml-mode . aggressive-indent-mode))
+  :config
+  (add-hook 'emacs-startup-hook
+            (lambda () (when-let ((buf (get-buffer "*scratch*")))
+                         (with-current-buffer buf
+                           (aggressive-indent-mode -1))))))
 
 (use-package ts)
 
@@ -1796,3 +1712,239 @@ directory is part of a projectile project."
 ;; https://github.com/purcell/list-unicode-display
 (use-package list-unicode-display
   :commands list-unicode-display)
+
+;; https://github.com/minad/marginalia
+(use-package marginalia
+  :demand t
+  ;; Either bind `marginalia-cycle' globally or only in the minibuffer
+  :bind (("M-A" . marginalia-cycle)
+         :map minibuffer-local-map
+         ("M-A" . marginalia-cycle))
+  ;; The :init configuration is always executed (Not lazy!)
+  :init
+  ;; Must be in the :init section of use-package such that the mode gets
+  ;; enabled right away. Note that this forces loading the package.
+  (marginalia-mode))
+
+;; https://github.com/minad/vertico
+(use-package vertico
+  :demand t
+  :bind (:map vertico-map
+              ("C-M-n" . vertico-next-group)
+              ("C-M-p" . vertico-previous-group)
+              ("C-l" . vertico-directory-delete-word)
+              ("<return>" . vertico-directory-enter))
+  :config
+  (setq vertico-buffer-display-action '(display-buffer-below-selected))
+  (vertico-mode)
+  (vertico-buffer-mode))
+
+;; https://github.com/minad/consult
+(use-package consult
+  :bind (("C-j" . lw-consult-project-buffer)
+         ("C-s" . consult-line)
+         ("M-q" . consult-ripgrep)
+         ;; C-c bindings (mode-specific-map)
+         ("C-c h" . consult-history)
+         ("C-c m" . consult-mode-command)
+         ("C-c k" . consult-kmacro)
+         ;; C-x bindings (ctl-x-map)
+         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+         ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+         ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+         ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+         ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
+         ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+         ;; Custom M-# bindings for fast register access
+         ;;("M-#" . consult-register-load)
+         ;;("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
+         ;;("C-M-#" . consult-register)
+         ;; Other custom bindings
+         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+         ("<help> a" . consult-apropos)            ;; orig. apropos-command
+         ;; M-g bindings (goto-map)
+         ("M-g e" . consult-compile-error)
+         ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
+         ("M-g g" . consult-goto-line)             ;; orig. goto-line
+         ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+         ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+         ("M-g m" . consult-mark)
+         ("M-g k" . consult-global-mark)
+         ("M-g i" . consult-imenu)
+         ("M-g I" . consult-imenu-multi)
+         ;; M-s bindings (search-map)
+         ;; ("M-s d" . consult-find)
+         ;; ("M-s D" . consult-locate)
+         ;; ("M-s g" . consult-grep)
+         ;; ("M-s G" . consult-git-grep)
+         ;; ("M-s r" . consult-ripgrep)
+         ;; ("M-s l" . consult-line)
+         ;; ("M-s L" . consult-line-multi)
+         ;; ("M-s m" . consult-multi-occur)
+         ;; ("M-s k" . consult-keep-lines)
+         ;; ("M-s u" . consult-focus-lines)
+         ;; Isearch integration
+         ;; ("M-s e" . consult-isearch-history)
+         :map isearch-mode-map
+         ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
+         ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
+         ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+         ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
+         ;; Minibuffer history
+         :map minibuffer-local-map
+         ("M-s" . consult-history)                 ;; orig. next-matching-history-element
+         ("M-r" . consult-history))                ;; orig. previous-matching-history-element
+
+  ;; Enable automatic preview at point in the *Completions* buffer. This is
+  ;; relevant when you use the default completion UI.
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+
+  ;; The :init configuration is always executed (Not lazy)
+  :init
+  (fset 'lw-consult-switch
+        (lw-projectile-if-in-project #'consult-project-buffer
+                                     #'consult-buffer))
+
+  ;; Optionally configure the register formatting. This improves the register
+  ;; preview for `consult-register', `consult-register-load',
+  ;; `consult-register-store' and the Emacs built-ins.
+  (setq register-preview-delay 0.5
+        register-preview-function #'consult-register-format)
+
+  ;; Optionally tweak the register preview window.
+  ;; This adds thin lines, sorting and hides the mode line of the window.
+  (advice-add #'register-preview :override #'consult-register-window)
+
+  ;; Use Consult to select xref locations with preview
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+
+  ;; Configure other variables and modes in the :config section,
+  ;; after lazily loading the package.
+  :config
+  ;; Optionally configure preview. The default value
+  ;; is 'any, such that any key triggers the preview.
+  ;; (setq consult-preview-key 'any)
+  ;; (setq consult-preview-key (kbd "M-."))
+  ;; (setq consult-preview-key (list (kbd "<S-down>") (kbd "<S-up>")))
+  ;; For some commands and buffer sources it is useful to configure the
+  ;; :preview-key on a per-command basis using the `consult-customize' macro.
+  (consult-customize
+   consult-theme
+   :preview-key '(:debounce 0.2 any)
+   consult-ripgrep consult-git-grep consult-grep
+   consult-bookmark consult-recent-file consult-xref
+   consult--source-bookmark consult--source-recent-file
+   consult--source-project-recent-file
+   :preview-key (kbd "M-."))
+
+  ;; Optionally configure the narrowing key.
+  ;; Both < and C-+ work reasonably well.
+  (setq consult-narrow-key "<") ;; (kbd "C-+")
+
+  ;; Optionally make narrowing help available in the minibuffer.
+  ;; You may want to use `embark-prefix-help-command' or which-key instead.
+  ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
+
+  ;; By default `consult-project-function' uses `project-root' from project.el.
+  ;; Optionally configure a different project root function.
+  ;; There are multiple reasonable alternatives to chose from.
+  ;;;; 1. project.el (the default)
+  ;; (setq consult-project-function #'consult--default-project--function)
+  ;;;; 2. projectile.el (projectile-project-root)
+  (autoload 'projectile-project-root "projectile")
+  (setq consult-project-function (lambda (_) (projectile-project-root)))
+  ;;;; 3. vc.el (vc-root-dir)
+  ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
+  ;;;; 4. locate-dominating-file
+  ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
+
+  (setq consult-line-start-from-top t)
+
+  (defvar consult-projectile--source-projectile-buffer
+    (list :name     "Project Buffer"
+          :narrow   '(?b . "Buffer")
+          :category 'buffer
+          :face     'consult-buffer
+          :history  'buffer-name-history
+          :state    #'consult--buffer-state
+          :enabled  #'projectile-project-root
+          :items
+          (lambda ()
+            (when-let (root (projectile-project-root))
+              (mapcar #'buffer-name
+                      (seq-filter (lambda (x)
+                                    (when-let (file (buffer-file-name x))
+                                      (string-prefix-p root file)))
+                                  (consult--buffer-query :sort 'visibility)))))))
+
+  (defvar consult-projectile--source-projectile-file
+    (list :name     "Project File"
+          :narrow   '(?f . "File")
+          :category 'file
+          :face     'consult-file
+          :history  'file-name-history
+          :action   (lambda (f) (consult--file-action (concat (projectile-acquire-root) f)))
+          :enabled  #'projectile-project-root
+          :items
+          (lambda ()
+            (projectile-project-files (projectile-acquire-root)))))
+
+  (defvar consult-projectile--source-fallback
+    (list :name     "Buffer"
+          :narrow   ?b
+          :category 'buffer
+          :face     'consult-buffer
+          :history  'buffer-name-history
+          :state    #'consult--buffer-state
+          :enabled  (lambda () (null (projectile-project-root)))
+          :items
+          (lambda () (consult--buffer-query :sort 'visibility
+                                            :as #'buffer-name))))  
+
+  (setq consult-project-buffer-sources
+        '(consult-projectile--source-projectile-buffer
+          consult-projectile--source-projectile-file
+          consult-projectile--source-fallback))
+  (defun lw-consult-project-buffer ()
+    (interactive)
+    (consult-buffer consult-project-buffer-sources))
+  (consult-customize consult-project-buffer :preview-key nil)
+  (consult-customize lw-consult-project-buffer :preview-key nil)
+  (consult-customize consult-buffer :preview-key nil))
+
+(use-package orderless
+  :init
+  ;; Configure a custom style dispatcher (see the Consult wiki)
+  ;; (setq orderless-style-dispatchers '(+orderless-dispatch)
+  ;;       orderless-component-separator #'orderless-escapable-split-on-space)
+  (setq completion-styles '(orderless basic)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
+
+;; https://github.com/oantolin/embark
+(use-package embark
+  :bind
+  (("C-M-." . embark-act)         ;; pick some comfortable binding
+   ("M-." . embark-dwim)        ;; good alternative: M-.
+   ("C-h b" . embark-bindings)) ;; alternative for `describe-bindings'
+  :init
+  ;; Optionally replace the key help with a completing-read interface
+  (setq prefix-help-command #'embark-prefix-help-command)
+  :config
+  ;; Hide the mode line of the Embark live/completions buffers
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+;; Consult users will also want the embark-consult package.
+(use-package embark-consult
+  :after (embark consult)
+  :demand t ; only necessary if you have the hook below
+  ;; if you want to have consult previews as you move around an
+  ;; auto-updating embark collect buffer
+  :hook
+  (embark-collect-mode . consult-preview-at-point-mode))
+

@@ -27,7 +27,9 @@
 (menu-bar-mode -1)         ; Get rid of the menu bar
 
 ;;; Set variables
-(setq visible-bell 1)                  ; Get rid of annoying bell, use flash screen instead
+;; for the following two, see https://emacs.stackexchange.com/questions/29768/how-to-stop-emacs-from-blinking
+(setq visible-bell nil)
+(setq ring-bell-function #'ignore)
 (setq show-paren-style 'parenthesis)   ; Highlight text between parens
 (fset 'yes-or-no-p 'y-or-n-p)          ; Use y/n instead of yes/no
 ;; https://www.emacswiki.org/emacs/DisabledCommands
@@ -43,6 +45,7 @@
 (setq read-process-output-max (* 1024 1024)) ; 1MB
 (setq kill-do-not-save-duplicates t)
 (setq history-delete-duplicates t)           ; Delete duplicate history elements
+(setq enable-recursive-minibuffers t)
 
 (require 'holidays)
 (setq calendar-holidays holiday-christian-holidays)
@@ -172,6 +175,7 @@ If the next line is joined to the current line, kill the extra indent whitespace
       (forward-char 1)
       (just-one-space 1))))
 
+;; https://emacs.stackexchange.com/questions/73658/change-the-order-of-minor-modes-on-the-modeline
 (add-hook
  'after-load-functions
  (prog1
