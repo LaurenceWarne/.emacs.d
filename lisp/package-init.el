@@ -637,6 +637,9 @@
 ;;   - `lsp-doctor': Show lsp performance configuration (https://emacs-lsp.github.io/lsp-mode/page/performance/)
 ;;   - (setq lsp-log-io t), `lsp-workspace-show-log': Shows all communication between
 ;;     the server and client
+;;
+;; See also
+;; https://github.com/emacs-lsp/lsp-mode/blob/master/docs/tutorials/how-to-turn-off.md
 (use-package lsp-mode
   :delight lsp-lens-mode
   :hook (lsp-mode . lsp-lens-mode)
@@ -1732,9 +1735,19 @@ directory is part of a projectile project."
   ;; consult-line only searches lines and I want to highlight occurrences
   ;; on the same line and also have the search string default to whats after
   ;; point
-  :bind ("C-s" . helm-occur)
+  :bind (("C-s" . helm-occur)
+         ("M-y" . helm-show-kill-ring)
+         :map helm-map
+         ("C-," . helm-beginning-of-buffer)
+         ("C-." . helm-end-of-buffer)
+         ("C-k" . helm-buffer-run-kill-buffers)
+         ("M-D" . helm-delete-minibuffer-contents)
+         ("M-e" . helm-select-action))
   :config
-  (setq helm-split-window-in-side-p t))
+  (setq helm-split-window-in-side-p t)
+  (require 'helm-occur)
+  (define-key helm-occur-map (kbd "C-s") #'helm-next-line)
+  (define-key helm-occur-map (kbd "C-r") #'helm-previous-line))
 
 ;; https://github.com/minad/vertico
 (use-package vertico
@@ -1771,7 +1784,7 @@ directory is part of a projectile project."
          ;;("M-'" . consult-register-store)          ;; orig. abbrev-prefix-mark (unrelated)
          ;;("C-M-#" . consult-register)
          ;; Other custom bindings
-         ("M-y" . consult-yank-from-kill-ring)                ;; orig. yank-pop
+         ;; ("M-y" . consult-yank-pop)                ;; orig. yank-pop
          ("<help> a" . consult-apropos)            ;; orig. apropos-command
          ;; M-g bindings (goto-map)
          ("M-g e" . consult-compile-error)
@@ -1853,6 +1866,8 @@ directory is part of a projectile project."
   ;; Both < and C-+ work reasonably well.
   (setq consult-narrow-key "<") ;; (kbd "C-+")
 
+  ;; Use consult for <Tab> in eshell and such
+  (setq completion-in-region-function #'consult-completion-in-region)
   ;; Optionally make narrowing help available in the minibuffer.
   ;; You may want to use `embark-prefix-help-command' or which-key instead.
   ;; (define-key consult-narrow-map (vconcat consult-narrow-key "?") #'consult-narrow-help)
@@ -1957,4 +1972,7 @@ directory is part of a projectile project."
   ;; auto-updating embark collect buffer
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
+
+;; https://github.com/gagbo/consult-lsp
+(use-package consult-lsp)
 
