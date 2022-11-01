@@ -178,3 +178,24 @@
                            command-history))))
     (repeat-complex-command arg)))
 
+;; Credit https://www.reddit.com/r/emacs/comments/xdw6ok/comment/iodig8c
+(defun lw-open-on-github ()
+  (interactive)
+  (let
+      ((repo-url (magit-git-string "remote" "get-url" "--push" "origin"))
+       (commit-hash (magit-git-string "rev-parse" "HEAD"))
+       (start-line (if (use-region-p)
+                       (line-number-at-pos (region-beginning))
+                     (line-number-at-pos)))
+       (end-line (if (use-region-p) (line-number-at-pos (region-end)))))
+    (unless repo-url (error  "not in a git repo"))
+    (browse-url
+     (concat
+      (substring repo-url 0 -4)
+      "/blob/"
+      commit-hash
+      "/"
+      (substring buffer-file-name (length (projectile-project-root)))
+      "#L" (number-to-string start-line)
+      (when (and (use-region-p) (< 0 (- end-line start-line)))
+        (concat "..L" (number-to-string end-line)))))))

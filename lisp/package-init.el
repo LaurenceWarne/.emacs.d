@@ -823,9 +823,10 @@
 (use-package zoom-window
   :bind ("M-i" . zoom-window-zoom))
 
-;; https://github.com/domtronn/all-the-icons.el
+;; https://github.com/wyuenho/all-the-icons-dired
 ;; Note after installing this you need to run M-x all-the-icons-install-fonts
-(use-package all-the-icons)
+(use-package all-the-icons
+  :if (display-graphic-p))
 
 ;; https://github.com/sebastiencs/company-box
 ;; Need to M-x install-all-the-icons
