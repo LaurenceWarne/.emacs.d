@@ -823,7 +823,7 @@
 (use-package zoom-window
   :bind ("M-i" . zoom-window-zoom))
 
-;; https://github.com/wyuenho/all-the-icons-dired
+;; https://github.com/domtronn/all-the-icons.el
 ;; Note after installing this you need to run M-x all-the-icons-install-fonts
 (use-package all-the-icons
   :if (display-graphic-p))
@@ -894,7 +894,7 @@
 ;; https://github.com/hniksic/emacs-htmlize
 (use-package htmlize)
 
-;; https://github.com/jtbm37/all-the-icons-dired
+;; https://github.com/wyuenho/all-the-icons-dired
 (use-package all-the-icons-dired
   :hook (dired-mode . all-the-icons-dired-mode))
 
@@ -959,6 +959,10 @@
   (dired-rainbow-define partition "#e3342f" ("dmg" "iso" "bin" "nrg" "qcow" "toast" "vcd" "vmdk" "bak"))
   (dired-rainbow-define vc "#0074d9" ("git" "gitignore" "gitattributes" "gitmodules"))
   (dired-rainbow-define-chmod executable-unix "#38c172" "-.*x.*"))
+
+;; https://github.com/purcell/diredfl
+(use-package diredfl
+  :hook (dired-mode . diredfl-mode))
 
 (use-package pcre2el)
 
