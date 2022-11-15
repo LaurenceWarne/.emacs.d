@@ -8,37 +8,6 @@
 
 ;;;; Code:
 
-;;; Add repositories
-
-;; Add melpa repository
-(require 'package)
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-                    (not (gnutls-available-p))))
-       (proto (if no-ssl "http" "https")))
-  ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
-  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  
-  (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-  (when (< emacs-major-version 24)
-    ;; For important compatibility libraries like cl-lib
-    (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
-(add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/"))
-
-(package-initialize)
-
-;; Check if use-package is installed and install if it's not
-;; Note it's a melpa package so this has to come after the melpa repository is added
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package)
-  (eval-when-compile (require 'use-package)))
-
-;;; Use package declarations
-
-;; Install all packages if not already installed (use-package must still be called)
-(setq use-package-always-ensure t)
-(setq use-package-verbose t)
-
 ;; https://elpa.gnu.org/packages/delight.html
 (use-package delight)
 
@@ -132,7 +101,19 @@
      ("SachaChua"
       "https://sachachua.com/blog/feed/"
       "~/org/feeds.org"
-      "Emacs News"))
+      "Emacs News")
+     ("Ponder This"
+      "https://research.ibm.com/haifa/ponderthis/rss/index.xml"
+      "~/org/feeds.org"
+      "Monthly Ponder This Puzzles")
+     ("SomethingSomethingProgramming"
+      "https://nickdrozd.github.io/feed.xml"
+      "~/org/feeds.org"
+      "Something Something Programming")
+     ("BusyBeaver"
+      "https://www.sligocki.com/feed.xml"
+      "~/org/feeds.org"
+      "Busy Beaver"))
    org-confirm-babel-evaluate nil
    org-babel-python-command (-first #'executable-find '("python" "python3")))
   (set-face-attribute 'org-headline-done nil :strike-through t)
@@ -870,8 +851,8 @@
 (use-package org2jekyll
   :config
   (setq org2jekyll-blog-author "Laurence Warne"
-        org2jekyll-source-directory (expand-file-name "~/posts/")
-        org2jekyll-jekyll-directory (expand-file-name "~/Documents/")
+        org2jekyll-source-directory (expand-file-name "~/projects/posts/")
+        org2jekyll-jekyll-directory (expand-file-name "~/projects/LaurenceWarne.github.io/")
         org2jekyll-jekyll-drafts-dir ""
         org2jekyll-jekyll-posts-dir "_posts/"
         post-project

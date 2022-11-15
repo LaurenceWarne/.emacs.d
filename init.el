@@ -31,6 +31,11 @@
 	 (error-message-string e)))
 
 (condition-case e
+    (load "vanilla-mode-init")
+  (error "Error on loading vanilla-mode-init: %s"
+	 (error-message-string e)))
+
+(condition-case e
     (load "package-init")
   (error "Error on loading package-init: %s"
 	 (error-message-string e)))
