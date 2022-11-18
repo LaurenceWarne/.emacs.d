@@ -56,12 +56,6 @@
 (add-to-list 'savehist-additional-variables 'kill-ring)
 (add-to-list 'savehist-additional-variables 'query-replace-history)
 
-(require 'dired)
-(require 'dired-x)
-(add-hook 'dired-mode-hook (lambda ()
-			     (dired-hide-details-mode 1)
-			     (dired-omit-mode 1)))
-
 (require 'python)
 (setq python-shell-interpreter "/usr/bin/python3")
 

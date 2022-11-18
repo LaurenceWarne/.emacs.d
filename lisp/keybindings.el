@@ -37,7 +37,6 @@
 (global-set-key (kbd "C-M-b") 'backward-word)
 ;;(global-set-key (kbd "C-o") 'lw-open-line)
 (global-set-key (kbd "C-c m") 'lw-popup-messages)
-(global-set-key (kbd "C-M-d") (lambda () (interactive) (dired default-directory)))
 (global-set-key (kbd "C-M-x") 'lw-repeat-complex-command)
 
 ;;; Local keybindings
@@ -56,11 +55,6 @@
 (add-hook 'java-mode-hook
           (lambda ()
 	    (local-set-key (kbd "M-j") nil)))
-
-(add-hook 'dired-mode-hook
-	  (lambda ()
-	    (local-set-key (kbd "b") 'dired-up-directory)
-	    (local-set-key (kbd "k") 'kill-this-buffer)))
 
 (add-hook 'eshell-mode-hook
           (lambda ()

@@ -39,11 +39,26 @@
 (setq use-package-always-ensure t)
 
 (use-package proced
+  :ensure nil
   :commands proced
   :config
   (setq-default proced-auto-update-flag t)
   (setq-default proced-auto-update-interval 1)
   (setq-default proced-goal-attribute nil)
-  (add-to-list 'proced-format-alist
-               '(custom user pid ppid tree vsize rss pcpu pmem start time (args comm)))
+  (setq proced-enable-color-flag t)
+  (add-to-list
+   'proced-format-alist
+   '(custom user pid ppid sess tree pcpu pmem vsize rss start time state (args comm)))
   (setq-default proced-format 'custom))
+
+(use-package dired
+  :ensure nil
+  :commands dired
+  :bind (("C-M-d" . (lambda () (interactive) (dired default-directory)))
+         :map dired-mode-map
+         ("b" . dired-up-directory)
+         ("k" . kill-this-buffer))
+  :hook ((dired-mode . dired-hide-details-mode)
+         (dired-mode . dired-omit-mode))
+  :config
+  (require 'dired-x))
