@@ -1496,6 +1496,13 @@ directory is part of a projectile project."
      (define-key eshell-mode-map (kbd "C-d") #'lw-eshell-delete-char-or-exit))
    99))
 
+;; https://github.com/akreisher/eshell-syntax-highlighting
+(use-package eshell-syntax-highlighting
+  :after eshell
+  :config
+  ;; Enable in all Eshell buffers.
+  (eshell-syntax-highlighting-global-mode +1))
+
 ;; https://gitlab.com/tseenshe/haskell-tng.el
 (use-package haskell-tng-mode
   :ensure nil
