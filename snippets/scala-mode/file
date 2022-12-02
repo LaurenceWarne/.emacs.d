@@ -2,4 +2,4 @@
 # name: file
 # key: file
 # --
-val contents = scala.io.Source.fromFile($1).mkString$0
+scala.io.Source.fromFile($1)${0:.mkString}

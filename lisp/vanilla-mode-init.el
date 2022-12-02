@@ -62,3 +62,51 @@
          (dired-mode . dired-omit-mode))
   :config
   (require 'dired-x))
+
+(use-package python
+  :ensure nil
+  :bind (:map python-mode-map ("<C-return>" . lw-python-shell-send-region-or-line))
+  :config
+  (setq python-shell-interpreter "/usr/bin/python3")
+
+  (defun lw-python-shell-send-buffer (&optional send-main msg)
+    (interactive (list current-prefix-arg t))
+    (unless (python-shell-get-process)
+      (run-python)
+      ;; Next one here caught me out for hours
+      (sleep-for 0 100))
+    (python-shell-send-buffer)
+    (let ((buf (python-shell-get-buffer)))
+      (if-let ((window (get-buffer-window buf)))
+          (select-window window)
+        (other-window 1)
+        (switch-to-buffer buf)))
+    (end-of-buffer))
+
+  (defun python-shell-send-current-statement ()
+    (interactive)
+    (let ((beg (python-nav-beginning-of-statement))
+          (end (python-nav-end-of-statement)))
+      (python-shell-send-string (buffer-substring beg end)))
+    (python-nav-forward-statement))
+
+  (defun lw-python-shell-send-region-or-line ()
+    (interactive)
+    (cond ((region-active-p)
+           (setq deactivate-mark t)
+           (python-shell-send-region (region-beginning) (region-end)))
+          (t (python-shell-send-current-statement))))
+
+  ;; https://bmag.github.io/2015/12/26/desktop.html#supporting-more-buffer-types  
+  (defun lw-save-python-buffer (desktop-dirname)
+    default-directory)
+
+  (defun lw-create-python-buffer (_file-name buffer-name misc)
+    (let ((default-directory misc))
+      (run-python)))
+
+  ;; Save python buffers
+  (add-hook 'inferior-python-mode-hook
+	    (lambda () (setq-local desktop-save-buffer #'lw-save-python-buffer)))
+
+  (add-to-list 'desktop-buffer-mode-handlers '(inferior-python-mode . lw-create-python-buffer)))

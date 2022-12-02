@@ -658,12 +658,15 @@
 
 ;; https://www.mattduck.com/lsp-python-getting-started.html
 (use-package lsp-python-ms
+  :after python
   :init
   (setq lsp-python-ms-auto-install-server t)
   (setq lsp-python-ms-python-executable (executable-find "python3"))
   :bind (:map lsp-signature-mode-map
               ("M-n" . nil)
-              ("M-p" . nil))
+              ("M-p" . nil)
+              :map python-mode-map
+              ("C-c C-c" . lw-python-send-or-projectile))
   :hook (hack-local-variables . (lambda ()
 		                  (when (and (not (eq major-mode 'sage-shell:sage-mode))
                                              (derived-mode-p 'python-mode))
@@ -677,8 +680,7 @@
     (let ((type (projectile-project-type)))
       (if (or (eq type 'python-tox) (eq type 'python-poetry) lw-python-no-shell)
           (call-interactively #'projectile-test-project)
-        (lw-python-shell-send-buffer send-main msg))))
-  (define-key python-mode-map (kbd "C-c C-c") 'lw-python-send-or-projectile))
+        (lw-python-shell-send-buffer send-main msg)))))
 
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode))
