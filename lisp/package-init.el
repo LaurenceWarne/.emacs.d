@@ -1470,33 +1470,7 @@ directory is part of a projectile project."
          (eshell-mode . smartparens-mode))
   :config
   (setq eshell-prompt-function #'epe-theme-pipeline
-        eshell-hist-ignoredups 'erase
-        epe-pipeline-show-time nil)
-  (defun lw-eshell-clear-buffer ()
-    "Clear eshell buffer."
-    (interactive)
-    (let ((inhibit-read-only t)
-          (line (buffer-substring-no-properties
-                 (progn (eshell-bol) (point))
-	         (progn (end-of-line) (point)))))
-      (erase-buffer)
-      (eshell-send-input)
-      (insert line)))
-  (defun lw-eshell-delete-char-or-exit (&optional killflag)
-    "Call `delete-char' or exit the buffer + window if there is no forward char."
-    (interactive)
-    (condition-case nil
-        (delete-char 1 killflag)
-      (end-of-buffer
-       (kill-buffer-and-window))))
-  
-  ;; https://lists.gnu.org/r/bug-gnu-emacs/2019-06/msg01616.html
-  (add-hook
-   'eshell-mode-hook
-   (lambda ()
-     (define-key eshell-mode-map (kbd "C-l") #'lw-eshell-clear-buffer)
-     (define-key eshell-mode-map (kbd "C-d") #'lw-eshell-delete-char-or-exit))
-   99))
+        epe-pipeline-show-time nil))
 
 ;; https://github.com/akreisher/eshell-syntax-highlighting
 (use-package eshell-syntax-highlighting

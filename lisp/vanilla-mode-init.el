@@ -48,7 +48,7 @@
   (setq proced-enable-color-flag t)
   (add-to-list
    'proced-format-alist
-   '(custom user pid ppid sess tree pcpu pmem vsize rss start time state (args comm)))
+   '(custom user pid ppid sess tree pcpu pmem rss start time state (args comm)))
   (setq-default proced-format 'custom))
 
 (use-package dired
@@ -110,3 +110,33 @@
 	    (lambda () (setq-local desktop-save-buffer #'lw-save-python-buffer)))
 
   (add-to-list 'desktop-buffer-mode-handlers '(inferior-python-mode . lw-create-python-buffer)))
+
+(use-package eshell
+  :ensure nil
+  :defer t
+  :config
+  (setq eshell-hist-ignoredups 'erase)
+  (defun lw-eshell-clear-buffer ()
+    "Clear eshell buffer."
+    (interactive)
+    (let ((inhibit-read-only t)
+          (line (buffer-substring-no-properties
+                 (progn (eshell-bol) (point))
+	         (progn (end-of-line) (point)))))
+      (erase-buffer)
+      (eshell-send-input)
+      (insert line)))
+  (defun lw-eshell-delete-char-or-exit (&optional killflag)
+    "Call `delete-char' or exit the buffer + window if there is no forward char."
+    (interactive)
+    (condition-case nil
+        (delete-char 1 killflag)
+      (end-of-buffer
+       (kill-buffer-and-window))))
+  ;; https://lists.gnu.org/r/bug-gnu-emacs/2019-06/msg01616.html
+  (add-hook
+   'eshell-mode-hook
+   (lambda ()
+     (define-key eshell-mode-map (kbd "C-l") #'lw-eshell-clear-buffer)
+     (define-key eshell-mode-map (kbd "C-d") #'lw-eshell-delete-char-or-exit))
+   99))
