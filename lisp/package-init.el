@@ -1945,3 +1945,7 @@ directory is part of a projectile project."
 ;; https://github.com/gagbo/consult-lsp
 (use-package consult-lsp)
 
+;; https://github.com/nim-lang/nim-mode
+(use-package nim-mode
+  :mode "\\.nim\\'")
+
