@@ -41,6 +41,7 @@
 (use-package proced
   :ensure nil
   :commands proced
+  :bind (("C-M-p" . proced))
   :config
   (setq-default proced-auto-update-flag t)
   (setq-default proced-auto-update-interval 1)
