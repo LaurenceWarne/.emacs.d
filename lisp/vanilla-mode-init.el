@@ -117,16 +117,18 @@
   :defer t
   :config
   (setq eshell-hist-ignoredups 'erase)
-  (defun lw-eshell-clear-buffer ()
+  (defun lw-eshell-clear-buffer-or-recenter ()
     "Clear eshell buffer."
     (interactive)
-    (let ((inhibit-read-only t)
-          (line (buffer-substring-no-properties
-                 (progn (eshell-bol) (point))
-	         (progn (end-of-line) (point)))))
-      (erase-buffer)
-      (eshell-send-input)
-      (insert line)))
+    (if (eobp)
+        (let ((inhibit-read-only t)
+              (line (buffer-substring-no-properties
+                     (progn (eshell-bol) (point))
+	             (progn (end-of-line) (point)))))
+          (erase-buffer)
+          (eshell-send-input)
+          (insert line))
+      (recenter-top-bottom)))
   (defun lw-eshell-delete-char-or-exit (&optional killflag)
     "Call `delete-char' or exit the buffer + window if there is no forward char."
     (interactive)
@@ -138,6 +140,7 @@
   (add-hook
    'eshell-mode-hook
    (lambda ()
-     (define-key eshell-mode-map (kbd "C-l") #'lw-eshell-clear-buffer)
-     (define-key eshell-mode-map (kbd "C-d") #'lw-eshell-delete-char-or-exit))
+     (define-key eshell-mode-map (kbd "C-l") #'lw-eshell-clear-buffer-or-recenter)
+     (define-key eshell-mode-map (kbd "C-d") #'lw-eshell-delete-char-or-exit)
+     (define-key eshell-hist-mode-map (kbd "M-s") nil))
    99))
