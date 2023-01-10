@@ -46,6 +46,7 @@
 (setq kill-do-not-save-duplicates t)
 (setq history-delete-duplicates t)           ; Delete duplicate history elements
 (setq enable-recursive-minibuffers t)
+(setq read-minibuffer-restore-windows nil)   ; Can mess timers which set window points
 (when (file-exists-p "/var/tmp")
   (setq lock-file-name-transforms
         '(("\\`/.*/\\([^/]+\\)\\'" "/var/tmp/\\1" t))))  ; Make Emacs write all the lock files to /var/tmp/

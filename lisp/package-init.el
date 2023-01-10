@@ -115,7 +115,7 @@
       "~/org/feeds.org"
       "Busy Beaver"))
    org-confirm-babel-evaluate nil
-   org-babel-python-command (-first #'executable-find '("python" "python3")))
+   org-babel-python-command (-first #'executable-find '("python3" "python")))
   (set-face-attribute 'org-headline-done nil :strike-through t)
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -1249,10 +1249,9 @@
      ("-d" "--name url2pdf" "-p 80:80" . ,docker-image-run-default-args)))
   (add-to-list
    'docker-image-run-custom-args
-   `(".*jaegertracing.*"
-     ;; For the Jaeger UI open:
-     ;; http://localhost:16686/
-     ("-d" "--name jaeger" "-e COLLECTOR_ZIPKIN_HOST_PORT=:9411" "-p 80:80 -p 5775:5775/udp -p 6831:6831/udp -p 6832:6832/udp -p 5778:5778 -p 16686:16686 -p 14268:14268 -p 14250:14250 -p 9411:9411" . ,docker-image-run-default-args)))
+   `(".*jaegertracing.*"  ;; https://www.jaegertracing.io/docs/1.6/getting-started/#all-in-one-docker-image
+     ;; For the Jaeger UI open: http://localhost:16686/
+     ("-d" "--name jaeger" "-e COLLECTOR_ZIPKIN_HOST_PORT=:9411" "-p 5775:5775/udp -p 6831:6831/udp -p 6832:6832/udp -p 5778:5778 -p 16686:16686 -p 14268:14268 -p 14250:14250 -p 9411:9411" . ,docker-image-run-default-args)))
   (add-to-list
    'docker-image-run-custom-args
    `(".*mysql.*"  ; https://hub.docker.com/_/mysql/
