@@ -622,8 +622,9 @@
 ;; See also
 ;; https://github.com/emacs-lsp/lsp-mode/blob/master/docs/tutorials/how-to-turn-off.md
 (use-package lsp-mode
+  ;; :load-path "~/projects/lsp-mode"
   :delight lsp-lens-mode
-  :hook (lsp-mode . lsp-lens-mode)
+  :commands (lsp lsp-deferred)
   :bind (:map lsp-mode-map
               ("C-M-<return>" . lsp-execute-code-action)
               ("M-e" . lsp-avy-lens)
@@ -633,10 +634,26 @@
   (setq lsp-keep-workspace-alive nil
         lsp-enable-file-watchers nil
         lsp-enable-links nil
+        ;; lsp-lens-enable nil
         lsp-headerline-breadcrumb-enable nil)
   (when-let* ((go-dir (concat (getenv "HOME") "/go/bin/sqls"))
               ((f-exists? go-dir)))
     (setq lsp-sqls-server go-dir)))
+
+;; https://github.com/emacs-lsp/dap-mode
+(use-package dap-mode
+  :config
+  (defun lw-dap-go-to-output-buffer (&optional no-select)
+    "Go to output buffer."
+    (interactive)
+    (let* ((buf (dap--debug-session-output-buffer (dap--cur-session-or-die)))
+           (win (display-buffer-below-selected
+                 buf
+                 `((side . bottom) (slot . 5) (window-height . 0.50)))))
+      (with-current-buffer buf (compilation-mode 1))
+      (set-window-dedicated-p win t)
+      (unless no-select (select-window win))))
+  (advice-add 'dap-go-to-output-buffer :override #'lw-dap-go-to-output-buffer))
 
 (use-package lsp-ui
   :config
@@ -694,6 +711,7 @@
   :hook
   (prog-mode . rainbow-delimiters-mode))
 
+;; https://depp.brause.cc/eyebrowse/
 (use-package eyebrowse
   :config
   (define-key eyebrowse-mode-map (kbd "M-1") 'eyebrowse-switch-to-window-config-1)
@@ -711,13 +729,6 @@
 ;; https://github.com/purcell/package-lint
 (use-package package-lint
   :commands package-lint-current-buffer)
-
-;; https://github.com/LaurenceWarne/jdoc-jumper
-(use-package jdoc-jumper
-  :ensure nil
-  :quelpa (jdoc-jumper :fetcher github :repo "laurencewarne/jdoc-jumper" :upgrade t)
-  ;; :load-path "~/projects/jdoc-jumper"
-  :commands jdoc-jumper-jump-from-point)
 
 ;; https://github.com/slime/slime
 (use-package slime
@@ -1292,7 +1303,8 @@
            (comint-mode)
            (set-process-filter proc 'comint-output-filter)
            (setq-local finito-coloured t))))))
-  (setq transient-display-buffer-action '(display-buffer-below-selected)))
+  (setq transient-display-buffer-action '(display-buffer-below-selected)
+        finito--debug t))
 
 ;; https://github.com/davazp/graphql-mode
 (use-package graphql-mode

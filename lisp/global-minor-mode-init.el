@@ -47,6 +47,10 @@
 (setq history-delete-duplicates t)           ; Delete duplicate history elements
 (setq enable-recursive-minibuffers t)
 (setq read-minibuffer-restore-windows nil)   ; Can mess timers which set window points
+;; By default, to create a backup (which happens on first save), emacs renames the
+;; file a buffer points to and then saves the buffer.  Unfortunately, this screws
+;; with hard links.  The following solves this:
+(setq backup-by-copying-when-linked t)
 (when (file-exists-p "/var/tmp")
   (setq lock-file-name-transforms
         '(("\\`/.*/\\([^/]+\\)\\'" "/var/tmp/\\1" t))))  ; Make Emacs write all the lock files to /var/tmp/

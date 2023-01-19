@@ -33,6 +33,14 @@
   (package-install 'use-package)
   (eval-when-compile (require 'use-package)))
 
+(if init-file-debug
+    (setq use-package-verbose t
+          use-package-expand-minimally nil
+          use-package-compute-statistics t
+          debug-on-error t)
+  (setq use-package-verbose nil
+        use-package-expand-minimally t))
+
 ;;; Use package declarations
 
 ;; Install all packages if not already installed (use-package must still be called)
@@ -42,11 +50,12 @@
   :ensure nil
   :commands proced
   :bind (("C-M-p" . proced))
+  :custom (proced-auto-update-flag t)
   :config
-  (setq-default proced-auto-update-flag t)
-  (setq-default proced-auto-update-interval 1)
-  (setq-default proced-goal-attribute nil)
-  (setq proced-enable-color-flag t)
+  (setq proced-auto-update-interval 1
+        proced-goal-attribute nil
+        proced-show-remote-processes t
+        proced-enable-color-flag t)
   (add-to-list
    'proced-format-alist
    '(custom user pid ppid sess tree pcpu pmem rss start time state (args comm)))
