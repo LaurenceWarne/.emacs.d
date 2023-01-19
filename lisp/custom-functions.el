@@ -199,3 +199,12 @@
       "#L" (number-to-string start-line)
       (when (and (use-region-p) (< 0 (- end-line start-line)))
         (concat "..L" (number-to-string end-line)))))))
+
+
+(defun lw-capitalize-word ()
+  "Capitalize or Decapitalize the next word."
+  (interactive)
+  (let ((case-fold-search nil))
+    (if (string-match-p "[[:lower:]]" (char-to-string (char-after)))
+        (call-interactively #'capitalize-word)
+      (call-interactively #'downcase-word))))

@@ -38,6 +38,7 @@
 ;;(global-set-key (kbd "C-o") 'lw-open-line)
 (global-set-key (kbd "C-c m") 'lw-popup-messages)
 (global-set-key (kbd "C-M-x") 'lw-repeat-complex-command)
+(global-set-key (kbd "M-c") 'lw-capitalize-word)
 
 ;;; Local keybindings
 
