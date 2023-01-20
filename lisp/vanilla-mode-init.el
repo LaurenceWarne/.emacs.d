@@ -50,26 +50,39 @@
   :ensure nil
   :commands proced
   :bind (("C-M-p" . proced))
-  :custom (proced-auto-update-flag t)
+  :custom
+  (proced-auto-update-flag t)
+  (proced-goal-attribute nil)
+  (proced-show-remote-processes t)
+  (proced-enable-color-flag t)
+  (proced-format 'custom)
   :config
-  (setq proced-auto-update-interval 1
-        proced-goal-attribute nil
-        proced-show-remote-processes t
-        proced-enable-color-flag t)
   (add-to-list
    'proced-format-alist
-   '(custom user pid ppid sess tree pcpu pmem rss start time state (args comm)))
-  (setq-default proced-format 'custom))
+   '(custom user pid ppid sess tree pcpu pmem rss start time state (args comm))))
 
 (use-package dired
   :ensure nil
   :commands dired
-  :bind (("C-M-d" . (lambda () (interactive) (dired default-directory)))
+  :init
+  (defun lw-dired (arg)
+    (interactive "P")
+    (if (or (not (numberp (car-safe arg))) (/= (car-safe arg) 4))
+        (dired default-directory)
+      (let ((current-prefix-arg nil))
+        (call-interactively #'dired))))
+  :bind (("C-M-d" . lw-dired)
          :map dired-mode-map
          ("b" . dired-up-directory)
-         ("k" . kill-this-buffer))
+         ("k" . kill-this-buffer)
+         :map wdired-mode-map
+         ("C-x k" . wdired-abort-changes))
   :hook ((dired-mode . dired-hide-details-mode)
          (dired-mode . dired-omit-mode))
+  ;; args to 'ls'
+  :custom
+  (dired-listing-switches "-alFh")
+  (dired-dwim-target t)
   :config
   (require 'dired-x))
 
