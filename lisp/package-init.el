@@ -638,7 +638,16 @@
         lsp-headerline-breadcrumb-enable nil)
   (when-let* ((go-dir (concat (getenv "HOME") "/go/bin/sqls"))
               ((f-exists? go-dir)))
-    (setq lsp-sqls-server go-dir)))
+    (setq lsp-sqls-server go-dir))
+
+  (advice-add
+   #'lsp--text-document-position-params
+   :around
+   (defun my-text-pos-ext (old-fn &optional identifier position)
+     (append
+      (funcall old-fn identifier position)
+      (when (region-active-p)
+        (list :range (lsp--region-to-range (region-beginning) (region-end))))))))
 
 ;; https://github.com/emacs-lsp/dap-mode
 (use-package dap-mode

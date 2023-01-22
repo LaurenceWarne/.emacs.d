@@ -16,10 +16,10 @@
 (savehist-mode 1)          ; Save any variables added to `savehist-additional-variables'
 (column-number-mode 1)
 (global-auto-revert-mode 1)
-(when (eq system-type 'gnu/linux)
+(when (and (eq system-type 'gnu/linux) (x-list-fonts "Iosevka"))
   (set-face-attribute 'default nil
-                      :height 100
-                      :family "Bitstream Vera Sans Mono"
+                      :height 110
+                      :family "Iosevka"
                       :weight 'normal
                       :width 'normal))
 (scroll-bar-mode -1)       ; No scrollbar

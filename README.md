@@ -10,6 +10,8 @@ The Emacs (27+) configuration that I use - the very **perfection** <!--The few h
 For inspiration see also:
 - https://github.com/baron42bba/.emacs.d/blob/master/bba.org
 - https://github.com/sachac/.emacs.d/blob/gh-pages/Sacha.org
+- https://github.com/basil-conto/dotfiles/tree/main/.emacs.d
+- https://github.com/jwiegley/dot-emacs
 
 Be sure to also check out popular Emacs distros:
 - [Doom Emacs](https://github.com/hlissner/doom-emacs)
