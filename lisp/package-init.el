@@ -573,11 +573,12 @@
   :demand t
   :delight company-mode
   :bind ("M-RET" . company-complete)
-  :config
   ;; We usually want make sure we have appropriate backends before enabling
   ;; lsp also appears to handle enabling company for its enabled modes
-  (add-hook 'emacs-lisp-mode-hook 'company-mode)
-  (add-hook 'ielm-mode-hook 'company-mode)
+  :hook ((eshell-mode . company-mode)  ; TODO https://www.emacswiki.org/emacs/EshellCompletion
+         (emacs-lisp-mode-hook . company-mode)
+         (ielm-mode-hook . company-mode))
+  :config
   ;; See https://github.com/company-mode/company-mode/blob/master/NEWS.md
   (dolist (map (list company-active-map company-search-map))
     (define-key map (kbd "C-n") nil)
@@ -1173,47 +1174,6 @@
           ;;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ))
   (shackle-mode 1))
-
-(use-package company-graphviz-dot
-  :disabled
-  :after company graphviz-dot-mode)
-
-(defvar lw-eaf-location "~/.emacs.d/site-lisp/emacs-application-framework")
-
-;; https://github.com/manateelazycat/emacs-application-framework#dependency-list
-;; Note extra installation steps are required, see above link
-(use-package eaf
-  :demand t
-  :if (and (eq system-type 'gnu/linux)
-           (getenv "DBUS_SESSION_BUS_ADDRESS")
-           (f-exists-p lw-eaf-location))
-  :load-path lw-eaf-location
-  :custom
-  ;;See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
-  (eaf-browser-continue-where-left-off t)
-  (eaf-browser-enable-adblocker t))
-
-;; https://github.com/emacs-eaf/eaf-pdf-viewer
-;; "pip3 install PyMuPDF --user" appears to make this work
-(use-package eaf-pdf-viewer
-  :demand t
-  :if (and (eq system-type 'gnu/linux)
-           (getenv "DBUS_SESSION_BUS_ADDRESS")
-           (f-exists-p lw-eaf-location))
-  :load-path "~/.emacs.d/site-lisp/eaf-pdf-viewer"
-  :config
-  (setq eaf-pdf-dark-mode nil)
-  (setq eaf-pdf-show-progress-on-page nil)
-  (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key scroll_up_page "n" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key scroll_down_page "p" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key scroll_to_begin "C-," eaf-pdf-viewer-keybinding)
-  (eaf-bind-key scroll_to_end "C-." eaf-pdf-viewer-keybinding)
-  (eaf-bind-key jump_to_page "M-g M-g" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key kill-this-buffer "k" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key nil "M-u" eaf-pdf-viewer-keybinding)
-  (add-to-list 'org-file-apps '("pdf" . (lambda (f _) (eaf-open f "pdf-viewer")))))
 
 (use-package openapi-yaml-mode
   :after eaf

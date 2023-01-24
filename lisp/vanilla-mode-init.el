@@ -177,5 +177,6 @@
    (lambda ()
      (define-key eshell-mode-map (kbd "C-l") #'lw-eshell-clear-buffer-or-recenter)
      (define-key eshell-mode-map (kbd "C-d") #'lw-eshell-delete-char-or-exit)
+     (define-key eshell-mode-map (kbd "M-<RET>") nil)     
      (define-key eshell-hist-mode-map (kbd "M-s") nil))
    99))
