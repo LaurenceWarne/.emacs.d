@@ -28,29 +28,32 @@
 
 ;;; Set variables
 ;; for the following two, see https://emacs.stackexchange.com/questions/29768/how-to-stop-emacs-from-blinking
-(setq visible-bell nil)
-(setq ring-bell-function #'ignore)
-(setq show-paren-style 'parenthesis)   ; Highlight text between parens
-(fset 'yes-or-no-p 'y-or-n-p)          ; Use y/n instead of yes/no
-;; https://www.emacswiki.org/emacs/DisabledCommands
-(setq disabled-command-function nil)   ; Enable all disabled commands
-(setq mac-command-modifier 'meta)
-(setq mac-right-option-modifier 'control)
-(setq ns-use-native-fullscreen nil)    ; Fix Emacs jumping into its own workspace whenever it's fullscreened
-(setq compilation-scroll-output t)
-(setq confirm-kill-processes nil)      ; Don't ask for exit confirmation when there are subprocesses
-(setq browse-url-browser-function 'browse-url-firefox)
-;; https://emacs-lsp.github.io/lsp-mode/page/performance/
-(setq gc-cons-threshold 100000000)
-(setq read-process-output-max (* 1024 1024)) ; 1MB
-(setq kill-do-not-save-duplicates t)
-(setq history-delete-duplicates t)           ; Delete duplicate history elements
-(setq enable-recursive-minibuffers t)
-(setq read-minibuffer-restore-windows nil)   ; Can mess timers which set window points
-;; By default, to create a backup (which happens on first save), emacs renames the
-;; file a buffer points to and then saves the buffer.  Unfortunately, this screws
-;; with hard links.  The following solves this:
-(setq backup-by-copying-when-linked t)
+(setq visible-bell nil
+      initial-scratch-message ""             ; Empty the initial *scratch* buffer
+      initial-major-mode #'org-mode          ; Prefer `org-mode' for *scratch*
+      ring-bell-function #'ignore
+      show-paren-style 'parenthesis          ; Highlight text between parens
+      disabled-command-function nil          ; Enable all disabled commands
+      ;; Mac OS stuff
+      mac-command-modifier 'meta
+      mac-right-option-modifier 'control
+      ns-use-native-fullscreen nil           ; Fix Emacs jumping into its own workspace whenever it's fullscreened
+      compilation-scroll-output t
+      confirm-kill-processes nil             ; Don't ask for exit confirmation when there are subprocesses
+      browse-url-browser-function 'browse-url-firefox
+      gc-cons-threshold 100000000           ; https://emacs-lsp.github.io/lsp-mode/page/performance/
+      read-process-output-max (* 1024 1024) ; 1MB
+      kill-do-not-save-duplicates t
+      history-delete-duplicates t           ; Delete duplicate history elements
+      enable-recursive-minibuffers t
+      read-minibuffer-restore-windows nil   ; Can mess timers which set window points
+      ;; By default, to create a backup (which happens on first save), emacs renames the
+      ;; file a buffer points to and then saves the buffer.  Unfortunately, this screws
+      ;; with hard links.  The following solves this:
+      backup-by-copying-when-linked t
+      use-short-answers t)                  ; Replace yes/no prompts with y/n
+
+(fset 'yes-or-no-p 'y-or-n-p)     ; Use y/n instead of yes/no
 (when (file-exists-p "/var/tmp")
   (setq lock-file-name-transforms
         '(("\\`/.*/\\([^/]+\\)\\'" "/var/tmp/\\1" t))))  ; Make Emacs write all the lock files to /var/tmp/

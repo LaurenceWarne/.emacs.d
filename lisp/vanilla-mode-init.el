@@ -49,7 +49,11 @@
 (use-package proced
   :ensure nil
   :commands proced
-  :bind (("C-M-p" . proced))
+  :bind (("C-M-p" . proced)
+         :map proced-mode-map
+         ("k" . kill-this-buffer)
+         ("q" . kill-this-buffer)
+         ("K" . proced-send-signal))
   :custom
   (proced-auto-update-flag t)
   (proced-goal-attribute nil)
@@ -147,6 +151,7 @@
 
   (add-to-list 'desktop-buffer-mode-handlers '(inferior-python-mode . lw-create-python-buffer)))
 
+;; https://www.masteringemacs.org/article/complete-guide-mastering-eshell
 (use-package eshell
   :ensure nil
   :defer t
@@ -164,6 +169,7 @@
           (eshell-send-input)
           (insert line))
       (recenter-top-bottom)))
+
   (defun lw-eshell-delete-char-or-exit (&optional killflag)
     "Call `delete-char' or exit the buffer + window if there is no forward char."
     (interactive)
@@ -171,12 +177,19 @@
         (delete-char 1 killflag)
       (end-of-buffer
        (kill-buffer-and-window))))
+
+  (defun lw-eshell-send-input-and-reinsert ()
+    "Send input and reinsert the last command"
+    (interactive)
+    (eshell-send-input)
+    (call-interactively #'eshell-previous-matching-input-from-input))
   ;; https://lists.gnu.org/r/bug-gnu-emacs/2019-06/msg01616.html
   (add-hook
    'eshell-mode-hook
    (lambda ()
      (define-key eshell-mode-map (kbd "C-l") #'lw-eshell-clear-buffer-or-recenter)
      (define-key eshell-mode-map (kbd "C-d") #'lw-eshell-delete-char-or-exit)
-     (define-key eshell-mode-map (kbd "M-<RET>") nil)     
+     (define-key eshell-mode-map (kbd "M-<RET>") nil)
+     (define-key eshell-mode-map (kbd "<C-return>") #'lw-eshell-send-input-and-reinsert)
      (define-key eshell-hist-mode-map (kbd "M-s") nil))
    99))

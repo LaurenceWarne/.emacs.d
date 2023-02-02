@@ -576,8 +576,9 @@
   ;; We usually want make sure we have appropriate backends before enabling
   ;; lsp also appears to handle enabling company for its enabled modes
   :hook ((eshell-mode . company-mode)  ; TODO https://www.emacswiki.org/emacs/EshellCompletion
-         (emacs-lisp-mode-hook . company-mode)
-         (ielm-mode-hook . company-mode))
+         (emacs-lisp-mode . company-mode)
+         (ielm-mode . company-mode)
+         (LaTeX-mode . company-mode))
   :config
   ;; See https://github.com/company-mode/company-mode/blob/master/NEWS.md
   (dolist (map (list company-active-map company-search-map))
@@ -1169,14 +1170,15 @@
           ("*Org Links*" :select t :custom lw-shackle-get-window-cur)
           ("*pytest*.*" :regexp t :custom lw-shackle-get-window-cur)
           ;; doesn't work?!
-          (list-unicode-display-mode :select t :custom lw-shackle-get-window-cur)   
+          (list-unicode-display-mode :select t :custom lw-shackle-get-window-cur)
+          ("*grep*" :select t :custom lw-shackle-get-window-cur)
           ;;("* Merriam-Webster.*" :regexp t :custom lw-shackle-get-window-cur)
           ;;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ))
   (shackle-mode 1))
 
 (use-package openapi-yaml-mode
-  :after eaf
+  :disabled t  ;; atm depends on (removed) eaf
   :ensure nil
   :quelpa (openapi-yaml-mode :fetcher github :repo "magoyette/openapi-yaml-mode")
   :config
@@ -1295,26 +1297,7 @@
   ;; https://emacs.stackexchange.com/questions/33684/proper-way-to-change-prefix-key-for-minor-mode-map?rq=1
   (define-key polymode-mode-map (kbd "C-c n")
     (lookup-key polymode-mode-map (kbd "M-n")))
-  (define-key polymode-mode-map (kbd "M-n") nil)
-  
-  ;; ;; See https://polymode.github.io/defining-polymodes/
-  ;; (define-hostmode poly-org-hostmode :mode 'org-mode)
-  ;; ;; Note we don't use the :head-mode and :tail-mode options since it messes
-  ;; ;; up rainbow delims and the default poly-head-tail-mode used to fontify
-  ;; ;; is fine
-  ;; (define-innermode poly-latex-multiline-expr-org-innermode
-  ;;   :mode 'LaTeX-mode
-  ;;   :head-matcher (rx "\\\[")
-  ;;   :tail-matcher (rx "\\\]"))
-  ;; (define-innermode poly-latex-expr-org-innermode
-  ;;   :mode 'LaTeX-mode
-  ;;   :head-matcher (rx "\\\(")
-  ;;   :tail-matcher (rx "\\\)"))
-  ;; (define-polymode poly-org-latex-mode
-  ;;   :hostmode 'poly-org-hostmode
-  ;;   :innermodes '(poly-latex-multiline-expr-org-innermode
-  ;;                 poly-latex-expr-org-innermode))
-  )
+  (define-key polymode-mode-map (kbd "M-n") nil))
 
 ;; https://polymode.github.io/
 (use-package poly-markdown
@@ -1902,6 +1885,7 @@ directory is part of a projectile project."
         completion-category-overrides '((file (styles partial-completion)))))
 
 ;; https://github.com/oantolin/embark
+;; https://karthinks.com/software/fifteen-ways-to-use-embark/
 (use-package embark
   :bind
   (("C-M-." . embark-act)         ;; pick some comfortable binding
