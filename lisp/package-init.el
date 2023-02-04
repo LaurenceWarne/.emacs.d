@@ -38,9 +38,11 @@
 (use-package s
   :demand t)
 
+;; https://github.com/purcell/exec-path-from-shell
 (use-package exec-path-from-shell
   :config
   (when (memq window-system '(x mac ns))
+    ;;(delete "-i" exec-path-from-shell-arguments)
     (exec-path-from-shell-initialize)))
 
 (use-package doom-themes
@@ -1681,9 +1683,16 @@ directory is part of a projectile project."
          ("M-e" . helm-select-action))
   :config
   (setq helm-split-window-in-side-p t)
+  ;; Stop helm-eshell-history opening a new frame
+  (setq helm-show-completion-display-function #'helm-show-completion-default-display-function)
   (require 'helm-occur)
   (define-key helm-occur-map (kbd "C-s") #'helm-next-line)
-  (define-key helm-occur-map (kbd "C-r") #'helm-previous-line))
+  (define-key helm-occur-map (kbd "C-r") #'helm-previous-line)
+  (add-hook
+   'eshell-mode-hook
+   (lambda ()
+     (define-key eshell-mode-map (kbd "C-M-r") #'helm-eshell-history))
+   99))
 
 ;; https://github.com/minad/vertico
 (use-package vertico
