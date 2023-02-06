@@ -1172,8 +1172,8 @@
           ("*Org Links*" :select t :custom lw-shackle-get-window-cur)
           ("*pytest*.*" :regexp t :custom lw-shackle-get-window-cur)
           ;; doesn't work?!
-          (list-unicode-display-mode :select t :custom lw-shackle-get-window-cur)
-          ("*grep*" :select t :custom lw-shackle-get-window-cur)
+          ;;(list-unicode-display-mode :select t :custom lw-shackle-get-window-cur)
+          ("*Unicode Characters*" :select t :custom lw-shackle-get-window-cur)
           ;;("* Merriam-Webster.*" :regexp t :custom lw-shackle-get-window-cur)
           ;;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ))
@@ -1652,7 +1652,24 @@ directory is part of a projectile project."
 
 ;; https://github.com/purcell/list-unicode-display
 (use-package list-unicode-display
-  :commands list-unicode-display)
+  :bind (("C-c u" . lw-unicode-new-window)
+         :map list-unicode-display-mode-map
+         ("n" . next-line)
+         ("p" . previous-line)
+         ("q" . kill-buffer-and-window)
+         ("k" . kill-buffer-and-window))
+  :init
+  (defun lw-unicode-new-window ()
+    (interactive)
+    (save-current-buffer (call-interactively #'list-unicode-display))
+    (let ((display-buffer-alist '((".*" display-buffer-below-selected))))
+      (select-window (display-buffer "*Unicode Characters*")))
+    (mapc (lambda (w) (unless (eq w (selected-window))
+                        (save-selected-window
+                          (select-window w)
+                          (bury-buffer))))
+          (get-buffer-window-list "*Unicode Characters*")))
+  :commands (list-unicode-display lw-unicode-new-window))
 
 ;; https://github.com/minad/marginalia
 (use-package marginalia
