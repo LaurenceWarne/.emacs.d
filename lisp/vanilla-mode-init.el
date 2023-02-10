@@ -105,9 +105,20 @@
 
 (use-package python
   :ensure nil
-  :bind (:map python-mode-map ("<C-return>" . lw-python-shell-send-region-or-line))
+  :bind (:map python-mode-map
+              ("<C-return>" . lw-python-shell-send-region-or-line)
+              ("C-c C-c" . lw-python-send-or-projectile))
   :config
   (setq python-shell-interpreter "/usr/bin/python3")
+
+  (defvar-local lw-python-no-shell nil)
+  (defun lw-python-send-or-projectile (&optional send-main msg)
+    "Send/create shell or run tests for project."
+    (interactive)
+    (let ((type (projectile-project-type)))
+      (if (or (eq type 'python-tox) (eq type 'python-poetry) lw-python-no-shell)
+          (call-interactively #'projectile-test-project)
+        (lw-python-shell-send-buffer send-main msg))))
 
   (defun lw-python-shell-send-buffer (&optional send-main msg)
     (interactive (list current-prefix-arg t))

@@ -336,8 +336,6 @@
     (let* ((projects (projectile-relevant-known-projects))
            (project (f-expand (completing-read "Switch to project: " projects)))
            (windows (window-list))
-           (prog-file-p (lambda (f) (or (f-ext-p f "py") (f-ext-p f "scala")
-                                        (f-ext-p f "sc") (f-ext-p f "el"))))
            (opened-files (-filter #'buffer-file-name
                                   (projectile-project-buffers project)))
            (all-files (if (> (length windows) (length opened-files))
@@ -345,10 +343,8 @@
                            opened-files
                            (--> (projectile-project-files project)
                                 (-flatten
-                                 (-separate
-                                  (lambda (f)
-                                    (or (f-ext-p f "py") (f-ext-p f "scala")
-                                        (f-ext-p f "sc") (f-ext-p f "el"))) it))
+                                 (-separate (lambda (f) (or (f-ext-p f "py") (f-ext-p f "scala")
+                                                            (f-ext-p f "sc") (f-ext-p f "el"))) it))
                                 (-take (- (length windows) (length opened-files)) it)
                                 (-map (-partial #'f-join project) it)
                                 (-map #'find-file-noselect it)))
@@ -628,12 +624,15 @@
 (use-package lsp-mode
   ;; :load-path "~/projects/lsp-mode"
   :delight lsp-lens-mode
-  :commands (lsp lsp-deferred)
+  :commands lsp-deferred
+  :hook (python-mode . lsp-deferred)
   :bind (:map lsp-mode-map
               ("C-M-<return>" . lsp-execute-code-action)
               ("M-e" . lsp-avy-lens)
               :map lsp-browser-mode-map
-              ("k" . kill-current-buffer))
+              ("k" . kill-current-buffer)
+              :map lsp-signature-mode-map
+              ("M-p" . nil))
   :config
   (setq lsp-keep-workspace-alive nil
         lsp-enable-file-watchers nil
@@ -685,32 +684,6 @@
         lsp-java-format-on-type-enabled nil
         lsp-java-save-actions-organize-imports t)
   (setq tab-width 4))
-
-;; https://www.mattduck.com/lsp-python-getting-started.html
-(use-package lsp-python-ms
-  :after python
-  :init
-  (setq lsp-python-ms-auto-install-server t)
-  (setq lsp-python-ms-python-executable (executable-find "python3"))
-  :bind (:map lsp-signature-mode-map
-              ("M-n" . nil)
-              ("M-p" . nil)
-              :map python-mode-map
-              ("C-c C-c" . lw-python-send-or-projectile))
-  :hook (hack-local-variables . (lambda ()
-		                  (when (and (not (eq major-mode 'sage-shell:sage-mode))
-                                             (derived-mode-p 'python-mode))
-                                    (require 'lsp-python-ms)
-		                    (lsp-deferred))))
-  :config
-  (defvar-local lw-python-no-shell nil)
-  (defun lw-python-send-or-projectile (&optional send-main msg)
-    "Send/create shell or run tests for project."
-    (interactive)
-    (let ((type (projectile-project-type)))
-      (if (or (eq type 'python-tox) (eq type 'python-poetry) lw-python-no-shell)
-          (call-interactively #'projectile-test-project)
-        (lw-python-shell-send-buffer send-main msg)))))
 
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode))
@@ -1173,7 +1146,7 @@
           ("*pytest*.*" :regexp t :custom lw-shackle-get-window-cur)
           ;; doesn't work?!
           ;;(list-unicode-display-mode :select t :custom lw-shackle-get-window-cur)
-          ("*Unicode Characters*" :select t :custom lw-shackle-get-window-cur)
+          ;;("*Unicode Characters*" :select t :custom lw-shackle-get-window-cur)
           ;;("* Merriam-Webster.*" :regexp t :custom lw-shackle-get-window-cur)
           ;;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ))
@@ -1914,9 +1887,10 @@ directory is part of a projectile project."
 ;; https://karthinks.com/software/fifteen-ways-to-use-embark/
 (use-package embark
   :bind
-  (("C-M-." . embark-act)         ;; pick some comfortable binding
-   ("M-." . embark-dwim)        ;; good alternative: M-.
-   ("C-h b" . embark-bindings)) ;; alternative for `describe-bindings'
+  (("C-M-." . embark-act)        ;; pick some comfortable binding
+   ("C-M-," . embark-act-all)
+   ("M-." . embark-dwim)         ;; good alternative: M-.
+   ("C-h b" . embark-bindings))  ;; alternative for `describe-bindings'
   :init
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
