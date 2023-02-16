@@ -624,15 +624,19 @@
 (use-package lsp-mode
   ;; :load-path "~/projects/lsp-mode"
   :delight lsp-lens-mode
-  :commands lsp-deferred
   :hook (python-mode . lsp-deferred)
+  :commands (lsp lsp-deferred)
   :bind (:map lsp-mode-map
               ("C-M-<return>" . lsp-execute-code-action)
               ("M-e" . lsp-avy-lens)
               :map lsp-browser-mode-map
               ("k" . kill-current-buffer)
               :map lsp-signature-mode-map
-              ("M-p" . nil))
+              ("M-p" . nil)
+              ("M-n" . nil))
+  :init
+  ;; *Puts gun to head* don't even THINK about starting before I say so
+  (add-to-list 'desktop-minor-mode-handlers '(lsp-mode . (lambda (&rest args) (lsp-deferred))))
   :config
   (setq lsp-keep-workspace-alive nil
         lsp-enable-file-watchers nil
@@ -1065,7 +1069,6 @@
 
 ;; https://github.com/hvesalai/emacs-scala-mode
 (use-package scala-mode
-  :after projectile
   :mode "\\.s\\(c\\|cala\\|bt\\)$"
   :bind (:map scala-mode-map
               ("M-k" . projectile-toggle-between-implementation-and-test)
@@ -1144,8 +1147,8 @@
           ("*ASCII*" :select t :custom lw-shackle-get-window-cur)
           ("*Org Links*" :select t :custom lw-shackle-get-window-cur)
           ("*pytest*.*" :regexp t :custom lw-shackle-get-window-cur)
-          ;; doesn't work?!
-          ;;(list-unicode-display-mode :select t :custom lw-shackle-get-window-cur)
+          
+          (list-unicode-display-mode :select t :custom lw-shackle-get-window-cur)
           ;;("*Unicode Characters*" :select t :custom lw-shackle-get-window-cur)
           ;;("* Merriam-Webster.*" :regexp t :custom lw-shackle-get-window-cur)
           ;;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
@@ -1625,24 +1628,13 @@ directory is part of a projectile project."
 
 ;; https://github.com/purcell/list-unicode-display
 (use-package list-unicode-display
-  :bind (("C-c u" . lw-unicode-new-window)
+  :commands list-unicode-display
+  :bind (("C-c u" . list-unicode-display)
          :map list-unicode-display-mode-map
          ("n" . next-line)
          ("p" . previous-line)
          ("q" . kill-buffer-and-window)
-         ("k" . kill-buffer-and-window))
-  :init
-  (defun lw-unicode-new-window ()
-    (interactive)
-    (save-current-buffer (call-interactively #'list-unicode-display))
-    (let ((display-buffer-alist '((".*" display-buffer-below-selected))))
-      (select-window (display-buffer "*Unicode Characters*")))
-    (mapc (lambda (w) (unless (eq w (selected-window))
-                        (save-selected-window
-                          (select-window w)
-                          (bury-buffer))))
-          (get-buffer-window-list "*Unicode Characters*")))
-  :commands (list-unicode-display lw-unicode-new-window))
+         ("k" . kill-buffer-and-window)))
 
 ;; https://github.com/minad/marginalia
 (use-package marginalia

@@ -204,3 +204,14 @@
      (define-key eshell-mode-map (kbd "<C-return>") #'lw-eshell-send-input-and-reinsert)
      (define-key eshell-hist-mode-map (kbd "M-s") nil))
    99))
+
+(use-package java-mode
+  :ensure nil
+  :hook ((java-mode . eclipse-indent-setup)
+         (java-mode . dired-omit-mode))
+  :bind (:map c-mode-base-map
+              ("C-c C-c" . nil))
+  :init
+  (defun eclipse-indent-setup ()
+    (c-set-offset 'arglist-intro '+)
+    (c-set-offset 'arglist-close 0)))

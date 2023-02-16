@@ -29,8 +29,8 @@
 ;;; Set variables
 ;; for the following two, see https://emacs.stackexchange.com/questions/29768/how-to-stop-emacs-from-blinking
 (setq visible-bell nil
-      initial-scratch-message ""             ; Empty the initial *scratch* buffer
       initial-major-mode #'org-mode          ; Prefer `org-mode' for *scratch*
+      initial-scratch-message "* Scratch\n\n"
       ring-bell-function #'ignore
       show-paren-style 'parenthesis          ; Highlight text between parens
       disabled-command-function nil          ; Enable all disabled commands
@@ -61,16 +61,11 @@
 (setq calendar-holidays holiday-christian-holidays)
 
 (assoc-delete-all "\\.dir-locals\\(?:-2\\)?\\.el\\'" auto-mode-alist #'string=)
+(add-to-list 'auto-mode-alist '("\\.info\\'" . Info-on-current-buffer))
 
 (require 'savehist)
 (add-to-list 'savehist-additional-variables 'kill-ring)
 (add-to-list 'savehist-additional-variables 'query-replace-history)
-
-(defun eclipse-indent-setup ()
-  (c-set-offset 'arglist-intro '+)
-  (c-set-offset 'arglist-close 0))
-(add-hook 'java-mode-hook 'eclipse-indent-setup)
-(add-hook 'java-mode-hook (lambda () (setq compile-command "javac *.java")))
 
 ;;; Save special buffers
 ;; See:
