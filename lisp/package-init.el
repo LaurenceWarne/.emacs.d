@@ -976,7 +976,7 @@
               :preparation-function ox-yaow-preparation-fn
               :completion-function ox-yaow-completion-fn
               :ox-yaow-wiki-home-file "~/org/wiki.org"
-              :ox-yaow-file-blacklist ("~/org/maths/answers.org")
+              :ox-yaow-file-blacklist ("~/org/maths/answers.org" "~/org/recipes.org")
               :ox-yaow-depth 2)
              ("wiki-static"
               :base-directory "~/org/"
@@ -1149,7 +1149,7 @@
           ("*pytest*.*" :regexp t :custom lw-shackle-get-window-cur)
           
           (list-unicode-display-mode :select t :custom lw-shackle-get-window-cur)
-          ;;("*Unicode Characters*" :select t :custom lw-shackle-get-window-cur)
+          ("*Async Shell Command*" :custom lw-shackle-get-window-cur)
           ;;("* Merriam-Webster.*" :regexp t :custom lw-shackle-get-window-cur)
           ;;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ))
@@ -1744,7 +1744,9 @@ directory is part of a projectile project."
          ;; Minibuffer history
          :map minibuffer-local-map
          ("M-s" . consult-history)                 ;; orig. next-matching-history-element
-         ("M-r" . consult-history))                ;; orig. previous-matching-history-element
+         ("M-r" . consult-history)                 ;; orig. previous-matching-history-element
+         :map comint-mode-map
+         ("C-M-r" . consult-history))
 
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.

@@ -205,12 +205,15 @@
      (define-key eshell-hist-mode-map (kbd "M-s") nil))
    99))
 
+(use-package cc-mode
+  :ensure nil
+  :bind (:map c-mode-base-map
+              ("C-c C-c" . nil)))
+
 (use-package java-mode
   :ensure nil
   :hook ((java-mode . eclipse-indent-setup)
-         (java-mode . dired-omit-mode))
-  :bind (:map c-mode-base-map
-              ("C-c C-c" . nil))
+         (java-mode . dired-omit-mode))  
   :init
   (defun eclipse-indent-setup ()
     (c-set-offset 'arglist-intro '+)

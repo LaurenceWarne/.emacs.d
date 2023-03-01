@@ -29,8 +29,8 @@
 ;;; Set variables
 ;; for the following two, see https://emacs.stackexchange.com/questions/29768/how-to-stop-emacs-from-blinking
 (setq visible-bell nil
-      initial-major-mode #'org-mode          ; Prefer `org-mode' for *scratch*
-      initial-scratch-message "* Scratch\n\n"
+      ;initial-major-mode #'org-mode          ; Prefer `org-mode' for *scratch*
+      ;initial-scratch-message "* Scratch\n\n"
       ring-bell-function #'ignore
       show-paren-style 'parenthesis          ; Highlight text between parens
       disabled-command-function nil          ; Enable all disabled commands
