@@ -220,16 +220,23 @@
   :config
   (require 'smartparens-config)
   (setq sp-escape-quotes-after-insert t)
+  (defun lw-in-eval-expression-p (&optional id action context)
+    (memq this-command '(eval-expression pp-eval-expression)))
+
   (add-hook 'lisp-mode-hook #'smartparens-strict-mode)
   (add-hook 'emacs-lisp-mode-hook #'smartparens-strict-mode)
   (add-hook 'slime-repl-mode-hook #'smartparens-strict-mode)
   (add-hook 'ielm-mode-hook #'smartparens-strict-mode)
-  (add-hook 'minibuffer-inactive-mode-hook #'smartparens-mode)
-  (add-hook 'minibuffer-mode-hook #'smartparens-mode)
+  (add-hook 'minibuffer-setup-hook #'smartparens-mode)
   (add-hook 'emacs-startup-hook
             (lambda () (when-let ((buf (get-buffer "*scratch*")))
                          (with-current-buffer buf
                            (smartparens-strict-mode -1)))))
+
+  (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil :unless '(lw-in-eval-expression-p))
+  (sp-local-pair 'minibuffer-inactive-mode "`" nil :actions nil :unless '(lw-in-eval-expression-p))
+  (sp-local-pair 'minibuffer-mode "'" nil :actions nil :unless '(lw-in-eval-expression-p))
+  (sp-local-pair 'minibuffer-mode "`" nil :actions nil :unless '(lw-in-eval-expression-p))
   (smartparens-global-mode 1)
 
   (defun lw-backword-kill-word-dwim (arg)

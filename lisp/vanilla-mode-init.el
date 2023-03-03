@@ -208,7 +208,8 @@
 (use-package cc-mode
   :ensure nil
   :bind (:map c-mode-base-map
-              ("C-c C-c" . nil)))
+              ("C-c C-c" . nil)
+              ("M-q" . nil)))
 
 (use-package java-mode
   :ensure nil

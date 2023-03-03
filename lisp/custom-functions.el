@@ -209,3 +209,10 @@
     (if (string-match-p "[[:lower:]]" (char-to-string (char-after)))
         (call-interactively #'capitalize-word)
       (call-interactively #'downcase-word))))
+
+
+(defun lw-package-refresh-contents-async ()
+  "Call `package-refresh-contents' asynchronously."
+  (interactive)
+  (package-refresh-contents t)
+  (message "Refreshing packages asynchronously"))
