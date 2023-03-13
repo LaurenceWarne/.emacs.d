@@ -67,6 +67,11 @@
 (add-to-list 'savehist-additional-variables 'kill-ring)
 (add-to-list 'savehist-additional-variables 'query-replace-history)
 
+(add-to-list 'magic-mode-alist
+             '("^#!/usr/bin/env (ba)?sh" . shell-script-mode))
+(add-to-list 'magic-mode-alist
+             '("^#!(/usr)?/bin/(ba)?sh" . shell-script-mode))
+
 ;;; Save special buffers
 ;; See:
 
@@ -129,6 +134,8 @@ If the next line is joined to the current line, kill the extra indent whitespace
     (save-excursion
       (forward-char 1)
       (just-one-space 1))))
+
+(advice-add 'risky-local-variable-p :override #'ignore)
 
 ;; https://emacs.stackexchange.com/questions/73658/change-the-order-of-minor-modes-on-the-modeline
 (add-hook

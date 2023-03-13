@@ -583,7 +583,8 @@
   :hook ((eshell-mode . company-mode)  ; TODO https://www.emacswiki.org/emacs/EshellCompletion
          (emacs-lisp-mode . company-mode)
          (ielm-mode . company-mode)
-         (LaTeX-mode . company-mode))
+         (LaTeX-mode . company-mode)
+         (shell-script-mode . company-mode))
   :config
   ;; See https://github.com/company-mode/company-mode/blob/master/NEWS.md
   (dolist (map (list company-active-map company-search-map))
@@ -683,6 +684,7 @@
   (setq lsp-ui-sideline-enable t
         lsp-ui-sideline-show-symbol t
         lsp-ui-sideline-show-hover t
+        lsp-ui-sideline-show-diagnostics t
         lsp-ui-sideline-show-code-actions t
         lsp-ui-sideline-update-mode 'point
         lsp-ui-doc-show-with-cursor t))
