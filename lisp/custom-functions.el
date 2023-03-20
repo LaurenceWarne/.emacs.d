@@ -201,18 +201,24 @@
       (when (and (use-region-p) (< 0 (- end-line start-line)))
         (concat "..L" (number-to-string end-line)))))))
 
+(defun increment-number-at-point ()
+  (interactive)
+  (skip-chars-backward "0-9")
+  (or (looking-at "[0-9]+")
+      (error "No number at point"))
+  (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
 
-(defun lw-capitalize-word ()
-  "Capitalize or Decapitalize the next word."
+(defun lw-capitalize-word-or-increment ()
+  "Capitalize or Decapitalize the next word, or increment number at point."
   (interactive)
   (let ((case-fold-search nil))
-    (if (string-match-p "[[:lower:]]" (char-to-string (char-after)))
-        (call-interactively #'capitalize-word)
-      (call-interactively #'downcase-word))))
-
+    (call-interactively
+     (cond ((looking-at "[0-9]+") #'increment-number-at-point)
+           ((looking-at "[[:lower:]]") #'capitalize-word)
+           (t #'downcase-word)))))
 
 (defun lw-package-refresh-contents-async ()
   "Call `package-refresh-contents' asynchronously."
   (interactive)
   (package-refresh-contents t)
-  (message "Refreshing packages asynchronously"))
+  (message "Refreshing packages asynchronously..."))
