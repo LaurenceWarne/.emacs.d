@@ -202,19 +202,23 @@
         (concat "..L" (number-to-string end-line)))))))
 
 (defun increment-number-at-point ()
+  "Increment the number at point."
   (interactive)
   (skip-chars-backward "0-9")
   (or (looking-at "[0-9]+")
       (error "No number at point"))
   (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
 
-(defun lw-capitalize-word-or-increment ()
+(defun lw-flex ()
   "Capitalize or Decapitalize the next word, or increment number at point."
   (interactive)
   (let ((case-fold-search nil))
     (call-interactively
      (cond ((looking-at "[0-9]+") #'increment-number-at-point)
            ((looking-at "[[:lower:]]") #'capitalize-word)
+           ((looking-at "==") (delete-char 1) (insert "!") (forward-char 2))
+           ((looking-at "+") (delete-char 1) (insert "-") (forward-char 1))
+           ((looking-at "-") (delete-char 1) (insert "+") (forward-char 1))
            (t #'downcase-word)))))
 
 (defun lw-package-refresh-contents-async ()
