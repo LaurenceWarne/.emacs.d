@@ -630,9 +630,10 @@
 ;; See also
 ;; https://github.com/emacs-lsp/lsp-mode/blob/master/docs/tutorials/how-to-turn-off.md
 (use-package lsp-mode
-  ;; :load-path "~/projects/lsp-mode"
+  :load-path "~/projects/lsp-mode"
   :delight lsp-lens-mode
-  :hook (python-mode . lsp-deferred)
+  :hook ((python-mode . lsp-deferred)
+         (c++-mode . lsp-deferred))
   :commands (lsp lsp-deferred)
   :bind (:map lsp-mode-map
               ("C-M-<return>" . lsp-execute-code-action)
@@ -810,7 +811,12 @@
                                    branch
                                    (or (magit-get-upstream-branch branch)
                                        (magit-get "branch" branch "remote"))))
-        (user-error "Push to upstream aborted by user")))))
+        (user-error "Push to upstream aborted by user"))))
+
+  (defun magit-insert-coauthor (name mail)
+    "Insert a header mentioning the person who co-authored the commit."
+    (interactive (git-commit-read-ident "Author: "))
+    (git-commit-insert-header "Co-authored-by" name mail)))
 
 ;; https://github.com/syohex/emacs-zoom-window
 (use-package zoom-window
@@ -1920,3 +1926,24 @@ directory is part of a projectile project."
 (use-package nim-mode
   :mode "\\.nim\\'")
 
+;; https://github.com/LaurenceWarne/hydrapop.el
+(use-package hydrapop
+  :ensure nil
+  :quelpa (hydrapop :fetcher github :repo "LaurenceWarne/hydrapop.el")
+  :commands hydrapop-define-board
+  :bind ("C-M-c" . hydrapop-invoke)
+  :config
+  (defvar hydrapop--ex-banner "   /\\/\\   ___| |_ __ _| |___ 
+  /    \\ / _ \\ __/ _` | / __|
+ / /\\/\\ \\  __/ || (_| | \\__ \\
+ \\/    \\/\\___|\\__\\__,_|_|___/"))
+
+;; https://github.com/mhayashi1120/Emacs-wgrep
+(use-package wgrep)
+
+;; https://github.com/LaurenceWarne/wildcard-importer.el
+(use-package wildcard-importer
+  :ensure nil
+  :quelpa (wildcard-importer :fetcher github :repo "LaurenceWarne/wildcard-importer.el")
+  :commands wildcard-importer-import
+  :bind ("C-c i" . wildcard-importer-import))
