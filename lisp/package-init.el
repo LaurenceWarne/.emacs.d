@@ -630,7 +630,7 @@
 ;; See also
 ;; https://github.com/emacs-lsp/lsp-mode/blob/master/docs/tutorials/how-to-turn-off.md
 (use-package lsp-mode
-  :load-path "~/projects/lsp-mode"
+  ;; :load-path "~/projects/lsp-mode"
   :delight lsp-lens-mode
   :hook ((python-mode . lsp-deferred)
          (c++-mode . lsp-deferred))
@@ -645,13 +645,20 @@
               ("M-n" . nil))
   :init
   ;; *Puts gun to head* don't even THINK about starting before I say so
-  (add-to-list 'desktop-minor-mode-handlers '(lsp-mode . (lambda (&rest args) (lsp-deferred))))
+  (add-to-list 'desktop-locals-to-save 'lsp--buffer-deferred)
+  (add-to-list 'desktop-minor-mode-handlers
+               '(lsp-mode . (lambda (desktop-buffer-locals)
+                              (if (alist-get 'lsp--buffer-deferred desktop-buffer-locals)
+                                  (lsp-deferred)
+                                (lsp-mode)))))
   :config
   (setq lsp-keep-workspace-alive nil
         lsp-enable-file-watchers nil
         lsp-enable-links nil
         ;; lsp-lens-enable nil
-        lsp-headerline-breadcrumb-enable nil)
+        lsp-headerline-breadcrumb-enable nil
+        ;; Enable this one per project, it's horrible by default
+        lsp-pylsp-plugins-flake8-enabled nil)
   (when-let* ((go-dir (concat (getenv "HOME") "/go/bin/sqls"))
               ((f-exists? go-dir)))
     (setq lsp-sqls-server go-dir))
@@ -1947,3 +1954,5 @@ directory is part of a projectile project."
   :quelpa (wildcard-importer :fetcher github :repo "LaurenceWarne/wildcard-importer.el")
   :commands wildcard-importer-import
   :bind ("C-c i" . wildcard-importer-import))
+
+(use-package csv-mode)

@@ -110,6 +110,9 @@
 
 (add-hook 'python-mode-hook (lambda () (local-set-key (kbd "<return>") #'lw-newline-smart-indent)))
 (add-hook 'java-mode-hook (lambda () (local-set-key (kbd "<return>") #'lw-newline-smart-indent)))
+(add-hook 'sql-mode-hook (lambda ()
+                           (local-set-key (kbd "<return>") #'lw-newline-smart-indent)
+                           (local-set-key (kbd "C-c C-c") nil)))
 
 ;; Stolen from (http://endlessparentheses.com/ansi-colors-in-the-compilation-buffer-output.html)
 (require 'ansi-color)
