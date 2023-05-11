@@ -1222,6 +1222,8 @@
          ("k" . nil))
   :config
   (setq docker-show-messages nil)
+  (oset (get 'docker-container-rm 'transient--prefix) :value '("-f"))
+
   (add-to-list
    'docker-image-run-custom-args
    `("^postgres" ("-e POSTGRES_PASSWORD=postgres" . ,docker-image-run-default-args)))
