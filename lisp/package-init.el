@@ -632,8 +632,11 @@
 (use-package lsp-mode
   ;; :load-path "~/projects/lsp-mode"
   :delight lsp-lens-mode
-  :hook ((python-mode . lsp-deferred)
-         (c++-mode . lsp-deferred))
+  :hook ((c++-mode . lsp-deferred)
+         (hack-local-variables . (lambda ()
+		                   (when (and (not (eq major-mode 'sage-shell:sage-mode))
+                                              (derived-mode-p 'python-mode))
+                                     (lsp-deferred)))))
   :commands (lsp lsp-deferred)
   :bind (:map lsp-mode-map
               ("C-M-<return>" . lsp-execute-code-action)
