@@ -71,10 +71,13 @@
   :init
   (defun lw-dired (arg)
     (interactive "P")
-    (if (or (not (numberp (car-safe arg))) (/= (car-safe arg) 4))
-        (dired default-directory)
-      (let ((current-prefix-arg nil))
-        (call-interactively #'dired))))
+    (let ((file (file-name-nondirectory (buffer-file-name))))
+      (if (or (not (numberp (car-safe arg))) (/= (car-safe arg) 4))
+          (dired default-directory)
+        (let ((current-prefix-arg nil))
+          (call-interactively #'dired)
+          (re-search-forward file)))
+      (re-search-forward file)))
   :bind (("C-M-d" . lw-dired)
          :map dired-mode-map
          ("b" . dired-up-directory)
