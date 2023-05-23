@@ -343,6 +343,7 @@
     (let* ((projects (projectile-relevant-known-projects))
            (project (f-expand (completing-read "Switch to project: " projects)))
            (windows (window-list))
+           (priorities '(("py" . 5) ("scala" . 4) ("sc" . 3) ("el" . 2)))
            (opened-files (-filter #'buffer-file-name
                                   (projectile-project-buffers project)))
            (all-files (if (> (length windows) (length opened-files))
@@ -350,8 +351,10 @@
                            opened-files
                            (--> (projectile-project-files project)
                                 (-flatten
-                                 (-separate (lambda (f) (or (f-ext-p f "py") (f-ext-p f "scala")
-                                                            (f-ext-p f "sc") (f-ext-p f "el"))) it))
+                                 (-separate (lambda (f)
+                                              (member (f-ext f) (mapcar #'car priorities))) it))
+                                (-sort (lambda (a b) (< (alist-get (f-ext a) priorities -1 nil #'string=)
+                                                        (alist-get (f-ext b) priorities -1 nil #'string=))) it)
                                 (-take (- (length windows) (length opened-files)) it)
                                 (-map (-partial #'f-join project) it)
                                 (-map #'find-file-noselect it)))
