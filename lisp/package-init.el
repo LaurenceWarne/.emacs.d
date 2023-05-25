@@ -814,6 +814,9 @@
   (transient-append-suffix 'magit-branch "w"
     '("-" "last branch" lw-magit-checkout-last))
 
+  (transient-append-suffix 'magit-diff "w"
+    '("m" "master" (lambda () (interactive) (magit-diff-range "master"))))
+
   (define-advice magit-push-current-to-upstream (:before (args) query-yes-or-no)
     "Prompt for confirmation before permitting a push to upstream/master."
     (when-let ((branch (magit-get-current-branch))
