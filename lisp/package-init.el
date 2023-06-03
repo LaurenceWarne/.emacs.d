@@ -489,9 +489,10 @@
             (s-join "." (--take-while (not (string= it "src"))
                                       (f-split (f-no-ext rel))))))
       (lw-send-to-current-eshell "stack ghci")))
-  
+
+  (defvar lw-sbtn-enabled nil)
   (defun lw-sbt-command ()
-    (if (locate-file "sbtn" exec-path) "sbtn" "sbt"))
+    (if (and lw-sbtn-enabled (locate-file "sbtn" exec-path)) "sbtn" "sbt"))
   (defalias 'lw-sbt-compile-cmd (lambda () (concat (lw-sbt-command) " compile")))
   (defalias 'lw-sbt-test-cmd (lambda () (concat (lw-sbt-command) " test")))
   (defalias 'lw-sbt-run-cmd (lambda () (concat (lw-sbt-command) " run")))
