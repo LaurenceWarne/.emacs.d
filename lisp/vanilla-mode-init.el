@@ -99,7 +99,15 @@
                               (file-name-directory ad-return-value))))
         (when (and (not (file-directory-p directory-name))
                    (y-or-n-p (format "directory %s doesn't exist, create it?" directory-name)))
-          (make-directory directory-name t))))))
+          (make-directory directory-name t)))))
+
+  ;; If dir is nil, causes errors when java sources are recreated from desktop
+  ;; TODO use advice and/or investigate more
+  (defun dired-omit-case-fold-p (dir)
+    "Non-nil if `dired-omit-mode' should be case-insensitive in DIR."
+    (and dir (if (eq dired-omit-case-fold 'filesystem)
+                 (file-name-case-insensitive-p dir)
+               dired-omit-case-fold))))
 
 (use-package wdired
   :ensure nil
