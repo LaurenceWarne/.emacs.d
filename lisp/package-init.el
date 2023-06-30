@@ -576,7 +576,8 @@
      :src-dir #'my-get-python-impl-dir
      :test-dir #'my-get-python-test-dir
      :test (format "nox -R --session tests-%s" python-version)
-     :test-file-fn #'lw-pytest-test-file-fn)))
+     :test-file-fn #'lw-pytest-test-file-fn
+     :precedence 'high)))
 
 (use-package company
   :demand t

@@ -126,6 +126,7 @@
   (defun lw-python-send-or-projectile (&optional send-main msg)
     "Send/create shell or run tests for project."
     (interactive)
+    (require 'projectile)
     (let ((type (projectile-project-type)))
       (if (or (eq type 'python-tox) (eq type 'python-poetry) lw-python-no-shell)
           (call-interactively #'projectile-test-project)
