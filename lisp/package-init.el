@@ -353,8 +353,8 @@
                                 (-flatten
                                  (-separate (lambda (f)
                                               (member (f-ext f) (mapcar #'car priorities))) it))
-                                (-sort (lambda (a b) (< (alist-get (f-ext a) priorities -1 nil #'string=)
-                                                        (alist-get (f-ext b) priorities -1 nil #'string=))) it)
+                                (reverse (-sort (lambda (a b) (< (alist-get (f-ext a) priorities -1 nil #'string=)
+                                                                 (alist-get (f-ext b) priorities -1 nil #'string=))) it))
                                 (-take (- (length windows) (length opened-files)) it)
                                 (-map (-partial #'f-join project) it)
                                 (-map #'find-file-noselect it)))
