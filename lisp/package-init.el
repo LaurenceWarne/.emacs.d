@@ -1819,9 +1819,9 @@ directory is part of a projectile project."
   ;; :preview-key on a per-command basis using the `consult-customize' macro.
   (consult-customize
    consult-theme
-   :preview-key '(:debounce 0.2 any)
-   consult-ripgrep consult-git-grep consult-grep
-   consult-bookmark consult-recent-file consult-xref
+   ;; :preview-key '(:debounce 0.2 any)
+   ;; consult-ripgrep consult-git-grep consult-grep
+   ;; consult-bookmark consult-recent-file consult-xref
    consult--source-bookmark consult--source-recent-file
    consult--source-project-recent-file
    :preview-key (kbd "M-."))
@@ -1968,4 +1968,9 @@ directory is part of a projectile project."
   :commands wildcard-importer-import
   :bind ("C-c i" . wildcard-importer-import))
 
+;; https://elpa.gnu.org/packages/csv-mode.html
 (use-package csv-mode)
+
+;; https://github.com/cbowdon/daemons.el
+(use-package daemons
+  :commands daemons)
