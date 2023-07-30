@@ -184,15 +184,17 @@
   (defun lw-clone-line-lisp ()
     "Copy the current line to the next."
     (interactive)
-    (let* ((p1 (progn (back-to-indentation) (point)))
-           (p2 (progn (sp-forward-sexp) (point)))
-           (contents (buffer-substring-no-properties p1 p2)))
-      (forward-line -1)
-      (end-of-line)
-      (open-line 1)
-      (forward-line)
-      (insert contents)
-      (indent-according-to-mode)))
+    (if (use-region-p)
+        (duplicate-dwim)
+      (let* ((p1 (progn (back-to-indentation) (point)))
+             (p2 (progn (sp-forward-sexp) (point)))
+             (contents (buffer-substring-no-properties p1 p2)))
+        (forward-line -1)
+        (end-of-line)
+        (open-line 1)
+        (forward-line)
+        (insert contents)
+        (indent-according-to-mode))))
 
   :hook ((helpful-mode . smartparens-mode)
          (messages-buffer-mode . smartparens-mode))
@@ -279,7 +281,7 @@
 (use-package projectile
   :demand t
   :delight '(:eval (format " P[%s]" (projectile-project-type)))
-  ;;:load-path "~/projects/projectile"
+  :load-path "~/projects/projectile"
   :init (require 'conf-mode)
   :bind (("C-c C-c" . projectile-test-project)
          ("C-c C-r" . projectile-run-project)
@@ -1102,6 +1104,7 @@
 
 ;; https://github.com/hvesalai/emacs-scala-mode
 (use-package scala-mode
+  ;; :load-path "~/projects/emacs-scala-mode"
   :mode "\\.s\\(c\\|cala\\|bt\\)$"
   :bind (:map scala-mode-map
               ("M-k" . projectile-toggle-between-implementation-and-test)
@@ -1119,27 +1122,73 @@
 ;; https://scalameta.org/metals/docs/editors/emacs.html
 ;; Note this package requires installation of a binary (see above link)
 (use-package lsp-metals
+  :load-path "~/projects/lsp-metals"
   :hook ((scala-mode . lsp-deferred)
-         (scala-mode . (lambda () (add-hook 'before-save-hook 'lsp-format-buffer nil t))))
+         (scala-mode . (lambda () (add-hook 'before-save-hook
+                                            (lambda ()
+                                              (when lw-lsp-do-format-buffer
+                                                (lsp-format-buffer))) nil t))))
+  :init
+  (setq lsp-metals-server-command "metals-snapshot")
+  ;;(setq lsp-metals-show-inferred-type t)
   :custom
   ;; Metals claims to support range formatting by default but it supports range
   ;; formatting of multiline strings only. You might want to disable it so that
   ;; emacs can use indentation provided by scala-mode.
-  (lsp-metals-server-args '("-J-Dmetals.allow-multiline-string-formatting=off")))
-;; https://github.com/emacs-lsp/dap-mode
-(use-package dap-mode
+  (lsp-metals-server-args '("-J-Dmetals.loglevel=debug" "-J-Dmetals.allow-multiline-string-formatting=off"))
+  ;; (lsp-metals-server-args '("-J-Dmetals.allow-multiline-string-formatting=off"))
   :config
-  (defun lw-dap-go-to-output-buffer (&optional no-select)
-    "Go to output buffer."
+  (defvar-local lw-lsp-do-format-buffer t)
+
+  (defun lw-run-scalafix ()
     (interactive)
-    (let* ((buf (dap--debug-session-output-buffer (dap--cur-session-or-die)))
-           (win (display-buffer-below-selected
-                 buf
-                 `((side . bottom) (slot . 5) (window-height . 0.50)))))
-      (with-current-buffer buf (compilation-mode 1))
-      (set-window-dedicated-p win t)
-      (unless no-select (select-window win))))
-  (advice-add 'dap-go-to-output-buffer :override #'lw-dap-go-to-output-buffer))
+    (lsp-send-execute-command "scalafix-run" (lsp--text-document-position-params)))
+  (defun lw-run-scalafix-rule ()
+    (interactive)
+    (lsp-send-execute-command
+     "scalafix-run-only"
+     (list :textDocumentPositionParams (lsp--text-document-position-params)
+           :rules nil)))
+  
+  (setq lsp-metals-fallback-scala-version "2.13.8")
+  (setq lsp-metals-ammonite-jvm-properties ["-Xmx1G"])
+  ;; (setq lsp-metals-test-user-interface "test explorer")
+
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-tramp-connection 'lsp-metals--server-command)
+                    :remote? t
+                    :major-modes '(scala-mode)
+                    :priority -1
+                    :initialization-options '((decorationProvider . t)
+                                              (inlineDecorationProvider . t)
+                                              (didFocusProvider . t)
+                                              (executeClientCommandProvider . t)
+                                              (doctorProvider . "html")
+                                              (statusBarProvider . "on")
+                                              (debuggingProvider . t)
+                                              (treeViewProvider . t)
+                                              (quickPickProvider . t)
+                                              (inputBoxProvider . t)
+                                              (commandInHtmlFormat . "vscode"))
+                    :notification-handlers (ht ("metals/executeClientCommand" #'lsp-metals--execute-client-command)
+                                               ("metals/publishDecorations" #'lsp-metals--publish-decorations)
+                                               ("metals/treeViewDidChange" #'lsp-metals-treeview--did-change)
+                                               ("metals-model-refresh" #'lsp-metals--model-refresh)
+                                               ("metals/status" #'lsp-metals--status-string))
+                    :request-handlers (ht ("metals/quickPick" #'lsp-metals--quick-pick)
+                                          ("metals/inputBox" #'lsp-metals--input-box))
+                    :action-handlers (ht ("metals-debug-session-start" (-partial #'lsp-metals--debug-start :json-false))
+                                         ("metals-run-session-start" (-partial #'lsp-metals--debug-start t)))
+                    :server-id 'metals-remote
+                    :initialized-fn (lambda (workspace)
+                                      (lsp-metals--add-focus-hooks)
+                                      (with-lsp-workspace workspace
+                                        (lsp--set-configuration
+                                         (lsp-configuration-section "metals"))))
+                    :after-open-fn (lambda ()
+                                     (add-hook 'lsp-on-idle-hook #'lsp-metals--did-focus nil t))
+                    :completion-in-comments? t
+                    :download-server-fn #'lsp-metals--download-server)))
 
 ;; https://github.com/spotify/dockerfile-mode
 (use-package dockerfile-mode
@@ -1182,6 +1231,7 @@
           ("*pytest*.*" :regexp t :custom lw-shackle-get-window-cur)
           
           (list-unicode-display-mode :select t :custom lw-shackle-get-window-cur)
+          ("\*daemons-output.*" :regexp t :select nil :custom lw-shackle-get-window-cur)
           ("*Async Shell Command*" :custom lw-shackle-get-window-cur)
           ;;("* Merriam-Webster.*" :regexp t :custom lw-shackle-get-window-cur)
           ;;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
@@ -1268,7 +1318,7 @@
   :demand t
   ;;:ensure nil
   ;;:quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t)
-  ;;:load-path "~/projects/finito.el"
+  :load-path "~/projects/finito.el"
   :bind (("C-c b" . finito)
          :map finito-collection-view-mode-map
          ("x" . finito-delete-data-for-book-at-point))
@@ -1619,6 +1669,7 @@ directory is part of a projectile project."
 
 ;; https://github.com/LaurenceWarne/lsp-cfn.el
 (use-package lsp-cfn
+  :load-path "~/projects/lsp-cfn.el"
   :magic (("\\({\n *\\)? *[\"']AWSTemplateFormatVersion" . lsp-cfn-json-mode)
           ("\\({\n *\\)? *[\"']Transform[\"']: [\"']AWS::Serverless-2016-10-31" . lsp-cfn-json-mode)
           ("\\(---\n\\)?AWSTemplateFormatVersion:" . lsp-cfn-yaml-mode)
@@ -1628,6 +1679,7 @@ directory is part of a projectile project."
   :config
   (setq completion-ignore-case t)
   (setq lsp-cfn-verbose t)
+  ;; (setq lsp-cfn-diagnostic-publishing-method "ON_DID_SAVE")
   (define-key lsp-cfn-yaml-mode-map (kbd "C-c C-c") #'saws-deploy))
 
 ;; https://github.com/emacs-typescript/typescript.el
@@ -1974,8 +2026,18 @@ directory is part of a projectile project."
 ;; https://github.com/cbowdon/daemons.el
 ;; https://wiki.archlinux.org/title/systemd
 (use-package daemons
+  :load-path "~/projects/daemons.el"
   :commands daemons
   :bind (:map daemons-mode-map
               ("k" . kill-current-buffer))
   :config
-  (setq daemons-always-sudo t))
+  (setq daemons-always-sudo t)
+  ;; (defun lw-custom-daemons-systemctl-cmd (command service)
+  ;;   "Run systemctl command COMMAND against SERVICE."
+  ;;   (format "systemctl --no-ask-pass%s %s %s%s"
+  ;;           (if daemons-systemd-is-user " --user" "")
+  ;;           command
+  ;;           service
+  ;;           (if (string= command "status") "" (format " && systemctl status %s" service))))
+  ;; (setq daemons-systemctl-command-fn #'lw-custom-daemons-systemctl-cmd)
+  )

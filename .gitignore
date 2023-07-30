@@ -83,3 +83,4 @@ eaf/**
 /eln-cache/
 /undo-fu-session/
 /forge-database.sqlite
+/tree-sitter/

@@ -47,30 +47,6 @@
   (end-of-line)
   (newline-and-indent))
 
-(defun lw-copy-to-next-line-region ()
-  (interactive)
-  (let* ((mark-start (region-beginning))
-	 (mark-end (region-end))
-	 (region-string (buffer-substring-no-properties mark-start mark-end)))
-    (end-of-line)
-    ;; If we are not already on a new line, create a new line
-    (let ((contents-of-line (buffer-substring-no-properties
-			     (line-beginning-position)
-			     (line-end-position))))
-      (when (not (string-match "^$" contents-of-line))
-	  (newline)))
-    (insert region-string)
-    (goto-char mark-end)
-    ;; There's an issue here with the marked region going invisible even with
-    ;; Transient-Mark mode active
-    (set-mark-command mark-start)))
-
-(defun lw-copy-to-next-line-region-or-text ()
-  (interactive)
-  (if (use-region-p)
-      (lw-copy-to-next-line-region)
-    (lw-copy-text-to-next-line)))
-
 (defun lw-avy-swap-lines ()
   (interactive)
   (when (use-region-p)
