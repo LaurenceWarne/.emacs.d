@@ -1972,5 +1972,10 @@ directory is part of a projectile project."
 (use-package csv-mode)
 
 ;; https://github.com/cbowdon/daemons.el
+;; https://wiki.archlinux.org/title/systemd
 (use-package daemons
-  :commands daemons)
+  :commands daemons
+  :bind (:map daemons-mode-map
+              ("k" . kill-current-buffer))
+  :config
+  (setq daemons-always-sudo t))

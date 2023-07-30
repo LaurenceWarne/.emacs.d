@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: default
+# key: default
+# --
+"\${${1:variable}:-${2:default}}"
+$0
