@@ -39,6 +39,7 @@
 (global-set-key (kbd "C-c m") 'lw-popup-messages)
 (global-set-key (kbd "C-M-x") 'lw-repeat-complex-command)
 (global-set-key (kbd "M-c") 'lw-flex)
+(global-set-key (kbd "C-x M-c") 'restart-emacs)
 
 ;;; Local keybindings
 
