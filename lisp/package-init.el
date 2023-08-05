@@ -2032,12 +2032,20 @@ directory is part of a projectile project."
               ("k" . kill-current-buffer))
   :config
   (setq daemons-always-sudo t)
-  ;; (defun lw-custom-daemons-systemctl-cmd (command service)
-  ;;   "Run systemctl command COMMAND against SERVICE."
-  ;;   (format "systemctl --no-ask-pass%s %s %s%s"
-  ;;           (if daemons-systemd-is-user " --user" "")
-  ;;           command
-  ;;           service
-  ;;           (if (string= command "status") "" (format " && systemctl status %s" service))))
-  ;; (setq daemons-systemctl-command-fn #'lw-custom-daemons-systemctl-cmd)
-  )
+  (defun lw-custom-daemons-systemctl-cmd (command service)
+    "Run systemctl command COMMAND against SERVICE."
+    (format "systemctl --no-ask-pass%s %s %s%s"
+            (if daemons-systemd-is-user " --user" "")
+            command
+            service
+            (if (string= command "status") "" (format " && systemctl status %s" service))))
+  (setq daemons-systemctl-command-fn #'lw-custom-daemons-systemctl-cmd))
+
+;; https://github.com/masasam/emacs-counsel-tramp
+(use-package counsel-tramp
+  :commands counsel-tramp
+  :bind ("C-c s" . counsel-tramp)
+  :config
+  ;; `counsel-tramp' should detect running docker containers and show them
+  ;; on the list of candidates
+  (setq counsel-tramp-custom-connections '(/ssh:user@domain:/)))

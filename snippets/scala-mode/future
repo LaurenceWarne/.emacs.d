@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: future successful
+# key: fu
+# --
+Future.successful($0)
