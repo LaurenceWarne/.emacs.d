@@ -1321,7 +1321,8 @@
   :load-path "~/projects/finito.el"
   :bind (("C-c b" . finito)
          :map finito-collection-view-mode-map
-         ("x" . finito-delete-data-for-book-at-point))
+         ("x" . finito-delete-data-for-book-at-point)
+         ("?" . which-key-show-top-level))
   :config
   (finito-download-server-if-not-exists #'finito-start-server-if-not-already)
   ;; Gives coloured output to finito process buffer
@@ -1615,7 +1616,8 @@ directory is part of a projectile project."
 
 (use-package saws
   :if (f-exists-p "~/projects/saws.el")
-  :load-path "~/projects/saws.el")
+  :load-path "~/projects/saws.el"
+  :commands (saws-logs saws-logs-open-log-group))
 
 ;; https://github.com/casouri/undo-hl
 (use-package undo-hl
@@ -2049,3 +2051,10 @@ directory is part of a projectile project."
   ;; `counsel-tramp' should detect running docker containers and show them
   ;; on the list of candidates
   (setq counsel-tramp-custom-connections '(/ssh:user@domain:/)))
+
+;; https://elpa.gnu.org/packages/vlf.html
+(use-package vlf
+  :demand t
+  :config
+  ;; Have *vlf* offered as choice when opening large files
+  (require 'vlf-setup))
