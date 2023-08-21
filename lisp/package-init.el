@@ -73,7 +73,16 @@
               ("C-)" . nil)
               ("C-#" . nil)
               ("C-'" . nil)
-              ("C-M-t" . nil))
+              ("C-M-t" . nil)
+              :map org-read-date-minibuffer-local-map
+              ("C-f" . (lambda () (interactive)
+		         (org-eval-in-calendar '(calendar-forward-day 1))))
+              ("C-b" . (lambda () (interactive)
+		         (org-eval-in-calendar '(calendar-backward-day 1))))
+              ("C-n" . (lambda () (interactive)
+		         (org-eval-in-calendar '(calendar-forward-week 1))))
+              ("C-p" . (lambda () (interactive)
+		         (org-eval-in-calendar '(calendar-backward-week 1)))))
   :config
   (require 'ox-latex)
   (add-to-list 'org-latex-packages-alist '("" "minted"))
@@ -281,7 +290,7 @@
 (use-package projectile
   :demand t
   :delight '(:eval (format " P[%s]" (projectile-project-type)))
-  :load-path "~/projects/projectile"
+  ;; :load-path "~/projects/projectile"
   :init (require 'conf-mode)
   :bind (("C-c C-c" . projectile-test-project)
          ("C-c C-r" . projectile-run-project)
@@ -369,8 +378,8 @@
   ;; (define-key projectile-mode-map (kbd "M-q")
   ;;   (lw-projectile-if-in-project #'helm-projectile-ag #'helm-ag))
   (global-set-key (kbd "M-p") #'lw-switch-project)
-  (require 'markdown-mode)
-  (define-key markdown-mode-map (kbd "M-p") #'lw-switch-project)
+  (with-eval-after-load 'markdown-mode
+    (define-key markdown-mode-map (kbd "M-p") #'lw-switch-project))
   (global-set-key (kbd "M-j") #'lw-switch-to-last-buffer)
   
   (cl-defun lw-projectile-update-project-type-override
@@ -777,6 +786,7 @@
 ;; https://github.com/koalaman/shellcheck
 ;; https://github.com/federicotdn/flymake-shellcheck
 (use-package flymake-shellcheck
+  :if (executable-find "shellcheck")
   :commands flymake-shellcheck-load
   :init
   (add-hook 'sh-mode-hook 'flymake-shellcheck-load)
@@ -805,8 +815,8 @@
 
 ;; https://magit.vc/
 (use-package magit
-  :bind(("C-x g" . magit)
-        ("C-c g" . magit-file-dispatch))
+  :bind (("C-x g" . magit)
+         ("C-c g" . magit-file-dispatch))
   :config
   (setq magit-clone-default-directory "~/projects"
         magit-no-confirm '(set-and-push stage-all-changes unstage-all-changes))
@@ -862,7 +872,6 @@
 
 (use-package magit-todos
   :after magit
-  :load-path "~/projects/magit-todos"
   :config
   (magit-todos-mode))
 
@@ -1774,6 +1783,8 @@ directory is part of a projectile project."
               ("C-l" . vertico-directory-delete-word)
               ("<return>" . vertico-directory-enter))
   :config
+  (require 'vertico-buffer)
+  (require 'vertico-directory)
   (setq vertico-buffer-display-action '(display-buffer-below-selected))
   (vertico-mode)
   (vertico-buffer-mode))
@@ -2028,7 +2039,7 @@ directory is part of a projectile project."
 ;; https://github.com/cbowdon/daemons.el
 ;; https://wiki.archlinux.org/title/systemd
 (use-package daemons
-  :load-path "~/projects/daemons.el"
+  ;; :load-path "~/projects/daemons.el"
   :commands daemons
   :bind (:map daemons-mode-map
               ("k" . kill-current-buffer))
@@ -2057,4 +2068,6 @@ directory is part of a projectile project."
   :demand t
   :config
   ;; Have *vlf* offered as choice when opening large files
+  ;; This will only be triggered when opening files with size greater than
+  ;; `large-file-warning-threshold'
   (require 'vlf-setup))
