@@ -231,9 +231,3 @@
   (defun eclipse-indent-setup ()
     (c-set-offset 'arglist-intro '+)
     (c-set-offset 'arglist-close 0)))
-
-(use-package ffap
-  :ensure nil
-  :demand t
-  :config
-  (ffap-bindings))
