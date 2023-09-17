@@ -600,7 +600,7 @@
          (emacs-lisp-mode . company-mode)
          (ielm-mode . company-mode)
          (LaTeX-mode . company-mode)
-         (shell-script-mode . company-mode))
+         (sh-mode . company-mode))
   :config
   ;; See https://github.com/company-mode/company-mode/blob/master/NEWS.md
   (dolist (map (list company-active-map company-search-map))
@@ -2053,6 +2053,7 @@ directory is part of a projectile project."
             command
             service
             (if (string= command "status") "" (format " && systemctl status %s" service))))
+  
   (setq daemons-systemctl-command-fn #'lw-custom-daemons-systemctl-cmd))
 
 ;; https://github.com/masasam/emacs-counsel-tramp
