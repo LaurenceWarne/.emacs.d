@@ -65,6 +65,16 @@
    'proced-format-alist
    '(custom user pid ppid sess tree pcpu pmem rss start time state (args comm))))
 
+(use-package desktop
+  :ensure nil
+  :config
+  ;; Don't save to desktop third party lib files from metal's goto def
+  (setq desktop-buffers-not-to-save-function
+        (lambda (filename bufname mode &rest rest)
+          (or (not (stringp filename))
+              (not (string-match-p (rx (seq "/.metals/readonly/dependencies"))
+                                   (file-name-directory filename)))))))
+
 (use-package dired
   :ensure nil
   :commands dired
