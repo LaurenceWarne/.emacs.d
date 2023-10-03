@@ -593,7 +593,13 @@
 (use-package company
   :demand t
   :delight company-mode
-  :bind ("M-RET" . company-complete)
+  :bind (("M-RET" . company-complete)
+         :map company-active-map
+         ;; Make company play nicer with yasnippet
+         ("<tab>" . (lambda () (interactive)
+                      (company-abort)
+                      (when (fboundp #'(yas-next-field-or-maybe-expand))
+                        (yas-next-field-or-maybe-expand)))))
   ;; We usually want make sure we have appropriate backends before enabling
   ;; lsp also appears to handle enabling company for its enabled modes
   :hook ((eshell-mode . company-mode)  ; TODO https://www.emacswiki.org/emacs/EshellCompletion
