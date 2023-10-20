@@ -2079,3 +2079,8 @@ directory is part of a projectile project."
   ;; This will only be triggered when opening files with size greater than
   ;; `large-file-warning-threshold'
   (require 'vlf-setup))
+
+;; https://github.com/tirimia/flycheck-actionlint/blob/main/flycheck-actionlint.el
+(use-package flycheck-actionlint
+  :hook ((yaml-mode . flycheck-mode)
+         (yaml-mode . flycheck-actionlint-setup)))
