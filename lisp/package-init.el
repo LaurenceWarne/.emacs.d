@@ -188,7 +188,6 @@
 
 (use-package smartparens
   :demand t
-
   :init
   (defun lw-clone-line-lisp ()
     "Copy the current line to the next."
@@ -598,7 +597,7 @@
          ;; Make company play nicer with yasnippet
          ("<tab>" . (lambda () (interactive)
                       (company-abort)
-                      (when (fboundp #'(yas-next-field-or-maybe-expand))
+                      (when (fboundp #'yas-next-field-or-maybe-expand)
                         (yas-next-field-or-maybe-expand)))))
   ;; We usually want make sure we have appropriate backends before enabling
   ;; lsp also appears to handle enabling company for its enabled modes
@@ -625,6 +624,10 @@
   ;; Don't use :hook here as that defers loading until flycheck is called
   :config
   (add-hook 'emacs-lisp-mode-hook 'flycheck-mode))
+
+;; https://github.com/flycheck/flycheck-pos-tip
+(use-package flycheck-pos-tip
+  :hook ((yaml-mode . flycheck-pos-tip-mode)))
 
 ;; Note groovy mode automatically adds itself to auto-mode-alist
 (use-package groovy-mode
@@ -2084,3 +2087,16 @@ directory is part of a projectile project."
 (use-package flycheck-actionlint
   :hook ((yaml-mode . flycheck-mode)
          (yaml-mode . flycheck-actionlint-setup)))
+
+(use-package proced-amd-gpu
+  :load-path "~/projects/proced-amd-gpu.el"
+  :after proced)
+
+(use-package copilot
+  :ensure nil
+  :bind ("C-<return>" . copilot-accept-completion)
+  :quelpa (copilot :fetcher github
+                   :repo "zerolfx/copilot.el"
+                   :branch "main"
+                   :files ("dist" "*.el"))
+  :hook (scala-mode . copilot-mode))
