@@ -834,11 +834,17 @@
     (interactive)
     (magit-branch-checkout "-" start-point))
 
+  ;; "w" is the key to add under
   (transient-append-suffix 'magit-branch "w"
     '("-" "last branch" lw-magit-checkout-last))
 
   (transient-append-suffix 'magit-diff "w"
-    '("m" "master" (lambda () (interactive) (magit-diff-range "master"))))
+    '("m" "master" (lambda () (interactive) (magit-diff-range (magit-main-branch)))))
+
+  (transient-append-suffix 'magit-pull "e"
+    `("\n M" "pull master"
+      (lambda () (interactive)
+        (magit-run-git-with-editor "pull" (magit-primary-remote) (magit-main-branch)))))
 
   (define-advice magit-push-current-to-upstream (:before (args) query-yes-or-no)
     "Prompt for confirmation before permitting a push to upstream/master."
