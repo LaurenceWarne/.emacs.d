@@ -2055,10 +2055,11 @@ directory is part of a projectile project."
 ;; https://github.com/cbowdon/daemons.el
 ;; https://wiki.archlinux.org/title/systemd
 (use-package daemons
-  ;; :load-path "~/projects/daemons.el"
   :commands daemons
-  :bind (:map daemons-mode-map
-              ("k" . kill-current-buffer))
+  :bind (("C-c D" . daemons)
+         :map daemons-mode-map
+         ("k" . kill-current-buffer))
+  :hook (daemons-mode . eldoc-mode)
   :config
   (setq daemons-always-sudo t)
   (defun lw-custom-daemons-systemctl-cmd (command service)
