@@ -60,10 +60,11 @@
   (proced-show-remote-processes t)
   (proced-enable-color-flag t)
   (proced-format 'custom)
+  (proced-auto-update-interval 2)
   :config
   (add-to-list
    'proced-format-alist
-   '(custom user pid ppid sess tree pcpu pmem rss start time state (args comm))))
+   '(custom user pid ppid sess tree pcpu pgpu pmem rss vram start time state (args comm))))
 
 (use-package desktop
   :ensure nil

@@ -844,7 +844,8 @@
   (transient-append-suffix 'magit-pull "e"
     `("\n M" "pull master"
       (lambda () (interactive)
-        (magit-run-git-with-editor "pull" (magit-primary-remote) (magit-main-branch)))))
+        ;; https://stackoverflow.com/questions/18857570/how-to-git-pull-without-switching-branches-git-checkout
+        (magit-run-git-with-editor "fetch" (magit-primary-remote) (format "%s:%s" (magit-main-branch) (magit-main-branch))))))
 
   (define-advice magit-push-current-to-upstream (:before (args) query-yes-or-no)
     "Prompt for confirmation before permitting a push to upstream/master."
