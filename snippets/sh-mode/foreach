@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: foreach
+# key: fo
+# --
+for VAR in "a" "b" "c"
+do
+    echo $VAR
+done

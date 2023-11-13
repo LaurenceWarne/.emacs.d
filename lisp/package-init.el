@@ -2102,9 +2102,15 @@ directory is part of a projectile project."
 
 (use-package copilot
   :ensure nil
+  :defer t
   :bind ("C-<return>" . copilot-accept-completion)
   :quelpa (copilot :fetcher github
                    :repo "zerolfx/copilot.el"
                    :branch "main"
                    :files ("dist" "*.el"))
   :hook (scala-mode . copilot-mode))
+
+
+;; https://github.com/SebastianMeisel/journalctl-mode
+(use-package journalctl-mode
+  :commands journalctl)
