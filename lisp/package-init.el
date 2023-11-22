@@ -623,11 +623,32 @@
               ("C-c l" . flycheck-list-errors))
   ;; Don't use :hook here as that defers loading until flycheck is called
   :config
-  (add-hook 'emacs-lisp-mode-hook 'flycheck-mode))
+  (add-hook 'emacs-lisp-mode-hook 'flycheck-mode)
+  (add-hook 'sql-mode-hook 'flycheck-mode)
+
+  (when (executable-find "sqlfluff")
+    (flycheck-define-checker sql-sqlfluff
+      "SQLFluff syntax checking."
+      :command ("sqlfluff" "lint" "--nofail" "--format" "json" "--dialect" "postgres" source)
+      :error-parser (lambda (output checker _buffer)
+                      (let* ((data (json-read-from-string output))
+                             (violations (append (alist-get 'violations (elt data 0)) nil)))
+                        (mapcar (lambda (violation)
+                                  (flycheck-error-new-at
+                                   (alist-get 'line_no violation)
+                                   (alist-get 'line_pos violation)
+                                   'error
+                                   (alist-get 'description violation)
+                                   :checker checker
+                                   :id (format "SQLFluff:%s" (alist-get 'code violation))))
+                                violations)))
+      :modes (sql-mode))
+    (add-to-list 'flycheck-checkers 'sql-sqlfluff)))
 
 ;; https://github.com/flycheck/flycheck-pos-tip
 (use-package flycheck-pos-tip
-  :hook ((yaml-mode . flycheck-pos-tip-mode)))
+  :hook ((yaml-mode . flycheck-pos-tip-mode)
+         (sql-mode . flycheck-pos-tip-mode)))
 
 ;; Note groovy mode automatically adds itself to auto-mode-alist
 (use-package groovy-mode
