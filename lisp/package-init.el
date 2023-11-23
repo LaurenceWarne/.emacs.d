@@ -887,7 +887,10 @@
 
 ;; https://github.com/syohex/emacs-zoom-window
 (use-package zoom-window
-  :bind ("M-i" . zoom-window-zoom))
+  :bind ("M-i" . zoom-window-zoom)
+  :config
+  ;; The default green is too bright
+  (setq zoom-window-mode-line-color "dark green"))
 
 ;; https://github.com/domtronn/all-the-icons.el
 ;; Note after installing this you need to run M-x all-the-icons-install-fonts
