@@ -678,6 +678,7 @@
 (use-package lsp-mode
   ;; :load-path "~/projects/lsp-mode"
   :delight lsp-lens-mode
+  :mode ("docker-compose.yml" "/\\.github/.*\\.yml\\'")
   :hook ((c++-mode . lsp-deferred)
          (hack-local-variables . (lambda ()
 		                   (when (and (not (eq major-mode 'sage-shell:sage-mode))
