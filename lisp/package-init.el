@@ -678,12 +678,12 @@
 (use-package lsp-mode
   ;; :load-path "~/projects/lsp-mode"
   :delight lsp-lens-mode
-  :mode ("docker-compose.yml" "/\\.github/.*\\.yml\\'")
   :hook ((c++-mode . lsp-deferred)
          (hack-local-variables . (lambda ()
 		                   (when (and (not (eq major-mode 'sage-shell:sage-mode))
                                               (derived-mode-p 'python-mode))
-                                     (lsp-deferred)))))
+                                     (lsp-deferred))))
+         (yaml-mode . lsp-deferred))
   :commands (lsp lsp-deferred)
   :bind (:map lsp-mode-map
               ("C-M-<return>" . lsp-execute-code-action)
@@ -1075,7 +1075,8 @@
            org-publish-project-alist))))
 
 ;; https://github.com/yoshiki/yaml-mode
-(use-package yaml-mode)
+(use-package yaml-mode
+  :mode ("\\.yml\\'" "\\.yaml\\'"))
 
 ;; https://github.com/positron-solutions/command-log-mode
 (use-package command-log-mode
