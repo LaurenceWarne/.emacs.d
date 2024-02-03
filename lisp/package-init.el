@@ -299,6 +299,7 @@
   :config
   (projectile-mode 1)
   (setq projectile-create-missing-test-files t
+        projectile-cmd-hist-ignoredups 'erase
         projectile-auto-discover nil
         projectile-project-search-path '("~/projects")
         ;; https://github.com/bbatsov/projectile/issues/1517
@@ -2085,10 +2086,12 @@ directory is part of a projectile project."
   :commands daemons
   :bind (("C-c D" . daemons)
          :map daemons-mode-map
-         ("k" . kill-current-buffer))
+         ("k" . kill-current-buffer)
+         ("/" . helm-occur))
   :hook (daemons-mode . eldoc-mode)
   :config
-  (setq daemons-always-sudo t)
+  (setq daemons-always-sudo t
+        daemons-systemd-color t)
   (defun lw-custom-daemons-systemctl-cmd (command service)
     "Run systemctl command COMMAND against SERVICE."
     (format "systemctl --no-ask-pass%s %s %s%s"
