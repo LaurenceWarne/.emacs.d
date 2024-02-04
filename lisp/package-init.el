@@ -1680,19 +1680,20 @@ directory is part of a projectile project."
   :hook ((text-mode . undo-hl-mode)
          (prog-mode . undo-hl-mode)))
 
-;; https://github.com/pythonic-emacs/blacken/blob/master/blacken.el
-(use-package blacken
-  :after python
-  :delight blacken-mode
-  :custom (blacken-only-if-project-is-blackened t)
-  :hook (python-mode . blacken-mode))
+;; https://github.com/radian-software/apheleia
+;; Applies formatters using patches rather than full buffer replaces which
+;; appears to give a better experience.
+(use-package apheleia
+  ;; ONLY start mode when `apheleia-inhibit' is non-nil in dir-locals
+  :hook (python-mode . apheleia-mode-maybe)
+  :custom (apheleia-inhibit t)
+  :config
+  (setf (alist-get 'python-mode apheleia-mode-alist)
+        '(isort black)))
 
 ;; https://github.com/wbolster/emacs-python-pytest
 (use-package python-pytest
   :commands python-pytest-dispatch)
-
-;; https://github.com/wyuenho/emacs-python-isort
-(use-package python-isort)
 
 ;; https://github.com/minad/org-modern
 (use-package org-modern
