@@ -127,6 +127,8 @@
       "Busy Beaver"))
    org-confirm-babel-evaluate nil
    org-babel-python-command (-first #'executable-find '("python3" "python")))
+  (when (<= (display-pixel-width) 3840)
+    (plist-put org-format-latex-options :scale 2.0))
   (set-face-attribute 'org-headline-done nil :strike-through t)
   (org-babel-do-load-languages
    'org-babel-load-languages
