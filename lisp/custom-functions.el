@@ -212,3 +212,11 @@ E.g. capitalize or decapitalize the next word, increment number at point."
   (interactive)
   (package-refresh-contents t)
   (message "Refreshing packages asynchronously..."))
+
+(defun lw-copy-current-file ()
+  "Like `copy-file', but always choose the current file to copy."
+  (interactive)
+  (let* ((file (buffer-file-name))
+         (dest (read-file-name "Copy to: " default-directory nil nil (file-name-nondirectory file))))
+    (copy-file file dest)
+    (find-file dest)))

@@ -2146,3 +2146,7 @@ directory is part of a projectile project."
 ;; https://github.com/SebastianMeisel/journalctl-mode
 (use-package journalctl-mode
   :commands journalctl)
+
+;; https://github.com/LaurenceWarne/rom-party.el
+(use-package rom-party
+  :commands (rom-party rom-party-infinite rom-party-choose-configuration))
