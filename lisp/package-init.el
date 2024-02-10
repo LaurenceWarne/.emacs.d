@@ -2150,3 +2150,8 @@ directory is part of a projectile project."
 ;; https://github.com/LaurenceWarne/rom-party.el
 (use-package rom-party
   :commands (rom-party rom-party-infinite rom-party-choose-configuration))
+
+;; https://github.com/colonelpanic8/multi-line
+(use-package multi-line
+  :commands multi-line
+  :bind ("C-z" . multi-line))
