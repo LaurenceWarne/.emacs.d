@@ -26,11 +26,16 @@
 (tool-bar-mode -1)         ; Get rid of the tool bar
 (menu-bar-mode -1)         ; Get rid of the menu bar
 
+;; https://emacs.stackexchange.com/questions/220/how-to-bind-c-i-as-different-from-tab/221#221
+(when (window-system) ; IF we are not in a TTY, unbind C-i from TAB
+  (define-key input-decode-map [?\C-i] [C-i])
+  (define-key input-decode-map [?\C-m] [C-m]))
+
 ;;; Set variables
 ;; for the following two, see https://emacs.stackexchange.com/questions/29768/how-to-stop-emacs-from-blinking
 (setq visible-bell nil
-      ;initial-major-mode #'org-mode          ; Prefer `org-mode' for *scratch*
-      ;initial-scratch-message "* Scratch\n\n"
+      ;;initial-major-mode #'org-mode          ; Prefer `org-mode' for *scratch*
+      ;;initial-scratch-message "* Scratch\n\n"
       ring-bell-function #'ignore
       show-paren-style 'parenthesis          ; Highlight text between parens
       disabled-command-function nil          ; Enable all disabled commands

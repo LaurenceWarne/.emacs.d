@@ -2155,3 +2155,9 @@ directory is part of a projectile project."
 (use-package multi-line
   :commands multi-line
   :bind ("C-z" . multi-line))
+
+;; https://github.com/magnars/multiple-cursors.el
+(use-package multiple-cursors
+  :load-path "~/projects/multiple-cursors.el"
+  ;; Note requires https://emacs.stackexchange.com/questions/220/how-to-bind-c-i-as-different-from-tab/221#221
+  :bind ("<C-i>" . mc/mark-all-dwim))
