@@ -2093,8 +2093,6 @@ directory is part of a projectile project."
          ("/" . helm-occur))
   :hook (daemons-mode . eldoc-mode)
   :config
-  (setq daemons-always-sudo t
-        daemons-systemd-color t)
   (defun lw-custom-daemons-systemctl-cmd (command service)
     "Run systemctl command COMMAND against SERVICE."
     (format "systemctl --no-ask-pass%s %s %s%s"
@@ -2102,8 +2100,19 @@ directory is part of a projectile project."
             command
             service
             (if (string= command "status") "" (format " && systemctl status %s" service))))
-  
-  (setq daemons-systemctl-command-fn #'lw-custom-daemons-systemctl-cmd))
+
+  (setq daemons-always-sudo nil
+        daemons-systemd-color t
+        daemons-systemctl-command-fn #'lw-custom-daemons-systemctl-cmd)
+
+  ;; My fix for the currently visiting file being opened as root when `daemons' is invoked.
+  ;; My only change here is adding an unconditional sudo.
+  (defun daemons--refresh-list ()
+    "Refresh the list of daemons."
+    (let ((hostname (daemons--get-user-and-hostname default-directory)))
+      (with-current-buffer (get-buffer-create (daemons--get-list-buffer-name hostname))
+        (daemons--sudo)
+        (setq-local tabulated-list-entries (lambda () (daemons--list (daemons-init-system-submodule))))))))
 
 ;; https://github.com/masasam/emacs-counsel-tramp
 (use-package counsel-tramp
