@@ -232,13 +232,21 @@
   :ensure nil
   :bind (:map c-mode-base-map
               ("C-c C-c" . nil)
-              ("M-q" . nil)))
+              ("M-q" . nil)
+              ("<return>" . lw-newline-smart-indent)))
 
 (use-package java-mode
   :ensure nil
   :hook ((java-mode . eclipse-indent-setup)
-         (java-mode . dired-omit-mode))  
+         (java-mode . dired-omit-mode))
   :init
   (defun eclipse-indent-setup ()
     (c-set-offset 'arglist-intro '+)
     (c-set-offset 'arglist-close 0)))
+
+(use-package js
+  :ensure nil
+  :bind (:map js-mode-map
+              ("C-c C-c" . nil)
+              ("M-q" . nil)
+              ("<return>" . lw-newline-smart-indent)))
