@@ -711,7 +711,8 @@
         ;; lsp-lens-enable nil
         lsp-headerline-breadcrumb-enable nil
         ;; Enable this one per project, it's horrible by default
-        lsp-pylsp-plugins-flake8-enabled nil)
+        lsp-pylsp-plugins-flake8-enabled nil
+        lsp-pylsp-plugins-rope-autoimport-enabled t)
   (when-let* ((go-dir (concat (getenv "HOME") "/go/bin/sqls"))
               ((f-exists? go-dir)))
     (setq lsp-sqls-server go-dir))
@@ -727,6 +728,7 @@
 
 ;; https://github.com/emacs-lsp/dap-mode
 (use-package dap-mode
+  :after (lsp-mode)
   :config
   (defun lw-dap-go-to-output-buffer (&optional no-select)
     "Go to output buffer."
@@ -741,6 +743,7 @@
   (advice-add 'dap-go-to-output-buffer :override #'lw-dap-go-to-output-buffer))
 
 (use-package lsp-ui
+  :after (lsp-mode)
   :config
   (setq lsp-ui-sideline-enable t
         lsp-ui-sideline-show-symbol t
@@ -751,8 +754,7 @@
         lsp-ui-doc-show-with-cursor t))
 
 (use-package lsp-java
-  :hook
-  (java-mode . lsp-deferred)
+  :hook (java-mode . lsp-deferred)
   :config
   (setq lsp-java-format-comments-enabled nil
         lsp-java-format-on-type-enabled nil
@@ -1372,6 +1374,7 @@
   :demand t
   ;;:ensure nil
   ;;:quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t)
+  :hook (finito-view-mode . visual-line-mode)
   :load-path "~/projects/finito.el"
   :bind (("C-c b" . finito)
          :map finito-collection-view-mode-map
@@ -2052,7 +2055,8 @@ directory is part of a projectile project."
   (embark-collect-mode . consult-preview-at-point-mode))
 
 ;; https://github.com/gagbo/consult-lsp
-(use-package consult-lsp)
+(use-package consult-lsp
+  :after (lsp-mode))
 
 ;; https://github.com/nim-lang/nim-mode
 (use-package nim-mode
