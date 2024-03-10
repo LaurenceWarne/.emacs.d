@@ -250,3 +250,8 @@
               ("C-c C-c" . nil)
               ("M-q" . nil)
               ("<return>" . lw-newline-smart-indent)))
+
+(use-package comint
+  :ensure nil
+  :config
+  (setq comint-input-ignoredups t))

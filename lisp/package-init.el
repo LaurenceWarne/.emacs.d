@@ -1131,8 +1131,6 @@
 
 ;; https://github.com/alphapapa/snow.el
 (use-package snow
-  :ensure nil
-  :quelpa (snow :fetcher github :repo "alphapapa/snow.el")
   :commands let-it-snow)
 
 ;; https://github.com/skuro/plantuml-mode
