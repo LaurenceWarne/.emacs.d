@@ -758,7 +758,9 @@
   :config
   (setq lsp-java-format-comments-enabled nil
         lsp-java-format-on-type-enabled nil
-        lsp-java-save-actions-organize-imports t)
+        lsp-java-save-actions-organize-imports t
+        ;; https://github.com/emacs-lsp/lsp-java/issues/249
+        lsp-java-jdt-download-url  "https://download.eclipse.org/jdtls/milestones/0.57.0/jdt-language-server-0.57.0-202006172108.tar.gz")
   (setq tab-width 4))
 
 (use-package org-bullets
@@ -1687,10 +1689,10 @@ directory is part of a projectile project."
 ;; Applies formatters using patches rather than full buffer replaces which
 ;; appears to give a better experience.
 (use-package apheleia
-  ;; ONLY start mode when `apheleia-inhibit' is non-nil in dir-locals
-  :hook (python-mode . apheleia-mode-maybe)
   :custom (apheleia-inhibit t)
   :config
+  ;; Now we can start apheleia like so:
+  ;; ((python-mode . ((eval . (apheleia-mode)))))
   (setf (alist-get 'python-mode apheleia-mode-alist)
         '(isort black)))
 
