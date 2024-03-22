@@ -110,7 +110,7 @@
       "~/org/feeds.org"
       "Weekly Org Entries")
      ("SachaChua"
-      "https://sachachua.com/blog/feed/"
+      "https://sachachua.com/blog/feed/index.xml"
       "~/org/feeds.org"
       "Emacs News")
      ("Ponder This"
@@ -758,9 +758,7 @@
   :config
   (setq lsp-java-format-comments-enabled nil
         lsp-java-format-on-type-enabled nil
-        lsp-java-save-actions-organize-imports t
-        ;; https://github.com/emacs-lsp/lsp-java/issues/249
-        lsp-java-jdt-download-url  "https://download.eclipse.org/jdtls/milestones/0.57.0/jdt-language-server-0.57.0-202006172108.tar.gz")
+        lsp-java-save-actions-organize-imports t)
   (setq tab-width 4))
 
 (use-package org-bullets
@@ -1173,7 +1171,9 @@
               (f-expand sdkman-dir)
               (lambda (dir) (equal '("current" "bin") (last (f-split dir) 2)))
               t)
-        (lambda (path) (setenv "PATH" (concat path ":" (getenv "PATH"))))))))
+        (lambda (path) (setenv "PATH" (concat path ":" (getenv "PATH")))))))
+
+  (defvar lw-scala-package-prefix nil))
 
 ;; https://scalameta.org/metals/docs/editors/emacs.html
 ;; Note this package requires installation of a binary (see above link)
