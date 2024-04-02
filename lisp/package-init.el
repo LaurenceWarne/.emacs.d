@@ -1764,6 +1764,8 @@ directory is part of a projectile project."
 
 ;; https://github.com/emacsorphanage/terraform-mode
 (use-package terraform-mode
+  :bind (:map terraform-mode-map
+              ("<return>" . lw-newline-smart-indent))
   :mode "\\.tf\\'")
 
 ;; https://github.com/larstvei/Try
