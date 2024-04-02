@@ -217,6 +217,8 @@ E.g. capitalize or decapitalize the next word, increment number at point."
   "Like `copy-file', but always choose the current file to copy."
   (interactive)
   (let* ((file (buffer-file-name))
-         (dest (read-file-name "Copy to: " default-directory nil nil (file-name-nondirectory file))))
+         (dest (read-file-name "Copy to: " default-directory nil nil (file-name-nondirectory file)))
+         (dest-dir (file-name-directory dest)))
+    (unless (file-exists-p dest-dir) (make-directory dest-dir))
     (copy-file file dest)
     (find-file dest)))
