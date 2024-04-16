@@ -219,6 +219,6 @@ E.g. capitalize or decapitalize the next word, increment number at point."
   (let* ((file (buffer-file-name))
          (dest (read-file-name "Copy to: " default-directory nil nil (file-name-nondirectory file)))
          (dest-dir (file-name-directory dest)))
-    (unless (file-exists-p dest-dir) (make-directory dest-dir))
+    (unless (file-exists-p dest-dir) (make-directory dest-dir t))
     (copy-file file dest)
     (find-file dest)))

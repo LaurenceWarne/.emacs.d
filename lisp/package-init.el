@@ -855,7 +855,10 @@
          ("C-c g" . magit-file-dispatch))
   :config
   (setq magit-clone-default-directory "~/projects"
-        magit-no-confirm '(set-and-push stage-all-changes unstage-all-changes))
+        magit-no-confirm '(set-and-push stage-all-changes unstage-all-changes)
+        magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1
+        magit-diff-paint-whitespace 'uncommitted
+        magit-diff-highlight-trailing t)
 
   (defun lw-magit-checkout-last (&optional start-point)
     (interactive)
@@ -1764,6 +1767,7 @@ directory is part of a projectile project."
 
 ;; https://github.com/emacsorphanage/terraform-mode
 (use-package terraform-mode
+  :hook ((terraform-mode . lsp-deferred))
   :bind (:map terraform-mode-map
               ("<return>" . lw-newline-smart-indent))
   :mode "\\.tf\\'")
@@ -2066,8 +2070,9 @@ directory is part of a projectile project."
 
 ;; https://github.com/LaurenceWarne/hydrapop.el
 (use-package hydrapop
-  :ensure nil
-  :quelpa (hydrapop :fetcher github :repo "LaurenceWarne/hydrapop.el")
+  ;; :ensure nil
+  ;; :quelpa (hydrapop :fetcher github :repo "LaurenceWarne/hydrapop.el")
+  :load-path "~/projects/hydrapop.el"
   :commands hydrapop-define-board
   :bind ("C-M-c" . hydrapop-invoke)
   :config
@@ -2164,7 +2169,9 @@ directory is part of a projectile project."
 
 ;; https://github.com/LaurenceWarne/rom-party.el
 (use-package rom-party
-  :commands (rom-party rom-party-infinite rom-party-choose-configuration))
+  :commands (rom-party rom-party-infinite rom-party-choose-configuration)
+  :config
+  (setq rom-party-chosen-words '("rne" "garner" "tco" "outcome" "hra" "thrash" "oic" "voice" "isu" "visual" "rbu" "overburden" "mv" "triumvirate" "uiv" "quiver" "rpa" "vorpal" "rdr" "airdrop" "umf" "humf" "ak" "yak" "elc" "belch" "llh" "hellhole" "gho" "ghost" "ehy" "dehydrate" "rtn" "partner" "olc" "volcano" "oei" "onomatopoeia" "amu" "gamut" "shm" "shmuck" "wc" "showcase" "ewo" "rework" "efu" "useful" "myo" "myopic" "ldo" "seldom" "vem" "movement" "rw" "narwhal" "df" "dreadful" "eun" "eunuch" "yne" "slyness" "efr" "refresh" "ptr" "sceptre" "apl" "maple" "hh" "shh" "skr" "skry" "bp" "subpar" "sg" "misgive")))
 
 ;; https://github.com/colonelpanic8/multi-line
 (use-package multi-line

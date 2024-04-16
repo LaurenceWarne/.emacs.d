@@ -56,7 +56,10 @@
       ;; file a buffer points to and then saves the buffer.  Unfortunately, this screws
       ;; with hard links.  The following solves this:
       backup-by-copying-when-linked t
-      use-short-answers t)                  ; Replace yes/no prompts with y/n
+      use-short-answers t                  ; Replace yes/no prompts with y/n
+      ;; TODO sort out shackle to make sure this works with magit
+      ;; switch-to-buffer-obey-display-actions nil
+      )
 
 (fset 'yes-or-no-p 'y-or-n-p)     ; Use y/n instead of yes/no
 (when (file-exists-p "/var/tmp")

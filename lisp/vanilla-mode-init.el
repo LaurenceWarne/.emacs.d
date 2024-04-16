@@ -89,6 +89,7 @@
           (call-interactively #'dired)
           (re-search-forward file)))
       (re-search-forward file)))
+  ;; Note C-x C-q runs wdired-change-to-wdired-mode
   :bind (("C-M-d" . lw-dired)
          :map dired-mode-map
          ("b" . dired-up-directory)
@@ -97,8 +98,9 @@
          (dired-mode . dired-omit-mode))
   ;; args to 'ls'
   :custom
-  (dired-listing-switches "-alFh")
+  (dired-listing-switches "-alFh --group-directories-first")
   (dired-dwim-target t)
+  (dired-kill-when-opening-new-dired-buffer t)
   :config
   (require 'dired-x)
 
