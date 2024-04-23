@@ -1748,7 +1748,10 @@ directory is part of a projectile project."
 
 ;; https://github.com/emacs-typescript/typescript.el
 (use-package typescript-mode
-  :mode "\\.ts\\'")
+  :mode "\\.ts\\'"
+  :config
+  (when (executable-find "tsserver")
+    (add-hook 'typescript-mode-hook #'lsp-deferred)))
 
 ;; https://github.com/yjwen/org-reveal/
 (use-package ox-reveal

@@ -258,8 +258,8 @@
   :config
   (setq comint-input-ignoredups t))
 
-(use-package grep-mode
-  :ensure nil
+(use-package grep
   :defer t
+  :ensure nil
   :bind (:map grep-mode-map
               ("C-x C-q" . wgrep-change-to-wgrep-mode)))
