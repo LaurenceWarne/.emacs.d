@@ -37,26 +37,26 @@
       ;;initial-major-mode #'org-mode          ; Prefer `org-mode' for *scratch*
       ;;initial-scratch-message "* Scratch\n\n"
       ring-bell-function #'ignore
-      show-paren-style 'parenthesis          ; Highlight text between parens
-      disabled-command-function nil          ; Enable all disabled commands
+      show-paren-style 'parenthesis            ; Highlight text between parens
+      disabled-command-function nil            ; Enable all disabled commands
       ;; Mac OS stuff
       mac-command-modifier 'meta
       mac-right-option-modifier 'control
-      ns-use-native-fullscreen nil           ; Fix Emacs jumping into its own workspace whenever it's fullscreened
-      compilation-scroll-output t
-      confirm-kill-processes nil             ; Don't ask for exit confirmation when there are subprocesses
+      ns-use-native-fullscreen nil             ; Fix Emacs jumping into its own workspace whenever it's fullscreened
+      compilation-scroll-output t              
+      confirm-kill-processes nil               ; Don't ask for exit confirmation when there are subprocesses
       browse-url-browser-function 'browse-url-firefox
-      gc-cons-threshold 100000000           ; https://emacs-lsp.github.io/lsp-mode/page/performance/
-      read-process-output-max (* 1024 1024) ; 1MB
+      gc-cons-threshold 100000000             ; https://emacs-lsp.github.io/lsp-mode/page/performance/
+      read-process-output-max (* 1024 1024)   ; 1MB
       kill-do-not-save-duplicates t
-      history-delete-duplicates t           ; Delete duplicate history elements
+      history-delete-duplicates t             ; Delete duplicate history elements
       enable-recursive-minibuffers t
-      read-minibuffer-restore-windows nil   ; Can mess timers which set window points
+      read-minibuffer-restore-windows nil     ; Can mess timers which set window points
       ;; By default, to create a backup (which happens on first save), emacs renames the
       ;; file a buffer points to and then saves the buffer.  Unfortunately, this screws
       ;; with hard links.  The following solves this:
       backup-by-copying-when-linked t
-      use-short-answers t                  ; Replace yes/no prompts with y/n
+      use-short-answers t                    ; Replace yes/no prompts with y/n
       ;; TODO sort out shackle to make sure this works with magit
       ;; switch-to-buffer-obey-display-actions nil
       )
