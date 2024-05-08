@@ -504,8 +504,9 @@
       (lw-send-to-current-eshell "stack ghci")))
 
   (defvar lw-sbtn-enabled nil)
+  (defvar lw-sbt-command "sbt")
   (defun lw-sbt-command ()
-    (if (and lw-sbtn-enabled (locate-file "sbtn" exec-path)) "sbtn" "sbt"))
+    (if (and lw-sbtn-enabled (locate-file "sbtn" exec-path)) "sbtn" lw-sbt-command))
   (defalias 'lw-sbt-compile-cmd (lambda () (concat (lw-sbt-command) " compile")))
   (defalias 'lw-sbt-test-cmd (lambda () (concat (lw-sbt-command) " test")))
   (defalias 'lw-sbt-run-cmd (lambda () (concat (lw-sbt-command) " run")))
@@ -1157,7 +1158,9 @@
 (use-package which-key
   :delight which-key-mode
   :config
-  (which-key-mode))
+  (which-key-mode)
+  ;; https://www.reddit.com/r/emacs/comments/1clvkfe/comment/l2yi5tn/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+  (define-key dired-mode-map "?" dired-mode-map))
 
 ;; https://github.com/hvesalai/emacs-scala-mode
 (use-package scala-mode
@@ -1376,9 +1379,9 @@
 (use-package finito
   :demand t
   ;;:ensure nil
-  ;;:quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t)
+  :quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t)
   :hook (finito-view-mode . visual-line-mode)
-  :load-path "~/projects/finito.el"
+  ;; :load-path "~/projects/finito.el"
   :bind (("C-c b" . finito)
          :map finito-collection-view-mode-map
          ("x" . finito-delete-data-for-book-at-point)
@@ -1733,7 +1736,7 @@ directory is part of a projectile project."
 
 ;; https://github.com/LaurenceWarne/lsp-cfn.el
 (use-package lsp-cfn
-  :load-path "~/projects/lsp-cfn.el"
+  ;; :load-path "~/projects/lsp-cfn.el"
   :magic (("\\({\n *\\)? *[\"']AWSTemplateFormatVersion" . lsp-cfn-json-mode)
           ("\\({\n *\\)? *[\"']Transform[\"']: [\"']AWS::Serverless-2016-10-31" . lsp-cfn-json-mode)
           ("\\(---\n\\)?AWSTemplateFormatVersion:" . lsp-cfn-yaml-mode)

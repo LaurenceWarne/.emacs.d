@@ -253,6 +253,7 @@
   :bind (:map js-mode-map
               ("C-c C-c" . nil)
               ("M-q" . nil)
+              ("M-." . nil)
               ("<return>" . lw-newline-smart-indent)))
 
 (use-package comint
