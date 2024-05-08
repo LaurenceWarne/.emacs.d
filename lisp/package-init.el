@@ -1160,7 +1160,8 @@
   :config
   (which-key-mode)
   ;; https://www.reddit.com/r/emacs/comments/1clvkfe/comment/l2yi5tn/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
-  (define-key dired-mode-map "?" dired-mode-map))
+  (with-eval-after-load 'dired
+    (define-key dired-mode-map "?" dired-mode-map)))
 
 ;; https://github.com/hvesalai/emacs-scala-mode
 (use-package scala-mode
