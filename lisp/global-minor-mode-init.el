@@ -56,7 +56,8 @@
       ;; file a buffer points to and then saves the buffer.  Unfortunately, this screws
       ;; with hard links.  The following solves this:
       backup-by-copying-when-linked t
-      use-short-answers t                    ; Replace yes/no prompts with y/n
+      use-short-answers t                     ; Replace yes/no prompts with y/n
+      undo-limit (* 10 1024 1024)             ; Set undo memory to 10MB
       ;; TODO sort out shackle to make sure this works with magit
       ;; switch-to-buffer-obey-display-actions nil
       )
