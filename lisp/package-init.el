@@ -1379,8 +1379,6 @@
 ;; https://github.com/LaurenceWarne/finito.el
 (use-package finito
   :demand t
-  ;;:ensure nil
-  :quelpa (finito :fetcher github :repo "laurencewarne/finito.el" :upgrade t)
   :hook (finito-view-mode . visual-line-mode)
   ;; :load-path "~/projects/finito.el"
   :bind (("C-c b" . finito)
@@ -2167,7 +2165,8 @@ directory is part of a projectile project."
                    :repo "zerolfx/copilot.el"
                    :branch "main"
                    :files ("dist" "*.el"))
-  :hook (scala-mode . copilot-mode))
+  :hook ((scala-mode . copilot-mode)
+         (sql-mode . copilot-mode)))
 
 
 ;; https://github.com/SebastianMeisel/journalctl-mode
