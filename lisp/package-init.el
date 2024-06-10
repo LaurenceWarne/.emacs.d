@@ -207,7 +207,8 @@
         (indent-according-to-mode))))
 
   :hook ((helpful-mode . smartparens-mode)
-         (messages-buffer-mode . smartparens-mode))
+         (messages-buffer-mode . smartparens-mode)
+         (compilation-mode . smartparens-mode))
   :bind (:map smartparens-mode-map
               ("C-0" . sp-forward-slurp-sexp)
               ("C-9" . sp-forward-barf-sexp)
