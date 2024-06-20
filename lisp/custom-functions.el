@@ -205,6 +205,7 @@ E.g. capitalize or decapitalize the next word, increment number at point."
            ((looking-at ">=") (delete-char 2) (insert "<=") (forward-char 2))
            ((looking-at "<") (delete-char 1) (insert ">") (forward-char 1))
            ((looking-at ">") (delete-char 1) (insert "<") (forward-char 1))
+           ((looking-at "<-") (delete-char 1) (insert "=") (forward-char 1))
            (t #'downcase-word)))))
 
 (defun lw-package-refresh-contents-async ()
@@ -214,7 +215,7 @@ E.g. capitalize or decapitalize the next word, increment number at point."
   (message "Refreshing packages asynchronously..."))
 
 (defun lw-copy-current-file ()
-  "Like `copy-file', but always choose the current file to copy."
+  "Copy the current file A.ext to a prompted dest B.ext, then replace occurrences of A with B in the new file."
   (interactive)
   (let* ((file (buffer-file-name))
          (from-string (file-name-nondirectory (file-name-sans-extension file)))

@@ -860,7 +860,9 @@
         magit-no-confirm '(set-and-push stage-all-changes unstage-all-changes)
         magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1
         magit-diff-paint-whitespace 'uncommitted
-        magit-diff-highlight-trailing t)
+        magit-diff-highlight-trailing t
+        ;; https://stackoverflow.com/questions/5188320/how-can-i-get-a-list-of-git-branches-ordered-by-most-recent-commit
+        magit-list-refs-sortby "-committerdate")
 
   (defun lw-magit-checkout-last (&optional start-point)
     (interactive)
