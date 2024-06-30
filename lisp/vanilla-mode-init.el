@@ -127,7 +127,9 @@
 (use-package wdired
   :ensure nil
   :defer t
-  :bind (:map wdired-mode-map ("C-x k" . wdired-abort-changes)))
+  :bind (:map wdired-mode-map ("C-x k" . wdired-abort-changes))
+  :config
+  (setq wdired-allow-to-change-permissions t))
 
 (use-package python
   :ensure nil

@@ -1287,6 +1287,7 @@
   (setq shackle-rules
         '((compilation-mode :select nil :custom lw-shackle-get-window)
           ("magit: .*" :regexp t :select t :custom lw-shackle-get-window-cur)
+          ("magit-diff: .*" :regexp t :other t)
           (".*Org-Babel.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ("^\*eshell.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ("*cfw:details*" :select t :custom lw-shackle-get-window-cur)
@@ -1299,9 +1300,10 @@
           (list-unicode-display-mode :select t :custom lw-shackle-get-window-cur)
           ("\*daemons-output.*" :regexp t :select nil :custom lw-shackle-get-window-cur)
           ("*Async Shell Command*" :custom lw-shackle-get-window-cur)
+          ("*Proced*" :select t :other t :inhibit-window-quit t)
+          ("*helpful variable:.*" :regexp t :select t :other t :inhibit-window-quit t)
           ;;("* Merriam-Webster.*" :regexp t :custom lw-shackle-get-window-cur)
-          ;;("\*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur)
-          ))
+          ("*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur :inhibit-window-quit nil)))
   (shackle-mode 1))
 
 (use-package openapi-yaml-mode
@@ -1331,21 +1333,11 @@
 ;; https://github.com/Silex/docker.el
 (use-package docker
   :bind (("C-c d" . docker)
-         :map docker-container-mode-map
-         ("q" . kill-current-buffer)
-         ("k" . kill-current-buffer)
-         :map docker-image-mode-map
-         ("q" . kill-current-buffer)
-         ("k" . kill-current-buffer)
-         :map docker-network-mode-map
-         ("q" . kill-current-buffer)
-         ("k" . kill-current-buffer)
-         :map docker-volume-mode-map
-         ("q" . kill-current-buffer)
-         ("k" . kill-current-buffer)
          :map tablist-mode-map
+         ("q" . nil)
          ("k" . nil)
          :map tablist-minor-mode-map
+         ("q" . nil)
          ("k" . nil))
   :config
   (setq docker-show-messages nil)
@@ -1362,7 +1354,7 @@
    'docker-image-run-custom-args
    `(".*jaegertracing.*"  ;; https://www.jaegertracing.io/docs/1.6/getting-started/#all-in-one-docker-image
      ;; For the Jaeger UI open: http://localhost:16686/
-     ("-d" "--name jaeger" "-e COLLECTOR_ZIPKIN_HOST_PORT=:9411" "-p 5775:5775/udp -p 6831:6831/udp -p 6832:6832/udp -p 5778:5778 -p 16686:16686 -p 14268:14268 -p 14250:14250 -p 9411:9411" . ,docker-image-run-default-args)))
+     ("-d" "--name jaeger" "-e COLLECTOR_ZIPKIN_HOST_PORT=:9411" "-p 6831:6831/udp -p 6832:6832/udp -p 5778:5778 -p 16686:16686 -p 4317:4317 -p 4318:4318 -p 14250:14250 -p 14268:14268 -p 14269:14269 -p 9411:9411" . ,docker-image-run-default-args)))
   (add-to-list
    'docker-image-run-custom-args
    `(".*mysql.*"  ; https://hub.docker.com/_/mysql/
