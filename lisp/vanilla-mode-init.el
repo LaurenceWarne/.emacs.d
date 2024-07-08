@@ -268,3 +268,9 @@
   :ensure nil
   :bind (:map grep-mode-map
               ("C-x C-q" . wgrep-change-to-wgrep-mode)))
+
+(use-package hl-line
+  :custom-face
+  (hl-line ((t (:background "darkblue"))))
+  :hook ((proced-mode . hl-line-mode)
+         (dired-mode . hl-line-mode)))

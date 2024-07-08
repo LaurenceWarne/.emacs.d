@@ -41,7 +41,7 @@
 ;; https://github.com/purcell/exec-path-from-shell
 (use-package exec-path-from-shell
   :config
-  (when (memq window-system '(x mac ns))
+  (when (memq window-system '(pgtk x mac ns))
     ;;(delete "-i" exec-path-from-shell-arguments)
     (exec-path-from-shell-initialize)))
 
@@ -854,6 +854,7 @@
 ;; https://magit.vc/
 (use-package magit
   :bind (("C-x g" . magit)
+         ("C-M-g" . magit)
          ("C-c g" . magit-file-dispatch))
   :config
   (setq magit-clone-default-directory "~/projects"
