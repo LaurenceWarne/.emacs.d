@@ -1217,7 +1217,7 @@
      (list :textDocumentPositionParams (lsp--text-document-position-params)
            :rules nil)))
   
-  (setq lsp-metals-fallback-scala-version "2.13.8")
+  (setq lsp-metals-fallback-scala-version "2.13.13")
   (setq lsp-metals-ammonite-jvm-properties ["-Xmx1G"])
   ;; (setq lsp-metals-test-user-interface "test explorer")
 
@@ -1747,9 +1747,8 @@ directory is part of a projectile project."
 ;; https://github.com/emacs-typescript/typescript.el
 (use-package typescript-mode
   :mode "\\.ts\\'"
-  :config
-  (when (executable-find "tsserver")
-    (add-hook 'typescript-mode-hook #'lsp-deferred)))
+  :hook ((typescript-mode . lsp-deferred))
+  :bind (:map typescript-mode-map ("<return>" . lw-newline-smart-indent)))
 
 ;; https://github.com/yjwen/org-reveal/
 (use-package ox-reveal
@@ -2023,7 +2022,8 @@ directory is part of a projectile project."
     (consult-buffer consult-project-buffer-sources))
   (consult-customize consult-project-buffer :preview-key nil)
   (consult-customize lw-consult-project-buffer :preview-key nil)
-  (consult-customize consult-buffer :preview-key nil))
+  (consult-customize consult-buffer :preview-key nil)
+  (setq consult-ripgrep-args (concat consult-ripgrep-args " --hidden")))
 
 (use-package orderless
   :init
