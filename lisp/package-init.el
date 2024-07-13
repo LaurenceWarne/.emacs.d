@@ -2041,7 +2041,11 @@ directory is part of a projectile project."
   (("C-M-." . embark-act)        ;; pick some comfortable binding
    ("C-M-," . embark-act-all)
    ("M-." . embark-dwim)         ;; good alternative: M-.
-   ("C-h b" . embark-bindings))  ;; alternative for `describe-bindings'
+   ("C-h b" . embark-bindings)   ;; alternative for `describe-bindings'
+   :map minibuffer-mode-map
+   ("C-SPC" . embark-select)
+   ("M-a" . embark-act-all)
+   ("M-e" . embark-export))
   :init
   ;; Optionally replace the key help with a completing-read interface
   (setq prefix-help-command #'embark-prefix-help-command)
