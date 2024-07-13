@@ -2050,7 +2050,8 @@ directory is part of a projectile project."
   (add-to-list 'display-buffer-alist
                '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
                  nil
-                 (window-parameters (mode-line-format . none)))))
+                 (window-parameters (mode-line-format . none))))
+  (setq embark-quit-after-action '((kill-buffer . nil) (t . t))))
 
 ;; Consult users will also want the embark-consult package.
 (use-package embark-consult
