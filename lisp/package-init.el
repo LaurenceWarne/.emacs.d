@@ -2175,7 +2175,10 @@ directory is part of a projectile project."
                    :branch "main"
                    :files ("dist" "*.el"))
   :hook ((scala-mode . copilot-mode)
-         (sql-mode . copilot-mode)))
+         (sql-mode . copilot-mode))
+  :config
+  ;; https://github.com/copilot-emacs/copilot.el/pull/311#issuecomment-2146427990
+  (add-to-list 'warning-suppress-types '(copilot)))
 
 
 ;; https://github.com/SebastianMeisel/journalctl-mode
