@@ -288,6 +288,14 @@
         (kill-region beg end)
       (sp-kill-region beg end))))
 
+
+;; https://github.com/jrblevin/markdown-mode
+(use-package markdown-mode
+  :mode ("README\\.md\\'" . gfm-mode)
+  :bind (:map markdown-mode-map
+              ("C-c C-c" . nil)
+              ("C-c C-e" . markdown-do)))
+
 ;; https://github.com/bbatsov/projectile
 (use-package projectile
   :demand t
