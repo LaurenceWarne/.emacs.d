@@ -223,6 +223,28 @@
     (interactive)
     (eshell-send-input)
     (call-interactively #'eshell-previous-matching-input-from-input))
+
+  (defvar-local lw-eshell-last-inserted-arg nil)
+
+  (defun lw-eshell-history-last-word ()
+    "Insert the last argument of the last command"
+    (interactive)
+    (if (eq last-command this-command)
+        (let ((completions (cl-mapcan
+                            (lambda (cmd) (cl-remove-if (lambda (s) (string-prefix-p "-" s)) (cdr (string-split cmd))))
+                            (ring-elements eshell-history-ring))))
+          (set-mark (max (point-min) (- (point) (length lw-eshell-last-inserted-arg))))
+          (let ((result (completing-read
+                         "Insert:"
+                         (lambda (string pred action)
+                           (if (eq action 'metadata)
+                               `(metadata (display-sort-function . ,#'identity))
+                             (complete-with-action action completions string pred))))))
+            (when (region-active-p) (delete-region (region-beginning) (region-end)))
+            (insert result)))
+      (when-let ((last-cmd (eshell-get-history 0)))
+        (insert (setq lw-eshell-last-inserted-arg (car (last (string-split last-cmd))))))))
+
   ;; https://lists.gnu.org/r/bug-gnu-emacs/2019-06/msg01616.html
   (add-hook
    'eshell-mode-hook
@@ -231,7 +253,8 @@
      (define-key eshell-mode-map (kbd "C-d") #'lw-eshell-delete-char-or-exit)
      (define-key eshell-mode-map (kbd "M-<RET>") nil)
      (define-key eshell-mode-map (kbd "<C-return>") #'lw-eshell-send-input-and-reinsert)
-     (define-key eshell-hist-mode-map (kbd "M-s") nil))
+     (define-key eshell-hist-mode-map (kbd "M-s") nil)
+     (define-key eshell-hist-mode-map (kbd "M-.") #'lw-eshell-history-last-word))
    99))
 
 (use-package cc-mode

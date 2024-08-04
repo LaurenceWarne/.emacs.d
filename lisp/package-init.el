@@ -1857,6 +1857,7 @@ directory is part of a projectile project."
 (use-package consult
   :bind (("C-j" . lw-consult-project-buffer)
          ;; ("C-s" . consult-line)
+         ;; Note '-g' following '--' acts as a file filter, e.g. search_term -- -g *el
          ("M-q" . consult-ripgrep)
          ;; C-c bindings (mode-specific-map)
          ("C-c h" . consult-history)
@@ -2051,7 +2052,7 @@ directory is part of a projectile project."
    ("M-." . embark-dwim)         ;; good alternative: M-.
    ("C-h b" . embark-bindings)   ;; alternative for `describe-bindings'
    :map minibuffer-mode-map
-   ("C-SPC" . embark-select)
+   ("C-M-SPC" . embark-select)
    ("M-a" . embark-act-all)
    ("M-e" . embark-export))
   :init
