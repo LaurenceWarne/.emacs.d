@@ -734,7 +734,10 @@
      (append
       (funcall old-fn identifier position)
       (when (region-active-p)
-        (list :range (lsp--region-to-range (region-beginning) (region-end))))))))
+        (list :range (lsp--region-to-range (region-beginning) (region-end)))))))
+
+  ;; https://emacs-lsp.github.io/lsp-mode/page/faq/#how-do-i-force-lsp-mode-to-forget-the-workspace-folders-for-multi-root-servers-so-the-workspace-folders-are-added-on-demand
+  (advice-add 'lsp :before (lambda (&rest _args) (eval '(setf (lsp-session-server-id->folders (lsp-session)) (ht))))))
 
 ;; https://github.com/emacs-lsp/dap-mode
 (use-package dap-mode
