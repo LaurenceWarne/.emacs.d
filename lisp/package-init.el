@@ -1195,6 +1195,14 @@
               t)
         (lambda (path) (setenv "PATH" (concat path ":" (getenv "PATH")))))))
 
+  ;; Makes `next-error' work with scala 3
+  (add-to-list 'compilation-error-regexp-alist
+               ;; [error] -- [E007] Type Mismatch Error: /home/laurencewarne/projects/foo/bar/Foo.scala:26:15 
+               (list (rx "[error] --" (*? anychar) ": " (group (*? anychar)) ":" (group (+ digit)) ":" (group (+ digit)))
+                     1 ; file
+                     2 ; line
+                     3 ; column
+                     ))
   (defvar lw-scala-package-prefix nil))
 
 ;; https://scalameta.org/metals/docs/editors/emacs.html
