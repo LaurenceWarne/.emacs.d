@@ -2213,3 +2213,7 @@ directory is part of a projectile project."
   :load-path "~/projects/multiple-cursors.el"
   ;; Note requires https://emacs.stackexchange.com/questions/220/how-to-bind-c-i-as-different-from-tab/221#221
   :bind ("<C-i>" . mc/mark-all-dwim))
+
+;; https://github.com/rust-lang/rust-mode
+(use-package rust-mode
+  :mode "\\.rs\\'")
