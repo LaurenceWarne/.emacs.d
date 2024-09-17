@@ -866,7 +866,11 @@
 (use-package magit
   :bind (("C-x g" . magit)
          ("C-M-g" . magit)
-         ("C-c g" . magit-file-dispatch))
+         ("C-c g" . magit-file-dispatch)
+         (:map magit-diff-section-map
+               ("C-<return>" . (lambda () (interactive)
+                                 (let ((current-prefix-arg '(4)))
+                                   (call-interactively #'magit-diff-visit-file))))))
   :config
   (setq magit-clone-default-directory "~/projects"
         magit-no-confirm '(set-and-push stage-all-changes unstage-all-changes)
