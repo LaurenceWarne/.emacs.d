@@ -1872,7 +1872,9 @@ directory is part of a projectile project."
 (use-package consult
   :bind (("C-j" . lw-consult-project-buffer)
          ;; ("C-s" . consult-line)
-         ;; Note '-g' following '--' acts as a file filter, e.g. search_term -- -g *el
+         ;; Note:
+         ;;  - '--' followed by '-g' acts as a file filter, e.g. search_term -- -g *el
+         ;;  - '-- -A n' adds n lines after the match
          ("M-q" . consult-ripgrep)
          ;; C-c bindings (mode-specific-map)
          ("C-c h" . consult-history)
