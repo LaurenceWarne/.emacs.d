@@ -294,7 +294,8 @@
   :mode ("README\\.md\\'" . gfm-mode)
   :bind (:map markdown-mode-map
               ("C-c C-c" . nil)
-              ("C-c C-e" . markdown-do)))
+              ("C-c C-e" . markdown-do)
+              ("C-M-i" . nil)))
 
 ;; https://github.com/bbatsov/projectile
 (use-package projectile
@@ -1111,7 +1112,9 @@
 
 ;; https://github.com/yoshiki/yaml-mode
 (use-package yaml-mode
-  :mode ("\\.yml\\'" "\\.yaml\\'"))
+  :mode ("\\.yml\\'" "\\.yaml\\'")
+  :bind (:map yaml-mode-map
+              ("C-M-i" . nil)))
 
 ;; https://github.com/positron-solutions/command-log-mode
 (use-package command-log-mode

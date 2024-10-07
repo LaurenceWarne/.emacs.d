@@ -135,7 +135,8 @@
   :ensure nil
   :bind (:map python-mode-map
               ("<C-return>" . lw-python-shell-send-region-or-line)
-              ("C-c C-c" . lw-python-send-or-projectile))
+              ("C-c C-c" . lw-python-send-or-projectile)
+              ("C-M-i" . nil))
   :config
   (setq python-shell-interpreter "/usr/bin/python3")
 
@@ -297,3 +298,8 @@
   (hl-line ((t (:background "darkblue"))))
   :hook ((proced-mode . hl-line-mode)
          (dired-mode . hl-line-mode)))
+
+(use-package elisp-mode
+  :ensure nil
+  :bind (:map emacs-lisp-mode-map
+              ("C-M-i" . nil)))
