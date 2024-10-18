@@ -2134,7 +2134,9 @@ directory is part of a projectile project."
   :bind ("C-c i" . wildcard-importer-import))
 
 ;; https://elpa.gnu.org/packages/csv-mode.html
-(use-package csv-mode)
+(use-package csv-mode
+  :bind (:map csv-mode-map
+              ("C-M-i" . nil)))
 
 ;; https://github.com/cbowdon/daemons.el
 ;; https://wiki.archlinux.org/title/systemd
