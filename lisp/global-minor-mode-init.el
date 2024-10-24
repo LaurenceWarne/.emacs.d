@@ -76,6 +76,10 @@
 (add-to-list 'savehist-additional-variables 'kill-ring)
 ;; See https://emacs.stackexchange.com/questions/58425/how-to-access-query-replace-history-in-replace-format-for-eg-abc-%E2%86%92-xyz
 (add-to-list 'savehist-additional-variables 'query-replace-defaults)
+(add-to-list 'savehist-additional-variables 'kmacro-ring)
+(add-to-list 'savehist-additional-variables 'last-kbd-macro)
+(add-to-list 'savehist-additional-variables 'kmacro-counter)
+(add-to-list 'savehist-additional-variables 'kmacro-counter-format)
 
 (add-to-list 'magic-mode-alist
              '("^#!/usr/bin/env (ba)?sh" . shell-script-mode))
