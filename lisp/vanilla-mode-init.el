@@ -303,3 +303,12 @@
   :ensure nil
   :bind (:map emacs-lisp-mode-map
               ("C-M-i" . nil)))
+
+(use-package sqlite-mode
+  :ensure nil
+  :bind (:map sqlite-mode-map
+              ("b" . backward-char)
+              ("f" . forward-char)
+              ("p" . previous-line)
+              ("n" . next-line)
+              ("D" . sqlite-mode-delete)))
