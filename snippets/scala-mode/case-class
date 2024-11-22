@@ -3,4 +3,4 @@
 # key: c
 # --
 
-case class ${1:Name}($0)
+final case class ${1:Name}($0)
