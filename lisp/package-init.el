@@ -738,7 +738,17 @@
         (list :range (lsp--region-to-range (region-beginning) (region-end)))))))
 
   ;; https://emacs-lsp.github.io/lsp-mode/page/faq/#how-do-i-force-lsp-mode-to-forget-the-workspace-folders-for-multi-root-servers-so-the-workspace-folders-are-added-on-demand
-  (advice-add 'lsp :before (lambda (&rest _args) (eval '(setf (lsp-session-server-id->folders (lsp-session)) (ht))))))
+  (advice-add 'lsp :before (lambda (&rest _args) (eval '(setf (lsp-session-server-id->folders (lsp-session)) (ht)))))
+
+  ;; Low effort I don't want to be spammed by metals
+  (lsp-defun lsp--window-log-message-request ((&ShowMessageRequestParams :message :type :actions?))
+    "Display a message request to user sending the user selection back to server."
+    (let* ((message (lsp--propertize message type))
+           (choices (seq-map #'lsp:message-action-item-title actions?)))
+      (cond ((and choices (string= (car choices) "Open doctor."))
+             (message "Skipped completing-read for metals with 'Open doctor'"))
+            (choices (completing-read (concat message " ") (seq-into choices 'list) nil t))
+            (t (lsp-log message))))))
 
 ;; https://github.com/emacs-lsp/dap-mode
 (use-package dap-mode
