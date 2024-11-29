@@ -60,7 +60,8 @@
       undo-limit (* 10 1024 1024)             ; Set undo memory to 10MB
       ;; TODO sort out shackle to make sure this works with magit
       ;; switch-to-buffer-obey-display-actions nil
-      )
+      ;; Don't add whitespace to the kill ring
+      kill-transform-function (lambda (str) (unless (string-match-p (rx bos (0+ (any "\n" blank)) eos) str) str)))
 
 (fset 'yes-or-no-p 'y-or-n-p)     ; Use y/n instead of yes/no
 (when (file-exists-p "/var/tmp")
