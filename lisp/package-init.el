@@ -316,6 +316,7 @@
         projectile-project-search-path '("~/projects")
         ;; https://github.com/bbatsov/projectile/issues/1517
         projectile-per-project-compilation-buffer t
+        projectile-max-file-buffer-count 50
         lw-all-ext
         '("yml" "yaml" "ini" "md" "xml" "jenkinsfile" "gql" "tf" "org" "conf" "gradle" "toml" "css")
         lw-code-ext
