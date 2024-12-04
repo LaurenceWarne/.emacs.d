@@ -184,9 +184,14 @@
   "Increment the number at point."
   (interactive)
   (skip-chars-backward "0-9")
-  (or (looking-at "[0-9]+")
-      (error "No number at point"))
-  (replace-match (number-to-string (1+ (string-to-number (match-string 0))))))
+  (unless (looking-at "[0-9]+")
+    (error "No number at point"))
+  (let* ((n-str (match-string 0))
+         (n (string-to-number n-str))
+         (rep (number-to-string (1+ n)))
+         (padding (max 0 (- (length n-str) (length rep))))
+         (padded-rep (concat (make-string padding ?0) rep)))
+    (replace-match padded-rep)))
 
 (defun lw-flex ()
   "Perform smart flexing at point.
