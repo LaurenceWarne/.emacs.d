@@ -316,7 +316,7 @@
         projectile-project-search-path '("~/projects")
         ;; https://github.com/bbatsov/projectile/issues/1517
         projectile-per-project-compilation-buffer t
-        projectile-max-file-buffer-count 50
+        ;; projectile-max-file-buffer-count 50
         lw-all-ext
         '("yml" "yaml" "ini" "md" "xml" "jenkinsfile" "gql" "tf" "org" "conf" "gradle" "toml" "css")
         lw-code-ext
@@ -343,6 +343,20 @@
         (list
          (projectile-related-files-fn-test-with-suffix "el" "-test")
          (projectile-related-files-fn-test-with-prefix "el" "test-")))
+
+  (defun lw-projectile-maybe-limit-project-file-buffers ()
+    (when-let* ((projectile-max-file-buffer-count)
+                (project-buffers (projectile-project-buffer-files))
+                ((> (length project-buffers) projectile-max-file-buffer-count))
+                (to-kill (-first (lambda (b)
+                                   (and (when-let ((filename (buffer-file-name b)))
+                                          (not (cl-search "/.git/" filename)))
+                                        (not (get-buffer-window b))))
+                                 (reverse project-buffers))))
+      (message "Killing %s" to-kill)
+      (kill-buffer to-kill)))
+
+  (add-hook 'find-file-hook #'lw-projectile-maybe-limit-project-file-buffers)
 
   (defun lw-switch-to-last-buffer ()
     "Switch to buffer an appropriate 'other buffer'."
@@ -1403,7 +1417,11 @@
   (add-to-list
    'docker-image-run-custom-args
    `(".*mysql.*"  ; https://hub.docker.com/_/mysql/
-     ("--name some-mysql" "-e MYSQL_ROOT_PASSWORD=root" . ,docker-image-run-default-args))))
+     ("--name some-mysql" "-e MYSQL_ROOT_PASSWORD=root" . ,docker-image-run-default-args)))
+  (add-to-list
+   'docker-image-run-custom-args
+   `(".*aws-otel-collector.*"  ; https://github.com/aws-observability/aws-otel-collector/blob/main/docs/developers/docker-demo.md
+     ("--name aws-otel-collector" "-e AWS_REGION=eu-west-2" "-p 4317:4317 -p 55680:55680 -p 8889:8888" . ,docker-image-run-default-args))))
 
 ;; https://github.com/jcs-elpa/goto-line-preview
 (use-package goto-line-preview
