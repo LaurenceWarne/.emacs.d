@@ -1397,7 +1397,12 @@
          ("k" . nil)
          :map tablist-minor-mode-map
          ("q" . nil)
-         ("k" . nil))
+         ("k" . nil)
+         ;; errors when running opening docker buffers seem to mess with shackle, so we set these here
+         :map docker-container-mode-map
+         ("q" . kill-buffer-and-window)
+         :map docker-image-mode-map
+         ("q" . kill-buffer-and-window))
   :config
   (setq docker-show-messages nil)
   (oset (get 'docker-container-rm 'transient--prefix) :value '("-f"))
