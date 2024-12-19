@@ -369,6 +369,19 @@
                     (projectile-project-buffers))))
           (switch-to-buffer buf))
       (switch-to-buffer nil)))
+
+  (defun lw-kill-buffer ()
+    (interactive)
+    (if (projectile-project-type)
+        (let ((buf (cl-find-if
+                    (lambda (p) (and (not (compilation-buffer-p p))
+                                     (not (member p (mapcar #'window-buffer
+                                                            (window-list))))))
+                    (projectile-project-buffers))))
+          (kill-this-buffer)
+          (switch-to-buffer buf))
+      (kill-this-buffer)))
+
   (defun lw-projectile-if-in-project (f1 f2)
     (lambda (&rest args)
       (interactive)
@@ -408,6 +421,7 @@
   (with-eval-after-load 'markdown-mode
     (define-key markdown-mode-map (kbd "M-p") #'lw-switch-project))
   (global-set-key (kbd "M-j") #'lw-switch-to-last-buffer)
+  (global-set-key (kbd "C-M-i") #'lw-kill-buffer)
   
   (cl-defun lw-projectile-update-project-type-override
       (old-fn
