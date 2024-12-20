@@ -39,7 +39,11 @@
   "Operates like ctrl-u on a unix terminal."
   (interactive)
   (funcall lw-unix-line-discard-bol-fn)
-  (kill-line))
+  ;; Hack to not copy to kill ring
+  (let ((lst (car kill-ring)))
+    (kill-line)
+    (unless (equal (car kill-ring) lst)
+      (setq kill-ring (cdr kill-ring)))))
 
 (defun lw-newline-and-indent-ignoring-current-line()
   "Create a new line below the current line and go to it."
