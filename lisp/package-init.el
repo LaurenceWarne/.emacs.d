@@ -344,10 +344,11 @@
          (projectile-related-files-fn-test-with-suffix "el" "-test")
          (projectile-related-files-fn-test-with-prefix "el" "test-")))
 
+  (defconst lw-projectile-max-file-buffer-count 50)
   (defun lw-projectile-maybe-limit-project-file-buffers ()
     (when-let* ((projectile-max-file-buffer-count)
                 (project-buffers (projectile-project-buffer-files))
-                ((> (length project-buffers) projectile-max-file-buffer-count))
+                ((> (length project-buffers) lw-projectile-max-file-buffer-count))
                 (to-kill (-first (lambda (b)
                                    (and (when-let ((filename (buffer-file-name b)))
                                           (not (cl-search "/.git/" filename)))
@@ -1750,6 +1751,7 @@ directory is part of a projectile project."
 ;; https://github.com/purcell/whole-line-or-region
 (use-package whole-line-or-region
   :delight (whole-line-or-region-global-mode) (whole-line-or-region-local-mode)
+  :bind ("C-]" . whole-line-or-region-comment-dwim-2)
   :config
   (whole-line-or-region-global-mode))
 
