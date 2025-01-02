@@ -2286,3 +2286,6 @@ directory is part of a projectile project."
 ;; https://github.com/rust-lang/rust-mode
 (use-package rust-mode
   :mode "\\.rs\\'")
+
+;; https://github.com/json-emacs/json-mode
+(use-package json-mode)
