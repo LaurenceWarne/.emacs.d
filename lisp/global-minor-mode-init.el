@@ -18,7 +18,7 @@
 (global-auto-revert-mode 1)
 (when (and (eq system-type 'gnu/linux) (x-list-fonts "Iosevka"))
   (set-face-attribute 'default nil
-                      :height 110
+                      :height 170
                       :family "Iosevka"
                       :weight 'normal
                       :width 'normal))
@@ -43,7 +43,7 @@
       mac-command-modifier 'meta
       mac-right-option-modifier 'control
       ns-use-native-fullscreen nil             ; Fix Emacs jumping into its own workspace whenever it's fullscreened
-      compilation-scroll-output t              
+      compilation-scroll-output t
       confirm-kill-processes nil               ; Don't ask for exit confirmation when there are subprocesses
       browse-url-browser-function 'browse-url-firefox
       gc-cons-threshold 100000000             ; https://emacs-lsp.github.io/lsp-mode/page/performance/

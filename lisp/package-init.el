@@ -753,7 +753,9 @@
         lsp-headerline-breadcrumb-enable nil
         ;; Enable this one per project, it's horrible by default
         lsp-pylsp-plugins-flake8-enabled nil
-        lsp-pylsp-plugins-rope-autoimport-enabled t)
+        lsp-pylsp-plugins-rope-autoimport-enabled t
+        ;; pylsp can apparently handle this itself
+        lsp-disabled-clients '(ruff))
   (when-let* ((go-dir (concat (getenv "HOME") "/go/bin/sqls"))
               ((f-exists? go-dir)))
     (setq lsp-sqls-server go-dir))
@@ -815,8 +817,10 @@
         lsp-java-save-actions-organize-imports t)
   (setq tab-width 4))
 
-(use-package org-bullets
-  :hook (org-mode . org-bullets-mode))
+;; https://github.com/integral-dw/org-superstar-mode
+(use-package org-superstar
+  :hook (org-mode . org-superstar)
+  (org-superstar-configure-like-org-bullets))
 
 ;; https://github.com/hlissner/emacs-solaire-mode
 (use-package solaire-mode
@@ -1187,6 +1191,7 @@
 
 ;; https://github.com/kjambunathan/fontmenu
 (use-package fontmenu
+  :ensure nil
   :quelpa (fontmenu :fetcher github :repo "laurencewarne/fontmenu" :upgrade t))
 
 ;; https://github.com/mineo/yatemplate
@@ -1938,7 +1943,7 @@ directory is part of a projectile project."
          ("M-q" . consult-ripgrep)
          ;; C-c bindings (mode-specific-map)
          ("C-c h" . consult-history)
-         ("C-c m" . consult-mode-command)
+         ;; ("C-c m" . consult-mode-command)
          ("C-c k" . consult-kmacro)
          ;; C-x bindings (ctl-x-map)
          ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
@@ -2243,7 +2248,8 @@ directory is part of a projectile project."
          (yaml-mode . flycheck-actionlint-setup)))
 
 (use-package proced-amd-gpu
-  :load-path "~/projects/proced-amd-gpu.el"
+  :disabled t
+  ;; :load-path "~/projects/proced-amd-gpu.el"
   :after proced)
 
 (use-package copilot
