@@ -819,7 +819,7 @@
 
 ;; https://github.com/integral-dw/org-superstar-mode
 (use-package org-superstar
-  :hook (org-mode . org-superstar)
+  :hook (org-mode . org-superstar-mode)
   (org-superstar-configure-like-org-bullets))
 
 ;; https://github.com/hlissner/emacs-solaire-mode
