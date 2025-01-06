@@ -1755,6 +1755,7 @@ directory is part of a projectile project."
 
 ;; https://github.com/purcell/whole-line-or-region
 (use-package whole-line-or-region
+  :demand t
   :delight (whole-line-or-region-global-mode) (whole-line-or-region-local-mode)
   :bind ("C-]" . whole-line-or-region-comment-dwim-2)
   :config
