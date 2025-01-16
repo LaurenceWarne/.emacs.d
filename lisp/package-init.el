@@ -1426,6 +1426,7 @@
   :config
   (setq docker-show-messages nil)
   (oset (get 'docker-container-rm 'transient--prefix) :value '("-f"))
+  (oset (get 'docker-container-logs 'transient--prefix) :value '("-f"))
 
   (add-to-list
    'docker-image-run-custom-args
@@ -2261,7 +2262,6 @@ directory is part of a projectile project."
   :config
   ;; https://github.com/copilot-emacs/copilot.el/pull/311#issuecomment-2146427990
   (add-to-list 'warning-suppress-types '(copilot)))
-
 
 ;; https://github.com/SebastianMeisel/journalctl-mode
 (use-package journalctl-mode
