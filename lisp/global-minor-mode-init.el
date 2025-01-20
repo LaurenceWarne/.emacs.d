@@ -81,6 +81,7 @@
 (add-to-list 'savehist-additional-variables 'last-kbd-macro)
 (add-to-list 'savehist-additional-variables 'kmacro-counter)
 (add-to-list 'savehist-additional-variables 'kmacro-counter-format)
+(add-to-list 'savehist-additional-variables 'log-edit-comment-ring)
 
 (add-to-list 'magic-mode-alist
              '("^#!/usr/bin/env (ba)?sh" . shell-script-mode))
