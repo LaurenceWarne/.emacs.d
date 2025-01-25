@@ -1267,14 +1267,15 @@
 ;; https://scalameta.org/metals/docs/editors/emacs.html
 ;; Note this package requires installation of a binary (see above link)
 (use-package lsp-metals
-  :load-path "~/projects/lsp-metals"
+  ;; :load-path "~/projects/lsp-metals"
   :hook ((scala-mode . lsp-deferred)
          (scala-mode . (lambda () (add-hook 'before-save-hook
                                             (lambda ()
                                               (when lw-lsp-do-format-buffer
                                                 (lsp-format-buffer))) nil t))))
   :init
-  (setq lsp-metals-server-command "metals-snapshot")
+  (when (executable-find "metals-snapshot")
+    (setq lsp-metals-server-command "metals-snapshot"))
   ;;(setq lsp-metals-show-inferred-type t)
   :custom
   ;; Metals claims to support range formatting by default but it supports range
