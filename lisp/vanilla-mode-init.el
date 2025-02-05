@@ -95,7 +95,8 @@
   :bind (("C-M-d" . lw-dired)
          :map dired-mode-map
          ("b" . dired-up-directory)
-         ("k" . kill-this-buffer))
+         ("k" . kill-this-buffer)
+         (")" . dired-omit-mode))
   :hook ((dired-mode . dired-hide-details-mode)
          (dired-mode . dired-omit-mode))
   ;; args to 'ls'
@@ -312,3 +313,10 @@
               ("p" . previous-line)
               ("n" . next-line)
               ("D" . sqlite-mode-delete)))
+
+(use-package nxml-mode
+  :ensure nil
+  :bind (:map nxml-mode-map
+              ("C-M-d" . nil)
+              ("M-<TAB>" . nil)
+              ("C-M-p" . nil)))
