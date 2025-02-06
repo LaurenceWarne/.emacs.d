@@ -243,3 +243,8 @@ E.g. capitalize or decapitalize the next word, increment number at point."
     (find-file dest)
     (erase-buffer)
     (insert edited-contents)))
+
+(defun lw-insert-key (key)
+  "Insert the key string of KEY at point."
+  (interactive "kKey: ")
+  (insert (key-description key)))
