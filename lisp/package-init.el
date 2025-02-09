@@ -917,12 +917,16 @@
                                  (let ((current-prefix-arg '(4)))
                                    (call-interactively #'magit-diff-visit-file)))))
          (:map magit-diff-mode-map
-               ("q" . (lambda () (interactive)
-                        (kill-this-buffer)
-                        ;; Stops the buffer being the magit status buffer
-                        (switch-to-buffer (other-buffer))
-                        (when-let ((win (--first (string-match-p "^magit: " (buffer-name (window-buffer it))) (window-list))))
-                          (select-window win))))))
+               ("q" . lw-magit-diff-quit-window)))
+  :init
+  (defun lw-magit-diff-quit-window ()
+    (interactive)
+    (kill-this-buffer)
+    (cl-flet ((is-buf-magit (buf) (string-match-p "^magit" (buffer-name buf))))
+      ;; Stops the buffer being the magit status buffer
+      (when (is-buf-magit (current-buffer)) (switch-to-buffer (other-buffer)))
+      (when-let ((win (--first (is-buf-magit (window-buffer it)) (window-list))))
+        (select-window win))))
   :config
   (setq magit-clone-default-directory "~/projects"
         magit-no-confirm '(set-and-push stage-all-changes unstage-all-changes)
