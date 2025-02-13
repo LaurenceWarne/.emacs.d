@@ -1244,7 +1244,7 @@
 ;; https://github.com/hvesalai/emacs-scala-mode
 (use-package scala-mode
   ;; :load-path "~/projects/emacs-scala-mode"
-  :mode "\\.s\\(c\\|cala\\|bt\\)$"
+  :mode (rx (or (seq "build.mill") (seq "." (or "scala" "sbt" "sc"))) eos)
   :bind (:map scala-mode-map
               ("M-k" . projectile-toggle-between-implementation-and-test)
               ("<return>" . lw-newline-smart-indent))
