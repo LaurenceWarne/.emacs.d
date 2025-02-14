@@ -2294,3 +2294,20 @@ directory is part of a projectile project."
 
 ;; https://github.com/json-emacs/json-mode
 (use-package json-mode)
+
+;; https://github.com/NicholasBHubbard/comint-histories
+(use-package comint-histories
+  :config
+  (comint-histories-mode 1)
+  (comint-histories-add-history python
+    :predicates '((lambda () (or (derived-mode-p 'inferior-python-mode)
+                                 (string-match-p "^>>>" (comint-histories-get-prompt)))))
+    :length 2000)
+  (comint-histories-add-history sage
+    :predicates '((lambda () (or (derived-mode-p 'sage-shell-mode)
+                                 (string-match-p "^sage:" (comint-histories-get-prompt)))))
+    :length 2000)
+  (add-hook
+   'comint-mode-hook
+   (lambda () (setq comint-input-ring
+                    (plist-get (cdr (comint-histories--select-history)) :history)))))
