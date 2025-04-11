@@ -345,19 +345,26 @@
          (projectile-related-files-fn-test-with-prefix "el" "test-")))
 
   (defconst lw-projectile-max-file-buffer-count 50)
+  
   (defun lw-projectile-maybe-limit-project-file-buffers ()
-    (when-let* ((projectile-max-file-buffer-count)
-                (project-buffers (projectile-project-buffer-files))
+    (interactive)
+    (when-let* ((lw-projectile-max-file-buffer-count)
+                (project-buffers (projectile-project-buffers))
                 ((> (length project-buffers) lw-projectile-max-file-buffer-count))
-                (to-kill (-first (lambda (b)
-                                   (and (when-let ((filename (buffer-file-name b)))
-                                          (not (cl-search "/.git/" filename)))
-                                        (not (get-buffer-window b))))
-                                 (reverse project-buffers))))
-      (message "Killing %s" to-kill)
-      (kill-buffer to-kill)))
+                (no-to-kill (- (length project-buffers) lw-projectile-max-file-buffer-count))
+                (to-kill (-take no-to-kill (-filter (lambda (buf)
+                                                      (when-let ((fname (buffer-file-name buf)))
+                                                        (and
+                                                         (not (cl-search "/.git/" fname))
+                                                         (not (get-buffer-window fname))
+                                                         buf)))
+                                                    (reverse project-buffers)))))
+      (--each to-kill
+        (message "Killing %s" (buffer-file-name it))
+        (kill-buffer it))
+      (message "killed %d buffers, %d remain" (length to-kill) (- (length project-buffers) (length to-kill)))))
 
-  (add-hook 'find-file-hook #'lw-projectile-maybe-limit-project-file-buffers)
+  ;; (add-hook 'find-file-hook #'lw-projectile-maybe-limit-project-file-buffers)
 
   (defun lw-switch-to-last-buffer ()
     "Switch to buffer an appropriate 'other buffer'."
