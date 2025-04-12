@@ -2309,12 +2309,12 @@ directory is part of a projectile project."
   (comint-histories-add-history python
     :predicates '((lambda () (or (derived-mode-p 'inferior-python-mode)
                                  (string-match-p "^>>>" (comint-histories-get-prompt)))))
-    :length 2000)
+    :filters (list (lambda (s) (not (comint-nonblank-p s))))
+    :length 2000
+    :no-dups t)
   (comint-histories-add-history sage
     :predicates '((lambda () (or (derived-mode-p 'sage-shell-mode)
                                  (string-match-p "^sage:" (comint-histories-get-prompt)))))
-    :length 2000)
-  (add-hook
-   'comint-mode-hook
-   (lambda () (setq comint-input-ring
-                    (plist-get (cdr (comint-histories--select-history)) :history)))))
+    :filters (list (lambda (s) (not (comint-nonblank-p s))))
+    :length 2000
+    :no-dups t))
