@@ -320,3 +320,8 @@
               ("C-M-d" . nil)
               ("M-<TAB>" . nil)
               ("C-M-p" . nil)))
+
+(use-package button
+  :ensure nil
+  :bind (:map button-map
+              ("M-<TAB>" . nil)))
