@@ -2214,8 +2214,14 @@ directory is part of a projectile project."
   :bind (("C-c D" . daemons)
          :map daemons-mode-map
          ("k" . kill-current-buffer)
-         ("/" . helm-occur))
+         ("/" . helm-occur)
+         ("l" . lw-show-journalctl)
+         ("L" . lw-show-journalctl))
   :hook (daemons-mode . eldoc-mode)
+  ;; Below disabled, systemctl status appears to output invalid ansi (?)
+  ;; (daemons-output-mode . (lambda () (interactive)
+  ;;                          (let ((buffer-read-only nil))
+  ;;                            (ansi-color-apply-on-region (point-min) (point-max)))))
   :config
   (defun lw-custom-daemons-systemctl-cmd (command service)
     "Run systemctl command COMMAND against SERVICE."
@@ -2229,6 +2235,12 @@ directory is part of a projectile project."
         daemons-systemd-color t
         daemons-systemctl-command-fn #'lw-custom-daemons-systemctl-cmd
         lw-daemons-systemd-ordering '("enabled" "enabled-runtime" "alias"))
+
+  (defun lw-show-journalctl (&optional service)
+    (interactive)
+    (let ((relevant-service (or service (aref (tabulated-list-get-entry) 0))))
+      (require 'journalctl-mode)
+      (journalctl--run (list "-b" "-0" (format "--unit=%s" relevant-service)))))
 
   ;; The `tabulated-list-format' interface is so bad I just advise `daemons--list' in order to sort how I want
   (defun lw-daemons-systemd-sort (a b)
