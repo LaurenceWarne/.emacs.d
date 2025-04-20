@@ -2227,16 +2227,21 @@ directory is part of a projectile project."
 
   (setq daemons-always-sudo nil
         daemons-systemd-color t
-        daemons-systemctl-command-fn #'lw-custom-daemons-systemctl-cmd)
+        daemons-systemctl-command-fn #'lw-custom-daemons-systemctl-cmd
+        lw-daemons-systemd-ordering '("enabled" "enabled-runtime" "alias"))
 
-  ;; My fix for the currently visiting file being opened as root when `daemons' is invoked.
-  ;; My only change here is adding an unconditional sudo.
-  (defun daemons--refresh-list ()
-    "Refresh the list of daemons."
-    (let ((hostname (daemons--get-user-and-hostname default-directory)))
-      (with-current-buffer (get-buffer-create (daemons--get-list-buffer-name hostname))
-        (daemons--sudo)
-        (setq-local tabulated-list-entries (lambda () (daemons--list (daemons-init-system-submodule))))))))
+  ;; The `tabulated-list-format' interface is so bad I just advise `daemons--list' in order to sort how I want
+  (defun lw-daemons-systemd-sort (a b)
+    (let ((aa (aref (cadr a) 1))
+          (bb (aref (cadr b) 1)))
+      (< (or (--find-index (string= it aa) lw-daemons-systemd-ordering) 100)
+         (or (--find-index (string= it bb) lw-daemons-systemd-ordering) 100))))
+
+  (defun lw-sort-tabulated-bs (orig-fun &rest args)
+    (let ((entries (apply orig-fun args)))
+      (sort entries #'lw-daemons-systemd-sort)))
+
+  (advice-add 'daemons--list :around #'lw-sort-tabulated-bs))
 
 ;; https://github.com/masasam/emacs-counsel-tramp
 (use-package counsel-tramp
