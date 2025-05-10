@@ -11,19 +11,6 @@
 ;; https://elpa.gnu.org/packages/delight.html
 (use-package delight)
 
-;; https://github.com/quelpa/quelpa
-(use-package quelpa
-  :init
-  (setq quelpa-checkout-melpa-p nil
-        quelpa-update-melpa-p nil)  ;; What does quelpa use melpa for?
-  :config
-  ;; https://github.com/quelpa/quelpa-use-package
-  (quelpa
-   '(quelpa-use-package
-     :fetcher git
-     :url "https://github.com/quelpa/quelpa-use-package.git"))
-  (require 'quelpa-use-package))
-
 ;; https://github.com/magnars/dash.el
 (use-package dash
   :demand t
@@ -1008,9 +995,8 @@
   (magit-todos-mode))
 
 (use-package mc-biome-viewer
-  :ensure nil
   ;; :load-path "~/projects/mc-biome-viewer"
-  :quelpa (mc-biome-viewer :fetcher github :repo "LaurenceWarne/mc-biome-viewer" :upgrade t)
+  :vc (:url "https://github.com/LaurenceWarne/mc-biome-viewer" :rev :newest)
   :commands (mc-biome-viewer-view-save mc-biome-viewer-view-seed)
   ;; Example configuration
   :config
@@ -1173,7 +1159,7 @@
 
 ;; https://github.com/positron-solutions/command-log-mode
 (use-package command-log-mode
-  :quelpa (command-log-mode :fetcher github :repo "https://github.com/positron-solutions/command-log-mode")
+  :vc (:url "https://github.com/positron-solutions/command-log-mode" :rev :newest)
   :commands clm/toggle
   :custom
   (clm-window-text-scale 2 "Command log two steps higher text scale")
@@ -1196,14 +1182,15 @@
 ;; https://github.com/cireu/elispfl
 (use-package elispfl
   :ensure nil
-  :quelpa (elispfl :fetcher github :repo "cireu/elispfl")
+  :vc (:url "https://github.com/cireu/elispfl" :rev :newest)
   :hook ((emacs-lisp-mode . elispfl-mode)
          (ielm-mode . elispfl-ielm-mode)))
 
 ;; https://github.com/kjambunathan/fontmenu
 (use-package fontmenu
   :ensure nil
-  :quelpa (fontmenu :fetcher github :repo "laurencewarne/fontmenu" :upgrade t))
+  :commands fontmenu
+  :vc (:url "https://github.com/laurencewarne/fontmenu" :rev :newest))
 
 ;; https://github.com/mineo/yatemplate
 (use-package yatemplate
@@ -1396,27 +1383,6 @@
           ;;("* Merriam-Webster.*" :regexp t :custom lw-shackle-get-window-cur)
           ("*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur :inhibit-window-quit nil)))
   (shackle-mode 1))
-
-(use-package openapi-yaml-mode
-  :disabled t  ;; atm depends on (removed) eaf
-  :ensure nil
-  :quelpa (openapi-yaml-mode :fetcher github :repo "magoyette/openapi-yaml-mode")
-  :config
-  (setq lw-openapi-jar-path "~/Downloads/swagger-codegen-cli.jar"
-        lw-openapi-output-dir "out/openapi")
-  (defun lw-openapi-to-html ()
-    (interactive)
-    (shell-command
-     (concat
-      "java -jar "
-      lw-openapi-jar-path
-      " "
-      (buffer-file-name)
-      " -l html2 -o " lw-openapi-output-dir))
-    (let ((dir default-directory))
-      (other-window 1)
-      (eaf-open (concat dir lw-openapi-output-dir "/index.html"))))
-  (define-key openapi-yaml-mode-map (kbd "C-c C-c") #'lw-openapi-to-html))
 
 ;; https://github.com/larstvei/ox-gfm
 (use-package ox-gfm)
@@ -1671,7 +1637,7 @@ directory is part of a projectile project."
 ;; https://gitlab.com/tseenshe/haskell-tng.el
 (use-package haskell-tng-mode
   :ensure nil
-  :quelpa (haskell-tng-mode :fetcher gitlab :repo "tseenshe/haskell-tng.el")
+  :vc (:url "https://gitlab.com/tseenshe/haskell-tng.el" :rev :newest)
   :mode ((rx ".hs" eos) . haskell-tng-mode)
   :bind
   (:map
@@ -1782,8 +1748,7 @@ directory is part of a projectile project."
 
 ;; https://github.com/casouri/undo-hl
 (use-package undo-hl
-  :ensure nil
-  :quelpa (undo-hl :fetcher github :repo "casouri/undo-hl")
+  :vc (:url "https://github.com/casouri/undo-hl" :rev :newest)
   :delight undo-hl-mode
   :hook ((text-mode . undo-hl-mode)
          (prog-mode . undo-hl-mode)))
@@ -2197,8 +2162,7 @@ directory is part of a projectile project."
 
 ;; https://github.com/LaurenceWarne/wildcard-importer.el
 (use-package wildcard-importer
-  :ensure nil
-  :quelpa (wildcard-importer :fetcher github :repo "LaurenceWarne/wildcard-importer.el")
+  :vc (:url "https://github.com/LaurenceWarne/wildcard-importer.el" :rev :newest)
   :commands wildcard-importer-import
   :bind ("C-c i" . wildcard-importer-import))
 
@@ -2234,7 +2198,7 @@ directory is part of a projectile project."
   (setq daemons-always-sudo nil
         daemons-systemd-color t
         daemons-systemctl-command-fn #'lw-custom-daemons-systemctl-cmd
-        lw-daemons-systemd-ordering '("enabled" "enabled-runtime" "alias"))
+        lw-daemons-systemd-ordering '("enabled" "enabled-runtime" "alias" "static"))
 
   (defun lw-show-journalctl (&optional service)
     (interactive)
