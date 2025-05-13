@@ -53,8 +53,8 @@
           (lambda ()
             (let ((map (current-local-map)))
               (when map (use-local-map (copy-keymap map)))
-              (keymap-local-set (kbd "k") 'kill-this-buffer)
-              (keymap-local-set (kbd "q") 'kill-this-buffer))))
+              (keymap-local-set (kbd "k") 'kill-current-buffer)
+              (keymap-local-set (kbd "q") 'kill-current-buffer))))
 
 (add-hook 'java-mode-hook
           (lambda ()

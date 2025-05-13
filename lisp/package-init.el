@@ -373,9 +373,9 @@
                                      (not (member p (mapcar #'window-buffer
                                                             (window-list))))))
                     (projectile-project-buffers))))
-          (kill-this-buffer)
+          (kill-current-buffer)
           (switch-to-buffer buf))
-      (kill-this-buffer)))
+      (kill-current-buffer)))
 
   (defun lw-projectile-if-in-project (f1 f2)
     (lambda (&rest args)
@@ -915,7 +915,7 @@
   :init
   (defun lw-magit-diff-quit-window ()
     (interactive)
-    (kill-this-buffer)
+    (kill-current-buffer)
     (cl-flet ((is-buf-magit (buf) (string-match-p "^magit" (buffer-name buf))))
       ;; Stops the buffer being the magit status buffer
       (when (is-buf-magit (current-buffer)) (switch-to-buffer (other-buffer)))

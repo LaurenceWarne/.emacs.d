@@ -51,8 +51,8 @@
   :commands proced
   :bind (("C-M-p" . proced)
          :map proced-mode-map
-         ("k" . kill-this-buffer)
-         ("q" . kill-this-buffer)
+         ("k" . kill-current-buffer)
+         ("q" . kill-current-buffer)
          ("K" . proced-send-signal))
   :custom
   (proced-auto-update-flag t)
@@ -95,7 +95,7 @@
   :bind (("C-M-d" . lw-dired)
          :map dired-mode-map
          ("b" . dired-up-directory)
-         ("k" . kill-this-buffer)
+         ("k" . kill-current-buffer)
          (")" . dired-omit-mode))
   :hook ((dired-mode . dired-hide-details-mode)
          (dired-mode . dired-omit-mode))
@@ -258,6 +258,12 @@
      (define-key eshell-hist-mode-map (kbd "M-s") nil)
      (define-key eshell-hist-mode-map (kbd "M-.") #'lw-eshell-history-last-word))
    99))
+
+(use-package prog-mode
+  :ensure nil
+  :bind (:map prog-mode-map
+              ("C-c C-c" . nil)
+              ("M-q" . nil)))
 
 (use-package cc-mode
   :ensure nil
