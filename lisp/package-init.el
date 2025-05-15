@@ -1744,7 +1744,8 @@ directory is part of a projectile project."
   :if (f-exists-p "~/projects/saws.el")
   :load-path "~/projects/saws.el"
   :bind ("C-c a" . saws)
-  :commands (saws saws-logs saws-logs-open-log-group))
+  :commands (saws saws-logs saws-logs-open-log-group)
+  :custom (saws-echo-commands t))
 
 ;; https://github.com/casouri/undo-hl
 (use-package undo-hl
