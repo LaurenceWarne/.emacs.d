@@ -1254,8 +1254,9 @@
 
   ;; Makes `next-error' work with scala 3
   (add-to-list 'compilation-error-regexp-alist
-               ;; [error] -- [E007] Type Mismatch Error: /home/laurencewarne/projects/foo/bar/Foo.scala:26:15 
-               (list (rx "[error] --" (*? anychar) ": " (group (*? anychar)) ":" (group (+ digit)) ":" (group (+ digit)))
+               ;; [error] -- [E007] Type Mismatch Error: /home/laurencewarne/projects/foo/bar/Foo.scala:26:15
+               ;; [warn] -- [E198] Unused Symbol Warning: /home/laurencewarne/projects/foo/bar/Foo.scala:26:15
+               (list (rx (or "[error]" "[warn]") " --" (*? anychar) ": " (group (*? anychar)) ":" (group (+ digit)) ":" (group (+ digit)))
                      1 ; file
                      2 ; line
                      3 ; column
