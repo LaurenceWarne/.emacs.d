@@ -1255,12 +1255,12 @@
   ;; Makes `next-error' work with scala 3
   (add-to-list 'compilation-error-regexp-alist
                ;; [error] -- [E007] Type Mismatch Error: /home/laurencewarne/projects/foo/bar/Foo.scala:26:15
+               (list (rx "[error] --"  (*? anychar) ": " (group (*? anychar)) ":" (group (+ digit)) ":" (group (+ digit))) 1 2 3 2))
+
+  (add-to-list 'compilation-error-regexp-alist
                ;; [warn] -- [E198] Unused Symbol Warning: /home/laurencewarne/projects/foo/bar/Foo.scala:26:15
-               (list (rx (or "[error]" "[warn]") " --" (*? anychar) ": " (group (*? anychar)) ":" (group (+ digit)) ":" (group (+ digit)))
-                     1 ; file
-                     2 ; line
-                     3 ; column
-                     ))
+               (list (rx "[warning] --" (*? anychar) ": " (group (*? anychar)) ":" (group (+ digit)) ":" (group (+ digit))) 1 2 3 1))
+  
   (defvar lw-scala-package-prefix nil))
 
 ;; https://scalameta.org/metals/docs/editors/emacs.html
@@ -1375,6 +1375,7 @@
           ("*ASCII*" :select t :custom lw-shackle-get-window-cur)
           ("*Org Links*" :select t :custom lw-shackle-get-window-cur)
           ("*pytest*.*" :regexp t :custom lw-shackle-get-window-cur)
+          (sage-shell-mode :other t)
           
           (list-unicode-display-mode :select t :custom lw-shackle-get-window-cur)
           ("\*daemons-output.*" :regexp t :select nil :custom lw-shackle-get-window-cur)
