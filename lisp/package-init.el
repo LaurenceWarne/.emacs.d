@@ -2096,7 +2096,7 @@ directory is part of a projectile project."
   (consult-customize consult-project-buffer :preview-key nil)
   (consult-customize lw-consult-project-buffer :preview-key nil)
   (consult-customize consult-buffer :preview-key nil)
-  (setq consult-ripgrep-args (concat consult-ripgrep-args " --hidden")))
+  (setq consult-ripgrep-args (concat consult-ripgrep-args " --hidden" " -g !.git/*")))
 
 (use-package orderless
   :init
