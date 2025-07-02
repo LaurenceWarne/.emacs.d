@@ -1478,7 +1478,14 @@
 
 ;; https://github.com/akicho8/string-inflection
 (use-package string-inflection
-  :bind ("C-=" . string-inflection-all-cycle))
+  :bind ("C-=" . string-inflection-all-cycle)
+  :custom
+  (string-inflection-final-position 'end)
+  (string-inflection-bounds-function
+   (lambda ()
+     (cons
+      (progn (skip-chars-forward "a-zA-Z0-9_-") (skip-chars-backward "_-") (point))
+      (progn (skip-chars-backward "a-zA-Z0-9_-") (skip-chars-forward "_-") (point))))))
 
 ;; https://polymode.github.io/
 (use-package polymode
