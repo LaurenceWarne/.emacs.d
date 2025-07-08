@@ -331,3 +331,7 @@
   :ensure nil
   :bind (:map button-map
               ("M-<TAB>" . nil)))
+
+(use-package xref
+  :ensure nil
+  :custom (xref-prompt-for-identifier nil))
