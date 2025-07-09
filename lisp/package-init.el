@@ -329,7 +329,8 @@
         lw-eldev-related-files
         (list
          (projectile-related-files-fn-test-with-suffix "el" "-test")
-         (projectile-related-files-fn-test-with-prefix "el" "test-")))
+         (projectile-related-files-fn-test-with-prefix "el" "test-"))
+        projectile-auto-cleanup-known-projects t)
 
   (defconst lw-projectile-max-file-buffer-count 50)
   
