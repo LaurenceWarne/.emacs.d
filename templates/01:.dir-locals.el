@@ -1,5 +1,4 @@
-((nil . ((projectile-project-root . "/home/laurencewarne/projects")
-         (fill-column . 80)))
+((nil . ((fill-column . 80)))
  ;; Use eval to run stuff!
  (haskell-mode . ((eval . (highlight-regexp "^ *"))))
  (c-mode . ((c-file-style . "BSD")))
