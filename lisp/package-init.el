@@ -682,7 +682,16 @@
                                    :id (format "SQLFluff:%s" (alist-get 'code violation))))
                                 violations)))
       :modes (sql-mode))
-    (add-to-list 'flycheck-checkers 'sql-sqlfluff)))
+    (add-to-list 'flycheck-checkers 'sql-sqlfluff))
+
+  ;; See https://github.com/flycheck/flycheck/issues/1762#issuecomment-750458442
+  (defvar-local lw-flycheck-local-cache nil)
+
+  (defun my/flycheck-checker-get (fn checker property)
+    (or (alist-get property (alist-get checker lw-flycheck-local-cache))
+        (funcall fn checker property)))
+
+  (advice-add 'flycheck-checker-get :around 'my/flycheck-checker-get))
 
 ;; https://github.com/flycheck/flycheck-pos-tip
 (use-package flycheck-pos-tip
@@ -2251,7 +2260,13 @@ directory is part of a projectile project."
 ;; https://github.com/tirimia/flycheck-actionlint/blob/main/flycheck-actionlint.el
 (use-package flycheck-actionlint
   :hook ((yaml-mode . flycheck-mode)
-         (yaml-mode . flycheck-actionlint-setup)))
+         (yaml-mode . flycheck-actionlint-setup))
+  :config
+  ;; See https://github.com/flycheck/flycheck/issues/1762#issuecomment-750458442 and flycheck above
+  (add-hook 'lsp-managed-mode-hook
+            (lambda ()
+              (when (and (derived-mode-p 'yaml-mode) (cl-search ".github/" (buffer-file-name)))
+                (setq lw-flycheck-local-cache '((lsp . ((next-checkers . (actionlint))))))))))
 
 (use-package proced-amd-gpu
   :disabled t
