@@ -1,4 +1,4 @@
-;;;; init.el -- my init file
+;;;; init.el -- my init file -*- lexical-binding: t -*-
 ;;; Commentary:
 
 ;; See https://www.gnu.org/software/emacs/manual/html_node/emacs/Early-Init-File.html
@@ -10,3 +10,6 @@
 (setq default-frame-alist '((background-color . "#000000")
                             (ns-appearance . dark)
                             (ns-transparent-titlebar . t)))
+
+(provide 'early-init)
+;;; early-init.el ends here
