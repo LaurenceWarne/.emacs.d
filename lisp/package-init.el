@@ -2325,3 +2325,8 @@ directory is part of a projectile project."
     :filters (list (lambda (s) (not (comint-nonblank-p s))))
     :length 2000
     :no-dups t))
+
+;; https://github.com/NicolasPetton/pass
+(use-package pass
+  :bind ("C-M-]" . password-store-copy)
+  :commands pass)
