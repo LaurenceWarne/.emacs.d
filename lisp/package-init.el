@@ -2295,7 +2295,12 @@ directory is part of a projectile project."
 ;; https://github.com/colonelpanic8/multi-line
 (use-package multi-line
   :commands multi-line
-  :bind ("C-z" . multi-line))
+  :bind ("C-z" . multi-line)
+  :config
+  (setq-default multi-line-current-strategy
+                (multi-line-strategy
+                 :respace (multi-line-default-respacers
+                           (make-instance multi-line-always-newline)))))
 
 ;; https://github.com/magnars/multiple-cursors.el
 (use-package multiple-cursors
