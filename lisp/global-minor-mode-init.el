@@ -72,6 +72,7 @@
 
 (assoc-delete-all "\\.dir-locals\\(?:-2\\)?\\.el\\'" auto-mode-alist #'string=)
 (add-to-list 'auto-mode-alist '("\\.info\\'" . Info-on-current-buffer))
+(add-to-list 'auto-mode-alist '("\\.el.gz\\'" . emacs-lisp-mode))
 
 (require 'savehist)
 (add-to-list 'savehist-additional-variables 'kill-ring)
