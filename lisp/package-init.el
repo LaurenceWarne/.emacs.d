@@ -2295,7 +2295,9 @@ directory is part of a projectile project."
 ;; https://github.com/colonelpanic8/multi-line
 (use-package multi-line
   :commands multi-line
-  :bind ("C-z" . multi-line)
+  ;; No idea why but the first invocation of `multi-line' always adds extra line breaks, subsequent invocations don't
+  ;; so we invoke three times instead of one 🤷
+  :bind ("C-z" . (lambda () (interactive) (dotimes (_ 3) (call-interactively #'multi-line))))
   :config
   (setq-default multi-line-current-strategy
                 (multi-line-strategy
