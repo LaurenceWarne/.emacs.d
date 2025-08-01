@@ -1384,14 +1384,14 @@
           ("*Org Select*" :select t :custom lw-shackle-get-window-cur)
           ("*ASCII*" :select t :custom lw-shackle-get-window-cur)
           ("*Org Links*" :select t :custom lw-shackle-get-window-cur)
-          ("*pytest*.*" :regexp t :custom lw-shackle-get-window-cur)
+          (flycheck-error-list-mode :other t :inhibit-window-quit t)
           (sage-shell-mode :other t)
           
           (list-unicode-display-mode :select t :custom lw-shackle-get-window-cur)
           ("\*daemons-output.*" :regexp t :select nil :custom lw-shackle-get-window-cur)
           ("*Async Shell Command*" :custom lw-shackle-get-window-cur)
           ("*Proced*" :select t :other t :inhibit-window-quit t)
-          ("*helpful variable:.*" :regexp t :select t :other t :inhibit-window-quit t)
+          (helpful-mode :regexp t :select t :other t :inhibit-window-quit t)
           ;;("* Merriam-Webster.*" :regexp t :custom lw-shackle-get-window-cur)
           ("*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur :inhibit-window-quit nil)))
   (shackle-mode 1))
@@ -2126,6 +2126,7 @@ directory is part of a projectile project."
 
 ;; https://github.com/oantolin/embark
 ;; https://karthinks.com/software/fifteen-ways-to-use-embark/
+;; https://www.matem.unam.mx/~omar/apropos-emacs.html#ten-things-to-try-with-embark
 (use-package embark
   :bind
   (("C-M-." . embark-act)        ;; pick some comfortable binding
@@ -2257,7 +2258,7 @@ directory is part of a projectile project."
   ;; `large-file-warning-threshold'
   (require 'vlf-setup))
 
-;; https://github.com/tirimia/flycheck-actionlint/blob/main/flycheck-actionlint.el
+;; https://github.com/tirimia/flycheck-actionlint
 (use-package flycheck-actionlint
   :hook ((yaml-mode . flycheck-mode)
          (yaml-mode . flycheck-actionlint-setup))
