@@ -61,7 +61,9 @@
       ;; TODO sort out shackle to make sure this works with magit
       ;; switch-to-buffer-obey-display-actions nil
       ;; Don't add whitespace to the kill ring
-      kill-transform-function (lambda (str) (unless (string-match-p (rx bos (0+ (any "\n" blank)) eos) str) str)))
+      kill-transform-function (lambda (str) (unless (string-match-p (rx bos (0+ (any "\n" blank)) eos) str) str))
+      ;; https://emacs.stackexchange.com/questions/80138/burying-a-buffer-shows-an-already-displayed-buffer
+      switch-to-prev-buffer-skip t)
 
 (fset 'yes-or-no-p 'y-or-n-p)     ; Use y/n instead of yes/no
 (when (file-exists-p "/var/tmp")
