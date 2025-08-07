@@ -1269,7 +1269,7 @@
 
   (add-to-list 'compilation-error-regexp-alist
                ;; [warn] -- [E198] Unused Symbol Warning: /home/laurencewarne/projects/foo/bar/Foo.scala:26:15
-               (list (rx "[warning] --" (*? anychar) ": " (group (*? anychar)) ":" (group (+ digit)) ":" (group (+ digit))) 1 2 3 1))
+               (list (rx "[warn] --" (*? anychar) ": " (group (*? anychar)) ":" (group (+ digit)) ":" (group (+ digit))) 1 2 3 1))
   
   (defvar lw-scala-package-prefix nil))
 
@@ -2291,7 +2291,7 @@ directory is part of a projectile project."
 (use-package rom-party
   :commands (rom-party rom-party-infinite rom-party-choose-configuration)
   :config
-  (setq rom-party-chosen-words '("rne" "garner" "tco" "outcome" "hra" "thrash" "oic" "voice" "isu" "visual" "rbu" "overburden" "mv" "triumvirate" "uiv" "quiver" "rpa" "vorpal" "rdr" "airdrop" "umf" "humf" "ak" "yak" "elc" "belch" "llh" "hellhole" "gho" "ghost" "ehy" "dehydrate" "rtn" "partner" "olc" "volcano" "oei" "onomatopoeia" "amu" "gamut" "shm" "shmuck" "wc" "showcase" "ewo" "rework" "efu" "useful" "myo" "myopic" "ldo" "seldom" "vem" "movement" "rw" "narwhal" "df" "dreadful" "eun" "eunuch" "yne" "slyness" "efr" "refresh" "ptr" "sceptre" "apl" "maple" "hh" "shh" "skr" "skry" "bp" "subpar" "sg" "misgive" "ioc" "idiocy" "iy" "hiya" "ysa" "naysayer" "uld" "would" "inh" "sinh" "eor" "meteor" "aln" "walnut" "ssw" "password" "seu" "museum" "reu" "vitreum" "gmo" "sigmoid" "iec" "piece" "kp" "jackpot" "rtr" "portray" "shn" "shnap" "ml" "dimly" "omy" "roomy" "lva" "elvan" "ily" "wily" "bte" "subtext" "kc" "blackcap")))
+  (setq rom-party-chosen-words '("rne" "garner" "tco" "outcome" "hra" "thrash" "oic" "voice" "isu" "visual" "rbu" "overburden" "mv" "triumvirate" "uiv" "quiver" "rpa" "vorpal" "rdr" "airdrop" "umf" "humf" "ak" "yak" "elc" "belch" "llh" "hellhole" "gho" "ghost" "ehy" "dehydrate" "rtn" "partner" "olc" "volcano" "oei" "onomatopoeia" "amu" "gamut" "shm" "shmuck" "wc" "showcase" "ewo" "rework" "efu" "useful" "myo" "myopic" "ldo" "seldom" "vem" "movement" "rw" "narwhal" "df" "dreadful" "eun" "eunuch" "yne" "slyness" "efr" "refresh" "ptr" "sceptre" "apl" "maple" "hh" "shh" "skr" "skry" "bp" "subpar" "sg" "misgive" "ioc" "idiocy" "iy" "hiya" "ysa" "naysayer" "uld" "would" "inh" "sinh" "eor" "meteor" "aln" "walnut" "ssw" "password" "seu" "museum" "reu" "vitreum" "gmo" "sigmoid" "iec" "piece" "kp" "jackpot" "rtr" "portray" "shn" "shnap" "ml" "dimly" "omy" "roomy" "lva" "elvan" "ily" "wily" "bte" "subtext" "kc" "blackcap" "asu" "erasure" "bsi" "subsidy")))
 
 ;; https://github.com/colonelpanic8/multi-line
 (use-package multi-line
