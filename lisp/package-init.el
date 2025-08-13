@@ -1376,7 +1376,6 @@
   (setq shackle-rules
         '((compilation-mode :select nil :custom lw-shackle-get-window)
           ("magit: .*" :regexp t :select t :custom lw-shackle-get-window-cur)
-          ("magit-diff: .*" :regexp t :other t)
           (".*Org-Babel.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ("^\*eshell.*" :regexp t :select t :custom lw-shackle-get-window-cur)
           ("*cfw:details*" :select t :custom lw-shackle-get-window-cur)
@@ -1391,7 +1390,9 @@
           ("\*daemons-output.*" :regexp t :select nil :custom lw-shackle-get-window-cur)
           ("*Async Shell Command*" :custom lw-shackle-get-window-cur)
           ("*Proced*" :select t :other t :inhibit-window-quit t)
-          (helpful-mode :regexp t :select t :other t :inhibit-window-quit t)
+          (helpful-mode :select t :other t :inhibit-window-quit t)
+          (magit-revision-mode :select t :other t :inhibit-window-quit t)
+          (magit-diff-mode :select t :other t :inhibit-window-quit t)
           ;;("* Merriam-Webster.*" :regexp t :custom lw-shackle-get-window-cur)
           ("*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur :inhibit-window-quit nil)))
   (shackle-mode 1))
