@@ -2340,3 +2340,6 @@ directory is part of a projectile project."
 (use-package pass
   :bind ("C-M-]" . password-store-copy)
   :commands pass)
+
+;; https://github.com/dominikh/go-mode.el
+(use-package go-mode)

@@ -65,6 +65,9 @@
       ;; https://emacs.stackexchange.com/questions/80138/burying-a-buffer-shows-an-already-displayed-buffer
       switch-to-prev-buffer-skip t)
 
+;; https://www.emacswiki.org/emacs/NoTabs
+(setq-default indent-tabs-mode nil)
+
 (fset 'yes-or-no-p 'y-or-n-p)     ; Use y/n instead of yes/no
 (when (file-exists-p "/var/tmp")
   (setq lock-file-name-transforms
@@ -122,10 +125,7 @@
 (define-key nxml-mode-map (kbd "C-c C-e") 'hs-toggle-hiding)
 
 (add-hook 'emacs-lisp-mode-hook
-	  (lambda ()
-	    (electric-pair-local-mode -1)
-            ;; https://github.com/bbatsov/emacs-lisp-style-guide
-	    (setq indent-tabs-mode nil)))
+	  (lambda () (electric-pair-local-mode -1)))
 
 (add-hook 'python-mode-hook (lambda () (local-set-key (kbd "<return>") #'lw-newline-smart-indent)))
 (add-hook 'java-mode-hook (lambda () (local-set-key (kbd "<return>") #'lw-newline-smart-indent)))
