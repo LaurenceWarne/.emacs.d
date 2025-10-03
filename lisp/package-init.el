@@ -1384,6 +1384,7 @@
           ("*ASCII*" :select t :custom lw-shackle-get-window-cur)
           ("*Org Links*" :select t :custom lw-shackle-get-window-cur)
           (flycheck-error-list-mode :other t :inhibit-window-quit t)
+          (saws-logs-output-mode :other t :inhibit-window-quit t)
           (sage-shell-mode :other t)
           
           (list-unicode-display-mode :select t :custom lw-shackle-get-window-cur)
@@ -1392,7 +1393,7 @@
           ("*Proced*" :select t :other t :inhibit-window-quit t)
           (helpful-mode :select t :other t :inhibit-window-quit t)
           (magit-revision-mode :select t :other t :inhibit-window-quit t)
-          (magit-diff-mode :select t :other t :inhibit-window-quit t)
+          (magit-diff-mode :other t :inhibit-window-quit t)
           ;;("* Merriam-Webster.*" :regexp t :custom lw-shackle-get-window-cur)
           ("*docker.*" :regexp t :select t :custom lw-shackle-get-window-cur :inhibit-window-quit nil)))
   (shackle-mode 1))
