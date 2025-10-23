@@ -974,6 +974,10 @@
     (interactive (git-commit-read-ident "Author: "))
     (git-commit-insert-header "Co-authored-by" name mail)))
 
+;; https://codeberg.org/pidu/git-timemachine
+(use-package git-timemachine
+  :commands git-timemachine)
+
 ;; https://github.com/syohex/emacs-zoom-window
 (use-package zoom-window
   :bind ("M-i" . zoom-window-zoom)
