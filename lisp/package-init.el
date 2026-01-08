@@ -620,6 +620,21 @@
                         'test-command)))
         (format "%s -- %s" test-str rel)))
 
+    (projectile-register-project-type
+     'uv
+     '("uv.lock")
+     :project-file "pyproject.toml"
+     :compile "uv run pytest"
+     :test "uv run pytest"
+     :test-prefix "test")
+
+    (projectile-update-project-type
+     'uv
+     :src-dir #'my-get-python-impl-dir
+     :test-dir #'my-get-python-test-dir
+     :test-file-fn #'lw-pytest-test-file-fn
+     :precedence 'high)
+
     (projectile-update-project-type
      'python-poetry
      :src-dir #'my-get-python-impl-dir

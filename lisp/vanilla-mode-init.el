@@ -147,7 +147,7 @@
     (interactive)
     (require 'projectile)
     (let ((type (projectile-project-type)))
-      (if (or (eq type 'python-tox) (eq type 'python-poetry) lw-python-no-shell)
+      (if (or (eq type 'python-tox) (eq type 'python-poetry) (eq type 'uv) lw-python-no-shell)
           (call-interactively #'projectile-test-project)
         (lw-python-shell-send-buffer send-main msg))))
 
