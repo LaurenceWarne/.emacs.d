@@ -55,7 +55,7 @@
          ("q" . kill-current-buffer)
          ("K" . proced-send-signal))
   :custom
-  (proced-auto-update-flag t)
+  (proced-auto-update-flag nil)
   (proced-goal-attribute nil)
   (proced-show-remote-processes t)
   (proced-enable-color-flag t)
