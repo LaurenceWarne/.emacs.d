@@ -1891,8 +1891,7 @@ directory is part of a projectile project."
 ;; https://github.com/purcell/list-unicode-display
 (use-package list-unicode-display
   :commands list-unicode-display
-  :bind (("C-c u" . list-unicode-display-find-copy)
-         :map list-unicode-display-mode-map
+  :bind (:map list-unicode-display-mode-map
          ("n" . next-line)
          ("p" . previous-line)
          ("q" . kill-buffer-and-window)

@@ -42,6 +42,7 @@
 (global-set-key (kbd "C-x M-c") 'restart-emacs)
 (global-set-key (kbd "C-c n") 'next-error)
 (global-set-key (kbd "C-x M-f") 'lw-copy-current-file)
+(global-set-key (kbd "C-c u") 'insert-char)
 
 ;;; Local keybindings
 
