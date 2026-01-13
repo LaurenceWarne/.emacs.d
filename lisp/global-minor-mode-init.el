@@ -67,8 +67,12 @@
       ;; https://www.gnu.org/software/emacs/manual/html_node/epa/GnuPG-Pinentry.html
       epg-pinentry-mode 'loopback)
 
-;; https://www.emacswiki.org/emacs/NoTabs
-(setq-default indent-tabs-mode nil)
+
+(setq-default
+ ;; https://www.emacswiki.org/emacs/NoTabs
+ indent-tabs-mode nil
+ ;; https://emacs.stackexchange.com/questions/64437/setq-require-final-newline-not-working-when-setq-default-does
+ require-final-newline t)
 
 (fset 'yes-or-no-p 'y-or-n-p)     ; Use y/n instead of yes/no
 (when (file-exists-p "/var/tmp")
