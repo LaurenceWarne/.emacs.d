@@ -407,7 +407,8 @@
                                 (-map #'find-file-noselect it)))
                         opened-files)))
       (--each (-zip windows all-files)
-        (set-window-buffer (car it) (cdr it)))))
+        (set-window-buffer (car it) (cdr it))))
+    (lw-projectile-maybe-limit-project-file-buffers))
 
   ;; (define-key projectile-mode-map (kbd "C-j")
   ;;   (lw-projectile-if-in-project #'helm-projectile #'helm-mini))
