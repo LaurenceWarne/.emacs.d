@@ -390,7 +390,7 @@
     (let* ((projects (projectile-relevant-known-projects))
            (project (f-expand (completing-read "Switch to project: " projects)))
            (windows (window-list))
-           (priorities '(("py" . 5) ("scala" . 4) ("sc" . 3) ("el" . 2)))
+           (priorities '(("scala" . 4) ("py" . 5) ("sc" . 3) ("el" . 2)))
            (opened-files (-filter #'buffer-file-name
                                   (projectile-project-buffers project)))
            (all-files (if (> (length windows) (length opened-files))
