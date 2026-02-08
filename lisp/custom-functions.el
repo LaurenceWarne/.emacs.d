@@ -209,11 +209,11 @@ E.g. capitalize or decapitalize the next word, increment number at point."
           ((looking-at "!=") (delete-char 1) (insert "=") (forward-char 2))
           ((looking-at "+") (delete-char 1) (insert "-") (forward-char 1))
           ((looking-at "-") (delete-char 1) (insert "+") (forward-char 1))
+          ((looking-at "<-") (delete-char 1) (insert "=") (forward-char 1))
           ((looking-at "<=") (delete-char 2) (insert ">=") (forward-char 2))
           ((looking-at ">=") (delete-char 2) (insert "<=") (forward-char 2))
           ((looking-at "<") (delete-char 1) (insert ">") (forward-char 1))
           ((looking-at ">") (delete-char 1) (insert "<") (forward-char 1))
-          ((looking-at "<-") (delete-char 1) (insert "=") (forward-char 1))
           (t (call-interactively #'downcase-word)))))
 
 (defun lw-package-refresh-contents-async ()
