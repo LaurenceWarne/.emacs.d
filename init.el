@@ -20,39 +20,18 @@
   (message "An Emacs version < 29 is in use, some things may not work!"))
 
 ;;; File loading
-(condition-case e
-    (load "custom-functions")
-  (error "Error on loading custom-functions: %s"
-	 (error-message-string e)))
+(load "custom-functions")
 
-(condition-case e
-    (load "global-minor-mode-init")
-  (error "Error on loading global-minor-mode-init: %s"
-	 (error-message-string e)))
+(load "global-minor-mode-init")
 
-(condition-case e
-    (load "vanilla-mode-init")
-  (error "Error on loading vanilla-mode-init: %s"
-	 (error-message-string e)))
+(load "vanilla-mode-init")
 
-(condition-case e
-    (load "package-init")
-  (error "Error on loading package-init: %s"
-	 (error-message-string e)))
+(load "package-init")
 
-(condition-case e
-    (load "keybindings")
-  (error "Error on loading keybindings: %s"
-	 (error-message-string e)))
+(load "keybindings")
 
-(condition-case e
-    (load "custom")
-  (error "Error on loading custom: %s"
-	 (error-message-string e)))
+(load "custom")
 
-(condition-case e
-    (when (file-exists-p (expand-file-name "local.el" lw-custom-init-files-directory))
-      (message "Found a local initialisation file")
-      (load "local"))
-  (error "Error on loading local: %s"
-	 (error-message-string e)))
+(when (file-exists-p (expand-file-name "local.el" lw-custom-init-files-directory))
+  (message "Found a local initialisation file")
+  (load "local"))
