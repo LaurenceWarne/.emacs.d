@@ -61,6 +61,8 @@
               ("C-#" . nil)
               ("C-'" . nil)
               ("C-M-t" . nil)
+              ("C-S-<right>" . nil)
+              ("C-S-<left>" . nil)
               :map org-read-date-minibuffer-local-map
               ("C-f" . (lambda () (interactive)
 		         (org-eval-in-calendar '(calendar-forward-day 1))))
