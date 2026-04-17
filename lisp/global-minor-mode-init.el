@@ -1,4 +1,4 @@
-;;;; global-minor-mode-init.el -- configure vanilla emacs modes
+;;;; global-minor-mode-init.el -- configure vanilla emacs modes -*- lexical-binding: t -*-
 ;;; Commentary:
 
 ;; No external package configuration is done here, see package-init.el

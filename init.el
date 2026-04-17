@@ -1,4 +1,4 @@
-;;;; init.el -- my init file
+;;;; init.el -- my init file -*- lexical-binding: t -*-
 ;;; Commentary:
 
 ;; For inspiration see:

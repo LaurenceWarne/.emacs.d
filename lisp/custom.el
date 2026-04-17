@@ -1,4 +1,4 @@
-;;;; custom.el -- emacs custom file
+;;;; custom.el -- emacs custom file -*- lexical-binding: t -*-
 ;;; Commentary:
 
 ;; 

@@ -1,4 +1,4 @@
-;;;; keybindings.el -- installs/initializes packages
+;;;; keybindings.el -- installs/initializes packages -*- lexical-binding: t -*-
 ;;; Commentary:
 
 ;; Here we set global keybindings, and local keybindings for vanilla
